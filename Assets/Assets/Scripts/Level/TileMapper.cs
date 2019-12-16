@@ -16,12 +16,14 @@ namespace RedKite
             new TileType("Wall")
         };
 
-        public GameObject selectedHero;
+        public Hero selectedHero;
         List<Node> currentPath = null;
 
         TileType[,] tiles = new TileType[H,W];
 
         Node[,] graph;
+
+        Camera cam;
 
         public Tile[] tileSprites = new Tile[2];
         public Tilemap tilemap;
@@ -29,7 +31,7 @@ namespace RedKite
         public Vector2 spawnPoint;
         public static int index = 0;
 
-        List<GameSprite> units = new List<GameSprite>();
+        List<Hero> units = new List<Hero>();
 
 
         //below are tile tracker variables
@@ -47,7 +49,6 @@ namespace RedKite
             tilemap = GetComponent<Tilemap>();
 
             //when I start adding UI this might fuck up. Tags might be the solution.
-            grid = FindObjectOfType<Grid>();
 
             tileSprites[0] = ScriptableObject.CreateInstance<Tile>();
             tileSprites[0].sprite = Resources.Load<Sprite>("Tiles/DungeonFloor");
@@ -84,13 +85,18 @@ namespace RedKite
                     }
                 }
             }
+
+            units = GameSpriteManager.Instance.Heroes;
         }
 
         private void Start()
         {
 
             GenerateGraph();
-          
+
+            grid = FindObjectOfType<Grid>();
+
+            cam = FindObjectOfType<Camera>();
         }
 
         private void Update()
@@ -98,20 +104,23 @@ namespace RedKite
             TileTracker();
 
             //selected hero needs to be cached.
+            if (selectedHero != null)
+            {
+                if (destination != Vector3.zero & tiles[(int)destination.x, (int)destination.y].isWalkable == true & selectedHero.isMoving == false)
+                    GeneratePathTo((int)destination.x, (int)destination.y);
+            }
 
-            if (destination != Vector3.zero && tiles[(int)destination.x, (int)destination.y].isWalkable == true & selectedHero.GetComponent<Hero>().isMoving == false)
-                GeneratePathTo((int)destination.x, (int)destination.y);
-
+            //draw debug line
             if(currentPath != null)
             {
                 int currNode = 0;
 
                 while(currNode < currentPath.Count -1)
                 {
-                    Vector3 start = new Vector3(selectedHero.GetComponent<Hero>().currentPath[currNode].x, selectedHero.GetComponent<Hero>().currentPath[currNode].y);
+                    Vector3 start = new Vector3(selectedHero.currentPath[currNode].x, selectedHero.currentPath[currNode].y);
 
                     //needs optimization. selected Hero needs to be cached somehow
-                    Vector3 end = new Vector3(selectedHero.GetComponent<Hero>().currentPath[currNode+1].x, selectedHero.GetComponent<Hero>().currentPath[currNode + 1].y);
+                    Vector3 end = new Vector3(selectedHero.currentPath[currNode+1].x, selectedHero.currentPath[currNode + 1].y);
 
                     Debug.DrawLine(start,end);
 
@@ -258,7 +267,7 @@ namespace RedKite
         public void GeneratePathTo(int x, int y)
         {
      		// Clear out our Hero's old path.
-		selectedHero.GetComponent<Hero>().currentPath = null;
+		selectedHero.currentPath = null;
 
 		if( HeroCanEnterTile(x,y) == false ) {
 			// We probably clicked on a mountain or something, so just quit out.
@@ -272,8 +281,8 @@ namespace RedKite
 		List<Node> unvisited = new List<Node>();
 		
 		Node source = graph[
-		                    selectedHero.GetComponent<Hero>().tileX, 
-		                    selectedHero.GetComponent<Hero>().tileY
+		                    selectedHero.tileX, 
+		                    selectedHero.tileY
 		                    ];
 		
 		Node target = graph[
@@ -346,15 +355,25 @@ namespace RedKite
 
 		currentPath.Reverse();
 
-		selectedHero.GetComponent<Hero>().currentPath = currentPath;
+		selectedHero.currentPath = currentPath;
 
         }
 
-        void TileTracker()
+        public void TileTracker()
         {
 
-            Vector3 worldPoint1 = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+            Vector3 worldPoint1 = cam.ScreenToWorldPoint(Input.mousePosition);
+
+            Debug.Log(worldPoint1.ToString());
+
             highlight = grid.WorldToCell(worldPoint1);
+
+            foreach(Hero unit in units)
+            {
+                if (new Vector2(unit.transform.position.x, unit.transform.position.y) == new Vector2(highlight.x, highlight.y) & Input.GetMouseButtonDown(0))
+                    selectedHero = unit;
+
+            }
 
             if (temp == Vector3Int.zero)
             {
@@ -387,12 +406,14 @@ namespace RedKite
                 temp = highlight;
             }
 
-            if (Input.GetMouseButtonDown(0) & selectedHero.GetComponent<Hero>().isMoving == false)
+            if (selectedHero != null)
             {
-                Vector3 worldPoint = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-                destination = grid.WorldToCell(grid.WorldToCell(worldPoint));
+                if (Input.GetMouseButtonDown(0) & selectedHero.isMoving == false)
+                {
+                    Vector3 worldPoint = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+                    destination = grid.WorldToCell(grid.WorldToCell(worldPoint));
 
-                //Shows the cell reference for the grid
+                }
             }
 
             tilemap.RefreshAllTiles();

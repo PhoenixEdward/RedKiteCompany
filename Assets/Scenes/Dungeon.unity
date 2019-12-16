@@ -196,11 +196,11 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 659999}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: -101}
+  m_LocalPosition: {x: 0, y: 0, z: -1}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
-  m_Father: {fileID: 17276456}
-  m_RootOrder: 0
+  m_Father: {fileID: 0}
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &660002
 MonoBehaviour:
@@ -224,6 +224,7 @@ MonoBehaviour:
   map: {fileID: 0}
   tileX: 0
   tileY: 0
+  isMoving: 0
 --- !u!1 &17276454
 GameObject:
   m_ObjectHideFlags: 0
@@ -264,7 +265,6 @@ Transform:
   m_LocalPosition: {x: 0, y: 0, z: 100}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
-  - {fileID: 660001}
   - {fileID: 1321452768}
   m_Father: {fileID: 0}
   m_RootOrder: 1
@@ -377,7 +377,6 @@ GameObject:
   - component: {fileID: 1321452770}
   - component: {fileID: 1321452769}
   - component: {fileID: 1321452771}
-  - component: {fileID: 1321452772}
   m_Layer: 0
   m_Name: Tilemap_Base
   m_TagString: Untagged
@@ -397,7 +396,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 17276456}
-  m_RootOrder: 1
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!483693784 &1321452769
 TilemapRenderer:
@@ -494,24 +493,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 993a3eed18eb9c9409b2a07d95ee06b4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  selectedHero: {fileID: 659999}
+  selectedHero: {fileID: 0}
   tileSprites:
   - {fileID: 0}
   - {fileID: 0}
   tilemap: {fileID: 0}
-  tileTracker: {fileID: 0}
   spawnPoint: {x: 0, y: 0}
---- !u!114 &1321452772
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1321452767}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: cc86a2721689bd74e878cb8310f37876, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
   destination: {x: 0, y: 0, z: 0}
   highlight: {x: 0, y: 0, z: 0}

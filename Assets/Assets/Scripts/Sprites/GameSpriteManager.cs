@@ -27,8 +27,7 @@ namespace RedKite
             }
         }
 
-        public List<GameSprite> Sprites { get; private set; }
-        public GameSprite Player { get; private set; }
+        public List<Hero> Heroes { get; private set; }
 
         void Awake()
         {
@@ -40,7 +39,7 @@ namespace RedKite
             {
                 Destroy(gameObject);
             }
-            Sprites = FindObjectsOfType<GameSprite>().ToList();
+            Heroes = FindObjectsOfType<Hero>().ToList();
 
         }
 

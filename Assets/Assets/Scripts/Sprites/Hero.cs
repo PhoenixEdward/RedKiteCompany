@@ -96,7 +96,6 @@ namespace RedKite
             if (currentPath.Count > 1)
             {
                 currentPath.RemoveAt(0);
-                Debug.Log(currentPath.Count.ToString());
 
             }
             // We only have one tile left in the path that MUST be our destination. So now we set current path to null

@@ -6,9 +6,7 @@ using UnityEngine.Tilemaps;
 namespace RedKite
 {
     public class TileTracker : MonoBehaviour
-{
-        
-        /*
+    {
         //You need references to to the Grid and the Tilemap
         Tilemap tm;
         Grid gd;
@@ -76,14 +74,13 @@ namespace RedKite
 
             if (Input.GetMouseButtonDown(0) & hero.isMoving == false)
             {
-                    Vector3 worldPoint = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-                    destination = gd.WorldToCell(gd.WorldToCell(worldPoint));
+                Vector3 worldPoint = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+                destination = gd.WorldToCell(gd.WorldToCell(worldPoint));
 
                 //Shows the cell reference for the grid
             }
 
             tm.RefreshAllTiles();
         }
-        */
     }
 }
