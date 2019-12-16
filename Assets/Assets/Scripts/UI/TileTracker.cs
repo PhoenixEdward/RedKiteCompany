@@ -7,6 +7,8 @@ namespace RedKite
 {
     public class TileTracker : MonoBehaviour
 {
+        
+        /*
         //You need references to to the Grid and the Tilemap
         Tilemap tm;
         Grid gd;
@@ -82,5 +84,6 @@ namespace RedKite
 
             tm.RefreshAllTiles();
         }
+        */
     }
 }

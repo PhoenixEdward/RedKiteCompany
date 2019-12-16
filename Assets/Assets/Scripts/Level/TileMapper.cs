@@ -25,16 +25,29 @@ namespace RedKite
 
         public Tile[] tileSprites = new Tile[2];
         public Tilemap tilemap;
-        public TileTracker tileTracker;
+        Grid grid;
         public Vector2 spawnPoint;
         public static int index = 0;
+
+        List<GameSprite> units = new List<GameSprite>();
+
+
+        //below are tile tracker variables
+        public Vector3 destination = Vector3.zero;
+
+        public Vector3Int highlight;
+
+        Vector3Int temp = Vector3Int.zero;
+
+        Sprite oldTile;
 
         // Start is called before the first frame update
         void Awake()
         {
-            tileTracker = GetComponent<TileTracker>();
-
             tilemap = GetComponent<Tilemap>();
+
+            //when I start adding UI this might fuck up. Tags might be the solution.
+            grid = FindObjectOfType<Grid>();
 
             tileSprites[0] = ScriptableObject.CreateInstance<Tile>();
             tileSprites[0].sprite = Resources.Load<Sprite>("Tiles/DungeonFloor");
@@ -82,10 +95,12 @@ namespace RedKite
 
         private void Update()
         {
+            TileTracker();
+
             //selected hero needs to be cached.
 
-            if(tileTracker.destination != Vector3.zero && tiles[(int)tileTracker.destination.x, (int)tileTracker.destination.y].isWalkable == true & selectedHero.GetComponent<Hero>().isMoving == false)
-                GeneratePathTo((int)tileTracker.destination.x, (int)tileTracker.destination.y);
+            if (destination != Vector3.zero && tiles[(int)destination.x, (int)destination.y].isWalkable == true & selectedHero.GetComponent<Hero>().isMoving == false)
+                GeneratePathTo((int)destination.x, (int)destination.y);
 
             if(currentPath != null)
             {
@@ -335,5 +350,53 @@ namespace RedKite
 
         }
 
+        void TileTracker()
+        {
+
+            Vector3 worldPoint1 = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+            highlight = grid.WorldToCell(worldPoint1);
+
+            if (temp == Vector3Int.zero)
+            {
+                oldTile = tilemap.GetSprite(highlight);
+
+                Tile tempTile1 = ScriptableObject.CreateInstance<Tile>();
+                tempTile1.color = Color.red;
+                tempTile1.sprite = oldTile;
+                tilemap.SetTile(highlight, tempTile1);
+                tilemap.RefreshTile(highlight);
+
+                temp = highlight;
+            }
+
+            if (highlight != temp)
+            {
+                Tile tempTile = ScriptableObject.CreateInstance<Tile>();
+                tempTile.sprite = oldTile;
+                tilemap.SetTile(temp, tempTile);
+                tilemap.RefreshTile(temp);
+
+                oldTile = tilemap.GetSprite(highlight);
+
+                tempTile = ScriptableObject.CreateInstance<Tile>();
+                tempTile.color = Color.red;
+                tempTile.sprite = oldTile;
+                tilemap.SetTile(highlight, tempTile);
+                tilemap.RefreshTile(highlight);
+
+                temp = highlight;
+            }
+
+            if (Input.GetMouseButtonDown(0) & selectedHero.GetComponent<Hero>().isMoving == false)
+            {
+                Vector3 worldPoint = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+                destination = grid.WorldToCell(grid.WorldToCell(worldPoint));
+
+                //Shows the cell reference for the grid
+            }
+
+            tilemap.RefreshAllTiles();
+        }
     }
+
 }
