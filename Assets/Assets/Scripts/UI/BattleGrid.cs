@@ -2,47 +2,26 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Tilemaps;
-using System;
-using System.Linq;
-
 
 namespace RedKite
 {
-    public class TileMapper : MonoBehaviour
+    public class BattleGrid : MonoBehaviour
     {
-        public TileType[] tileTypes =
-        {
-            new TileType("Empty"),
-            new TileType("Floor"),
-            new TileType("Wall")
-        };
+        Tile clearTile;
+        Tile highlightTile;
+        Tile rangeTile;
 
-        public static int H;
-        public static int W;
-        static char[,] map;
-        static int[,] roomIndices;
-
-        static System.Random rndState = new System.Random();
-        static int rnd(int x) => rndState.Next() % x;
-
-        public TileType[,] tiles;
-
-        Tile[] tileSprites;
         public Tilemap tilemap;
-        public Vector2 spawnPoint;
-        public static int index = 0;
-        //to delete below
-        List<Hero> units = new List<Hero>();
         Grid grid;
-
-        bool isSelection;
-        //below are tile tracker variables
-        //Should destination be attached to the hero?
 
         Node[,] graph;
 
         public Hero selectedHero;
         List<Node> currentPath = null;
+
+        List<Hero> units = new List<Hero>();
+
+        bool isSelection;
 
         public Node destination;
 
@@ -50,203 +29,82 @@ namespace RedKite
 
         Vector3Int temp = Vector3Int.zero;
 
+        TileMapper tileMapper;
+
         Sprite oldTileSprite;
         Color oldTileColor;
 
         Node[] withinRange = null;
         Node[] canMoveTo = null;
-        Sprite[] withinRangeSprites = null;
 
-        void Awake()
+        // Start is called before the first frame update
+        void Start()
         {
-            H = rndState.Next(25,50);
-            W = rndState.Next(25, 50);
-            roomIndices = new int[H, W];
-
-            map = new char[H, W];
-
-            tiles = new TileType[H, W];
-
+            grid = FindObjectOfType<Grid>();
+            tileMapper = FindObjectOfType<TileMapper>();
             tilemap = GetComponent<Tilemap>();
 
-            //when I start adding UI this might fuck up. Tags might be the solution.
+            clearTile = ScriptableObject.CreateInstance<Tile>();
 
-            tileSprites = new Tile[3];
+            rangeTile = ScriptableObject.CreateInstance<Tile>();
+            rangeTile.sprite = Resources.Load<Sprite>("UI/Range");
 
-            tileSprites[0] = ScriptableObject.CreateInstance<Tile>();
-            tileSprites[0].sprite = Resources.Load<Sprite>("Tiles/DungeonEmpty");
+            highlightTile = ScriptableObject.CreateInstance<Tile>();
+            highlightTile.sprite = Resources.Load<Sprite>("UI/Reticle");
 
-            tileSprites[1] = ScriptableObject.CreateInstance<Tile>();
-            tileSprites[1].sprite = Resources.Load<Sprite>("Tiles/DungeonFloor");
-
-            tileSprites[2] = ScriptableObject.CreateInstance<Tile>();
-            tileSprites[2].sprite = Resources.Load<Sprite>("Tiles/DungeonWall");
-
-            // generate
-            addRoom(start: true);
-
-            for (int j = 0; j < 5000; j++)
+            for (int y = 0; y < TileMapper.H; y++)
             {
-                addRoom(start: false);
-            }
-
-            for (int y = 0; y < H; y++)
-            {
-                for (int x = 0; x < W; x++)
+                for (int x = 0; x < TileMapper.W; x++)
                 {
-                    char c = map[y, x];
-                    if (c != '\0' & c != '#' & c != '!')
-                    {
-                        tiles[y, x] = tileTypes[1];
-                        Tile colorTile = ScriptableObject.CreateInstance<Tile>();
-                        colorTile.color = new Color(roomIndices[y, x]/roomIndices.Length, 1, 1);
-                        colorTile.sprite = tileSprites[1].sprite;
-                        tilemap.SetTile(new Vector3Int(y, x, 0), tileSprites[1]);
-                        if (c == '@')
-                            spawnPoint = tilemap.CellToWorld(new Vector3Int(y, x, 0));
-                    }
-                    else if (c == '#' | c == '!')
-                    {
-                        tiles[y, x] = tileTypes[2];
-                        tilemap.SetTile(new Vector3Int(y, x, 0), tileSprites[2]);
-
-                    }
-                    else if (c == '\0')
-                    { 
-                        tiles[y, x] = tileTypes[0];
-                        tilemap.SetTile(new Vector3Int(y ,x, 0),tileSprites[0]);
-                    }
+                    tilemap.SetTile(new Vector3Int(y, x, 0), clearTile);
                 }
             }
 
-            //to delete
+            units = GameSpriteManager.Instance.Heroes;
 
+            GenerateGraph();
         }
 
-        private void Start()
+        // Update is called once per frame
+        void Update()
         {
-            //to delete
-
-        }
-
-        private void Update()
-        {
-            //to delete
-            /*
             TileTracker();
             UnitRange();
             if (selectedHero != null)
             {
                 if (destination != null)
-                { 
-                    if(tiles[destination.cell.x, destination.cell.y].isWalkable == true & selectedHero.isMoving == false)
-                        if(ManhattanDistance(new Vector2Int(selectedHero.tileX,selectedHero.tileY),new Vector2Int(destination.cell.x,destination.cell.y)) <= selectedHero.movement)
+                {
+                    if (tileMapper.tiles[destination.cell.x, destination.cell.y].isWalkable == true & selectedHero.isMoving == false)
+                        if (ManhattanDistance(new Vector2Int(selectedHero.tileX, selectedHero.tileY), new Vector2Int(destination.cell.x, destination.cell.y)) <= selectedHero.movement)
                         {
                             Debug.Log("SHIT");
-                            if(IsReachable(destination, withinRange))
+                            if (IsReachable(destination, withinRange))
                                 GeneratePathTo((int)destination.cell.x, (int)destination.cell.y);
                         }
                 }
             }
-            //end delete
             //draw debug line
-            if(currentPath != null)
+            if (currentPath != null)
             {
                 int currNode = 0;
 
-                while(currNode < currentPath.Count -1)
+                while (currNode < currentPath.Count - 1)
                 {
                     Vector3 start = new Vector3(selectedHero.currentPath[currNode].cell.x, selectedHero.currentPath[currNode].cell.y);
 
                     //needs optimization. selected Hero needs to be cached somehow
-                    Vector3 end = new Vector3(selectedHero.currentPath[currNode+1].cell.x, selectedHero.currentPath[currNode + 1].cell.y);
+                    Vector3 end = new Vector3(selectedHero.currentPath[currNode + 1].cell.x, selectedHero.currentPath[currNode + 1].cell.y);
 
-                    Debug.DrawLine(start,end);
+                    Debug.DrawLine(start, end);
 
                     currNode++;
                 }
             }
-            */
-        }
-
-        static void addRoom(bool start)
-        {
-            int w = rnd(10) + 5;
-            int h = rnd(6) + 3;
-            int rx = rnd(W - w - 2) + 1;
-            int ry = rnd(H - h - 2) + 1;
-
-            int doorCount = 0, doorX = 0, doorY = 0;
-
-            // generate a door
-            if (!start)
-            {
-                // See if we can process this tile
-                for (int y = ry - 1; y < ry + h + 2; y++)
-                    for (int x = rx - 1; x < rx + w + 2; x++)
-                        if (map[y, x] == '.')
-                            return;
-
-                // find candidate tiles for the door
-                for (int y = ry - 1; y < ry + h + 2; y++)
-                    for (int x = rx - 1; x < rx + w + 2; x++)
-                    {
-                        bool s = x < rx || x > rx + w;
-                        bool t = y < ry || y > ry + h;
-                        if ((s ^ t) && map[y, x] == '#')
-                        {
-                            ++doorCount;
-                            if (rnd(doorCount) == 0)
-                            {
-                                doorX = x;
-                                doorY = y;
-                            }
-                        }
-                    }
-
-                if (doorCount == 0)
-                    return;
-            }
-
-            // generate a room
-            for (int y = ry - 1; y < ry + h + 2; y++)
-                for (int x = rx - 1; x < rx + w + 2; x++)
-                {
-                    bool s = x < rx || x > rx + w;
-                    bool t = y < ry || y > ry + h;
-                    if (s && t)
-                        map[y, x] = '!'; // avoid generation of doors at corners
-                    else if (s ^ t)
-                        map[y, x] = '#';
-                    else
-                    {
-                        map[y, x] = '.';
-                        roomIndices[y, x] = index;
-                    }
-                }
-
-            // place the door
-            if (doorCount > 0)
-                map[doorY, doorX] = '+';
-
-            if (start)
-            {
-                map[rnd(h) + ry, rnd(w) + rx] = '@';
-            } /* else {
-                // place other objects
-                for(int j=0; j<(rnd(6)+1); j++)
-                    char thing = rnd(4)==0 ? '$' : (char)(65+rnd(62))
-                    map[rnd(h)+ry, rnd(w)+rx] = thing;
-            } */
-
-            index++;
-
-
         }
 
         float CostToEnterTile(int x, int y)
         {
-            TileType tt = tiles[x, y];
+            TileType tt = tileMapper.tiles[x, y];
 
             return tt.movementCost;
         }
@@ -258,18 +116,18 @@ namespace RedKite
             // terrain flags here to see if they are allowed to enter the tile.
 
 
-            return tiles[x,y].isWalkable;
+            return tileMapper.tiles[x, y].isWalkable;
         }
 
         void GenerateRangeGraph()
         {
             // Initialize the array
-            graph = new Node[W, H];
+            graph = new Node[TileMapper.W, TileMapper.H];
 
             // Initialize a Node for each spot in the array
-            for (int x = 0; x < W; x++)
+            for (int x = 0; x < TileMapper.W; x++)
             {
-                for (int y = 0; y < H; y++)
+                for (int y = 0; y < TileMapper.H; y++)
                 {
                     graph[x, y] = new Node();
                     graph[x, y].cell.x = x;
@@ -278,20 +136,20 @@ namespace RedKite
             }
 
             // Now that all the nodes exist, calculate their neighbours
-            for (int x = 0; x < W; x++)
+            for (int x = 0; x < TileMapper.W; x++)
             {
-                for (int y = 0; y < W; y++)
+                for (int y = 0; y < TileMapper.W; y++)
                 {
 
-                    if(x > 0)
-                        graph[x,y].neighbours.Add( graph[x-1, y] );
-                    if(x < W-1)
-                        graph[x,y].neighbours.Add( graph[x+1, y] );
-                    if(y > 0)
-                        graph[x,y].neighbours.Add( graph[x, y-1] );
-                    if(y < H-1)
-                        graph[x,y].neighbours.Add( graph[x, y+1] );
-      
+                    if (x > 0)
+                        graph[x, y].neighbours.Add(graph[x - 1, y]);
+                    if (x < TileMapper.W - 1)
+                        graph[x, y].neighbours.Add(graph[x + 1, y]);
+                    if (y > 0)
+                        graph[x, y].neighbours.Add(graph[x, y - 1]);
+                    if (y < TileMapper.H - 1)
+                        graph[x, y].neighbours.Add(graph[x, y + 1]);
+
                 }
             }
         }
@@ -299,12 +157,12 @@ namespace RedKite
         void GenerateGraph()
         {
             // Initialize the array
-            graph = new Node[W, H];
+            graph = new Node[TileMapper.W, TileMapper.H];
 
             // Initialize a Node for each spot in the array
-            for (int x = 0; x < W; x++)
+            for (int x = 0; x < TileMapper.W; x++)
             {
-                for (int y = 0; y < W; y++)
+                for (int y = 0; y < TileMapper.H; y++)
                 {
                     graph[x, y] = new Node();
                     graph[x, y].cell = grid.WorldToCell(new Vector3(x, y, 100));
@@ -312,18 +170,18 @@ namespace RedKite
             }
 
             // Now that all the nodes exist, calculate their neighbours
-            for (int x = 0; x < W; x++)
+            for (int x = 0; x < TileMapper.W; x++)
             {
-                for (int y = 0; y < W; y++)
+                for (int y = 0; y < TileMapper.H; y++)
                 {
 
                     if (x > 0)
                         graph[x, y].neighbours.Add(graph[x - 1, y]);
-                    if (x < W - 1)
+                    if (x < TileMapper.W - 1)
                         graph[x, y].neighbours.Add(graph[x + 1, y]);
                     if (y > 0)
                         graph[x, y].neighbours.Add(graph[x, y - 1]);
-                    if (y < H - 1)
+                    if (y < TileMapper.H - 1)
                         graph[x, y].neighbours.Add(graph[x, y + 1]);
 
                 }
@@ -332,99 +190,110 @@ namespace RedKite
 
         public void GeneratePathTo(int x, int y)
         {
-     		// Clear out our Hero's old path.
-		selectedHero.currentPath = null;
+            // Clear out our Hero's old path.
+            selectedHero.currentPath = null;
 
-		if( HeroCanEnterTile(x,y) == false ) {
-			// We probably clicked on a mountain or something, so just quit out.
-			return;
-		}
+            if (HeroCanEnterTile(x, y) == false)
+            {
+                // We probably clicked on a mountain or something, so just quit out.
+                return;
+            }
 
-		Dictionary<Node, float> dist = new Dictionary<Node, float>();
-		Dictionary<Node, Node> prev = new Dictionary<Node, Node>();
+            Dictionary<Node, float> dist = new Dictionary<Node, float>();
+            Dictionary<Node, Node> prev = new Dictionary<Node, Node>();
 
-		// Setup the "Q" -- the list of nodes we haven't checked yet.
-		List<Node> unvisited = new List<Node>();
-		
-		Node source = graph[
-		                    selectedHero.tileX, 
-		                    selectedHero.tileY
-		                    ];
-		
-		Node target = graph[
-		                    x,
-		                    y
-		                    ];
-		
-		dist[source] = 0;
-		prev[source] = null;
+            // Setup the "Q" -- the list of nodes we haven't checked yet.
+            List<Node> unvisited = new List<Node>();
 
-		// Initialize everything to have INFINITY distance, since
-		// we don't know any better right now. Also, it's possible
-		// that some nodes CAN'T be reached from the source,
-		// which would make INFINITY a reasonable value
-		foreach(Node v in graph) {
-			if(v != source) {
-				dist[v] = Mathf.Infinity;
-				prev[v] = null;
-			}
+            Node source = graph[
+                                selectedHero.tileX,
+                                selectedHero.tileY
+                                ];
 
-			unvisited.Add(v);
-		}
+            Node target = graph[
+                                x,
+                                y
+                                ];
 
-		while(unvisited.Count > 0) {
-			// "u" is going to be the unvisited node with the smallest distance.
-			Node u = null;
+            dist[source] = 0;
+            prev[source] = null;
 
-			foreach(Node possibleU in unvisited) {
-				if(u == null || dist[possibleU] < dist[u]) {
-					u = possibleU;
-				}
-			}
+            // Initialize everything to have INFINITY distance, since
+            // we don't know any better right now. Also, it's possible
+            // that some nodes CAN'T be reached from the source,
+            // which would make INFINITY a reasonable value
+            foreach (Node v in graph)
+            {
+                if (v != source)
+                {
+                    dist[v] = Mathf.Infinity;
+                    prev[v] = null;
+                }
 
-			if(u == target) {
-				break;	// Exit the while loop!
-			}
+                unvisited.Add(v);
+            }
 
-			unvisited.Remove(u);
+            while (unvisited.Count > 0)
+            {
+                // "u" is going to be the unvisited node with the smallest distance.
+                Node u = null;
 
-			foreach(Node v in u.neighbours) {
-				float alt = dist[u] + CostToEnterTile(v.cell.x, v.cell.y);
-				if( alt < dist[v] ) {
-					dist[v] = alt;
-					prev[v] = u;
-				}
-			}
-		}
+                foreach (Node possibleU in unvisited)
+                {
+                    if (u == null || dist[possibleU] < dist[u])
+                    {
+                        u = possibleU;
+                    }
+                }
 
-		// If we get there, the either we found the shortest route
-		// to our target, or there is no route at ALL to our target.
+                if (u == target)
+                {
+                    break;  // Exit the while loop!
+                }
 
-		if(prev[target] == null) {
-			// No route between our target and the source
-			return;
-		}
+                unvisited.Remove(u);
 
-		List<Node> currentPath = new List<Node>();
+                foreach (Node v in u.neighbours)
+                {
+                    float alt = dist[u] + CostToEnterTile(v.cell.x, v.cell.y);
+                    if (alt < dist[v])
+                    {
+                        dist[v] = alt;
+                        prev[v] = u;
+                    }
+                }
+            }
 
-		Node curr = target;
+            // If we get there, the either we found the shortest route
+            // to our target, or there is no route at ALL to our target.
 
-		// Step through the "prev" chain and add it to our path
-		while(curr != null) {
-			currentPath.Add(curr);
-			curr = prev[curr];
-		}
+            if (prev[target] == null)
+            {
+                // No route between our target and the source
+                return;
+            }
 
-		// Right now, currentPath describes a route from out target to our source
-		// So we need to invert it!
+            List<Node> currentPath = new List<Node>();
 
-		currentPath.Reverse();
+            Node curr = target;
 
-		selectedHero.currentPath = currentPath;
+            // Step through the "prev" chain and add it to our path
+            while (curr != null)
+            {
+                currentPath.Add(curr);
+                curr = prev[curr];
+            }
+
+            // Right now, currentPath describes a route from out target to our source
+            // So we need to invert it!
+
+            currentPath.Reverse();
+
+            selectedHero.currentPath = currentPath;
 
         }
 
-        public bool IsReachable (Node node, Node[] range)
+        public bool IsReachable(Node node, Node[] range)
         {
             if (HeroCanEnterTile((int)node.cell.x, (int)node.cell.y) == false)
             {
@@ -456,8 +325,8 @@ namespace RedKite
 
             foreach (Node v in range)
             {
-                if(v != null)
-                { 
+                if (v != null)
+                {
                     if (v != source)
                     {
                         dist[v] = Mathf.Infinity;
@@ -491,7 +360,7 @@ namespace RedKite
                 foreach (Node v in u.neighbours)
                 {
                     if (ManhattanDistance(new Vector2Int(selectedHero.tileX, selectedHero.tileY), new Vector2Int(v.cell.x, v.cell.y)) <= selectedHero.movement)
-                    { 
+                    {
                         float alt = dist[u] + CostToEnterTile(v.cell.x, v.cell.y);
                         if (alt < dist[v] & alt < selectedHero.movement)
                         {
@@ -530,10 +399,10 @@ namespace RedKite
                 destination = null;
             }
 
-            foreach(Hero unit in units)
+            foreach (Hero unit in units)
             {
                 if (new Vector2(unit.transform.position.x, unit.transform.position.y) == new Vector2(highlight.x, highlight.y) & Input.GetMouseButtonDown(0))
-                { 
+                {
                     selectedHero = unit;
                     isSelection = true;
                 }
@@ -543,13 +412,8 @@ namespace RedKite
             if (temp == Vector3Int.zero)
             {
                 oldTileSprite = tilemap.GetSprite(highlight);
-                oldTileColor = tilemap.GetColor(highlight);
 
-                Tile tempTile1 = ScriptableObject.CreateInstance<Tile>();
-                tempTile1.color = Color.red;
-                tempTile1.sprite = oldTileSprite;
-                tilemap.SetTile(highlight, tempTile1);
-                tilemap.RefreshTile(highlight);
+                tilemap.SetTile(highlight, highlightTile);
 
                 temp = highlight;
             }
@@ -557,25 +421,19 @@ namespace RedKite
             if (highlight != temp)
             {
                 Tile tempTile = ScriptableObject.CreateInstance<Tile>();
-                tempTile.color = oldTileColor;
                 tempTile.sprite = oldTileSprite;
                 tilemap.SetTile(temp, tempTile);
-
                 oldTileSprite = tilemap.GetSprite(highlight);
-                oldTileColor = tilemap.GetColor(highlight);
 
-                tempTile = ScriptableObject.CreateInstance<Tile>();
-                tempTile.color = Color.red;
-                tempTile.sprite = oldTileSprite;
-                tilemap.SetTile(highlight, tempTile);
+                tilemap.SetTile(highlight, highlightTile);
 
                 temp = highlight;
             }
 
             if (selectedHero != null)
             {
-                if(!isSelection)
-                { 
+                if (!isSelection)
+                {
                     if (Input.GetMouseButtonDown(0) & selectedHero.isMoving == false)
                     {
                         Vector3 worldPoint = Camera.main.ScreenToWorldPoint(Input.mousePosition);
@@ -603,7 +461,7 @@ namespace RedKite
 
         void UnitRange()
         {
-            if(selectedHero != null)
+            if (selectedHero != null)
             {
                 //draw grid of valid movement tiles
                 //may need to keep an eye out for impassible moving units. could cause issues here.
@@ -616,8 +474,7 @@ namespace RedKite
                     //honestly not sure if this is the best place to store that data though.
 
                     canMoveTo = new Node[(int)Mathf.Pow(selectedHero.movement + 1, 2) + (int)Mathf.Pow(selectedHero.movement, 2)];
-                    withinRange = new Node[(int)Mathf.Pow(selectedHero.movement+1,2) + (int)Mathf.Pow(selectedHero.movement,2)];
-                    withinRangeSprites = new Sprite[(int)Mathf.Pow(selectedHero.movement + 1, 2) + (int)Mathf.Pow(selectedHero.movement, 2)];
+                    withinRange = new Node[(int)Mathf.Pow(selectedHero.movement + 1, 2) + (int)Mathf.Pow(selectedHero.movement, 2)];
 
                     int withinRangeIndex = 0;
 
@@ -639,12 +496,10 @@ namespace RedKite
                             if (ManhattanDistance(new Vector2Int(selectedHero.tileX, selectedHero.tileY), new Vector2Int(cell.x, cell.y)) <= selectedHero.movement)
                             {
 
-                                if (cell.x >= 0 & cell.x < W & cell.y >= 0 & cell.y < H)
+                                if (cell.x >= 0 & cell.x < TileMapper.W & cell.y >= 0 & cell.y < TileMapper.H)
                                 {
 
                                     withinRange[withinRangeIndex] = graph[cell.x, cell.y];
-
-                                    withinRangeSprites[withinRangeIndex] = Sprite.Instantiate(tilemap.GetSprite(grid.WorldToCell(new Vector3Int(cell.x, cell.y, 100))));
 
                                 }
 
@@ -674,12 +529,9 @@ namespace RedKite
 
                     for (int i = 0; i < canMoveTo.Length; i++)
                     {
-                        if(canMoveTo[i] != null)
-                        { 
-                            Tile tempTile = ScriptableObject.CreateInstance<Tile>();
-                            tempTile.color = Color.green;
-                            tempTile.sprite = withinRangeSprites[i];
-                            tilemap.SetTile(canMoveTo[i].cell, tempTile);
+                        if (canMoveTo[i] != null)
+                        {
+                            tilemap.SetTile(canMoveTo[i].cell, rangeTile);
                         }
                     }
 
@@ -693,9 +545,7 @@ namespace RedKite
                     {
                         if (canMoveTo[i] != null)
                         {
-                            Tile tempTile = ScriptableObject.CreateInstance<Tile>();
-                            tempTile.sprite = withinRangeSprites[i];
-                            tilemap.SetTile(canMoveTo[i].cell, tempTile);
+                            tilemap.SetTile(canMoveTo[i].cell, clearTile);
                         }
                     }
 
@@ -715,9 +565,8 @@ namespace RedKite
                 {
                     if (canMoveTo[i] != null)
                     {
-                        Tile tempTile = ScriptableObject.CreateInstance<Tile>();
-                        tempTile.sprite = withinRangeSprites[i];
-                        tilemap.SetTile(canMoveTo[i].cell, tempTile);
+
+                        tilemap.SetTile(canMoveTo[i].cell, rangeTile);
                     }
                 }
 
@@ -729,5 +578,4 @@ namespace RedKite
 
         }
     }
-
 }
