@@ -17,6 +17,7 @@ namespace RedKite
         public List<Node> currentPath = null;
 
         int speed = 2;
+        public int movement = 2;
 
         public override void Start()
         {

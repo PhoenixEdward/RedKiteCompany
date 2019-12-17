@@ -12,6 +12,7 @@ namespace RedKite
     {
         public TileType[] tileTypes =
         {
+            new TileType("Empty"),
             new TileType("Floor"),
             new TileType("Wall")
         };
@@ -43,6 +44,8 @@ namespace RedKite
 
         Sprite oldTile;
 
+        Dictionary<Vector3Int, Sprite> withinRange = null;
+
         // Start is called before the first frame update
         void Awake()
         {
@@ -71,7 +74,7 @@ namespace RedKite
                     char c = map[y, x];
                     if (c != '\0' & c != '#' & c != '!')
                     {
-                        tiles[y,x] = tileTypes[0];
+                        tiles[y, x] = tileTypes[1];
                         tileSprites[0].color = new Color(roomIndices[y, x], 1, 1);
                         tilemap.SetTile(new Vector3Int(y, x, 0), tileSprites[0]);
                         if (c == '@')
@@ -79,10 +82,12 @@ namespace RedKite
                     }
                     else if (c == '#' | c == '!')
                     {
-                        tiles[y, x] = tileTypes[1];
+                        tiles[y, x] = tileTypes[2];
                         tilemap.SetTile(new Vector3Int(y, x, 0), tileSprites[1]);
 
                     }
+                    else if (c == '\0')
+                        tiles[y, x] = tileTypes[0];
                 }
             }
 
@@ -102,7 +107,7 @@ namespace RedKite
         private void Update()
         {
             TileTracker();
-
+            UnitRange();
             //selected hero needs to be cached.
             if (selectedHero != null)
             {
@@ -364,9 +369,10 @@ namespace RedKite
 
             Vector3 worldPoint1 = cam.ScreenToWorldPoint(Input.mousePosition);
 
-            Debug.Log(worldPoint1.ToString());
-
             highlight = grid.WorldToCell(worldPoint1);
+
+            if (Input.GetMouseButtonDown(1))
+                selectedHero = null;
 
             foreach(Hero unit in units)
             {
@@ -393,7 +399,6 @@ namespace RedKite
                 Tile tempTile = ScriptableObject.CreateInstance<Tile>();
                 tempTile.sprite = oldTile;
                 tilemap.SetTile(temp, tempTile);
-                tilemap.RefreshTile(temp);
 
                 oldTile = tilemap.GetSprite(highlight);
 
@@ -401,7 +406,6 @@ namespace RedKite
                 tempTile.color = Color.red;
                 tempTile.sprite = oldTile;
                 tilemap.SetTile(highlight, tempTile);
-                tilemap.RefreshTile(highlight);
 
                 temp = highlight;
             }
@@ -411,12 +415,99 @@ namespace RedKite
                 if (Input.GetMouseButtonDown(0) & selectedHero.isMoving == false)
                 {
                     Vector3 worldPoint = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-                    destination = grid.WorldToCell(grid.WorldToCell(worldPoint));
+                    destination = grid.WorldToCell(worldPoint);
 
                 }
             }
 
             tilemap.RefreshAllTiles();
+        }
+
+        public int ManhattanDistance(Vector2Int a, Vector2Int b)
+        {
+            checked
+            {
+                return Mathf.Abs(a.x - b.x) + Mathf.Abs(a.y - b.y);
+            }
+        }
+
+
+
+        void UnitRange()
+        {
+            if(selectedHero != null)
+            {
+                //draw grid of valid movement tiles
+                //may need to keep an eye out for impassible moving units. could cause issues here.
+
+                if (selectedHero.isMoving == false & withinRange == null)
+                {
+                    withinRange = new Dictionary<Vector3Int, Sprite>();
+                    List<Node> box = new List<Node>();
+                    int boxRange = (selectedHero.movement * 2) + 1;
+
+                    Vector2 startingSpot = new Vector2(selectedHero.tileX - selectedHero.movement, selectedHero.tileY - selectedHero.movement);
+
+                    for (int i = 0; i < boxRange; i++)
+                    {
+                        for (int j = 0; j < boxRange; j++)
+                        {
+
+                            if (startingSpot.x + i >= 0 & startingSpot.x + i < W - 1 & startingSpot.y + j >= 0 & startingSpot.y + j < H - 1)
+                                if (tiles[(int)startingSpot.x + i, (int)startingSpot.y + j].isWalkable)
+                                    box.Add(graph[(int)startingSpot.x + i, (int)startingSpot.y + j]);
+                        }
+                    }
+
+                    Debug.Log(box.Count.ToString());
+
+
+                    foreach (Node cell in box)
+                    {
+                        if (ManhattanDistance(new Vector2Int(selectedHero.tileX, selectedHero.tileY), new Vector2Int(cell.x, cell.y)) <= selectedHero.movement)
+                            withinRange.Add(grid.WorldToCell(new Vector3Int(cell.x, cell.y, 100)), Sprite.Instantiate(tilemap.GetSprite(grid.WorldToCell(new Vector3Int(cell.x, cell.y, 100)))));
+
+                    }
+
+                    foreach (KeyValuePair<Vector3Int, Sprite> entry in withinRange)
+                    {
+                        Tile tempTile = ScriptableObject.CreateInstance<Tile>();
+                        tempTile.color = Color.green;
+                        tempTile.sprite = entry.Value;
+                        tilemap.SetTile(entry.Key, tempTile);
+                    }
+                }
+                else if (selectedHero.isMoving == true & withinRange != null)
+                {
+                    foreach (KeyValuePair<Vector3Int, Sprite> entry in withinRange)
+                    {
+                        Tile tempTile = ScriptableObject.CreateInstance<Tile>();
+                        tempTile.sprite = entry.Value;
+                        tilemap.SetTile(entry.Key, tempTile);
+
+                        withinRange = null;
+                    }
+                }
+
+                tilemap.RefreshAllTiles();
+
+            }
+
+
+            else if (selectedHero == null & withinRange != null)
+            {
+                foreach(KeyValuePair<Vector3Int, Sprite> entry in withinRange)
+                {
+                    Tile tempTile = ScriptableObject.CreateInstance<Tile>();
+                    tempTile.sprite = entry.Value;
+                    tilemap.SetTile(entry.Key, tempTile);
+                }
+
+                tilemap.RefreshAllTiles();
+
+                withinRange = null;
+            }
+
         }
     }
 

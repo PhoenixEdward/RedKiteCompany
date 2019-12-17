@@ -6,6 +6,7 @@ public class TileType
 {
     public enum Type
     {
+        Empty,
         Floor,
         Wall
     }
@@ -26,6 +27,12 @@ public class TileType
         if (_Type == "Wall")
         {
             tileType = Type.Wall;
+            movementCost = 100;
+            isWalkable = false;
+        }
+        if (_Type == "Empty")
+        {
+            tileType = Type.Empty;
             movementCost = 100;
             isWalkable = false;
         }
