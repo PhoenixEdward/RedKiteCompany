@@ -9,7 +9,7 @@ namespace RedKite
     {
         protected float timeSinceLastMove = 0;
         protected float secondsPerMove = 0.0167f;
-        protected float pix = 32f/3;
+        protected float pix = 32f/8;
         protected Hero hero;
         protected Tilemap map;
         protected Vector2 xBounds;
@@ -31,33 +31,27 @@ namespace RedKite
         void Update()
         {
 
-            if (timeSinceLastMove > secondsPerMove)
+            Vector3 pos = transform.position;
+
+            if (Input.GetKey(KeyCode.W) & pos.y < yBounds.y)
             {
-                timeSinceLastMove = 0;
-
-                Vector3 pos = transform.position;
-
-                if (Input.GetKey(KeyCode.W) & pos.y < yBounds.y)
-                {
-                    pos.y += pix * Time.deltaTime;
-                }
-                if (Input.GetKey(KeyCode.S) & pos.y > yBounds.x)
-                {
-                    pos.y -= pix * Time.deltaTime;
-                }
-                if (Input.GetKey(KeyCode.D) & pos.x < xBounds.y)
-                {
-                    pos.x += pix * Time.deltaTime;
-                }
-                if (Input.GetKey(KeyCode.A) & pos.x > xBounds.x)
-                {
-                    pos.x -= pix * Time.deltaTime;
-                }
-
-                transform.position = pos;
+                pos.y += pix * Time.deltaTime;
+            }
+            if (Input.GetKey(KeyCode.S) & pos.y > yBounds.x)
+            {
+                pos.y -= pix * Time.deltaTime;
+            }
+            if (Input.GetKey(KeyCode.D) & pos.x < xBounds.y)
+            {
+                pos.x += pix * Time.deltaTime;
+            }
+            if (Input.GetKey(KeyCode.A) & pos.x > xBounds.x)
+            {
+                pos.x -= pix * Time.deltaTime;
             }
 
-            timeSinceLastMove += Time.deltaTime;
+            transform.position = pos;
+
         }
     }
 }
