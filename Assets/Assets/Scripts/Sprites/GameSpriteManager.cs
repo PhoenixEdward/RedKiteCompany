@@ -18,8 +18,10 @@ namespace RedKite
                     instance = FindObjectOfType<GameSpriteManager>();
                     if (instance == null)
                     {
-                        GameObject obj = new GameObject();
-                        obj.name = typeof(GameSpriteManager).Name;
+                        GameObject obj = new GameObject
+                        {
+                            name = typeof(GameSpriteManager).Name
+                        };
                         instance = obj.AddComponent<GameSpriteManager>();
                     }
                 }
