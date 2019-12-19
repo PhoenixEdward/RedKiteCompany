@@ -10,22 +10,41 @@ namespace RedKite
 {
     public class TileMapper : MonoBehaviour
     {
-        public TileType[] tileTypes =
+        public Cell[] tileTypes =
         {
-            new TileType("Empty"),
-            new TileType("Floor"),
-            new TileType("Wall")
+            new Cell(Cell.Type.Empty),
+            new Cell(Cell.Type.Floor),
+            new Cell(Cell.Type.Wall)
+        };
+
+        Color[] colors = new Color[10]
+        {
+            Colors.AmericanBlue,
+            Colors.AmericanGreen,
+            Colors.AmericanPurple,
+            Colors.AmericanRed,
+            Colors.AmericanOrange,
+            Colors.AmericanYellow,
+            Colors.AmericanBrown,
+            Colors.AmericanGold,
+            Colors.AmericanPink,
+            Colors.AmericanSilver,
+
         };
 
         public static int H;
         public static int W;
         static char[,] map;
-        static int[,] roomIndices;
+
+        static int roomCount;
+        static int roomIndex = 0;
+
+        static List<Vector2>[] roomTiles;
 
         static System.Random rndState = new System.Random();
         static int rnd(int x) => rndState.Next() % x;
 
-        public TileType[,] tiles;
+        public Cell[,] tiles;
 
         Tile[] tileSprites;
         public Tilemap tilemap;
@@ -38,18 +57,27 @@ namespace RedKite
         void Awake()
         {
             H = rndState.Next(25, 50);
-            W = rndState.Next(25,50);
-            roomIndices = new int[W, H];
+            W = rndState.Next(25, 50);
 
             map = new char[W, H];
 
-            tiles = new TileType[W, H];
+            roomCount = rndState.Next(4, 10);
+
+            tiles = new Cell[W, H];
 
             tilemap = GetComponent<Tilemap>();
 
             tilemap.size = new Vector3Int(W, H, 1);
 
-            //when I start adding UI this might fuck up. Tags might be the solution.
+            //create array of lists to store tile coordinates for each room 
+            //and loop through to create lists for the given number of rooms
+
+            roomTiles = new List<Vector2>[roomCount];
+
+            for (int i = 0; i < roomTiles.Length; i++)
+            {
+                roomTiles[i] = new List<Vector2>();
+            }
 
             tileSprites = new Tile[3];
 
@@ -63,11 +91,14 @@ namespace RedKite
             tileSprites[2].sprite = Resources.Load<Sprite>("Tiles/DungeonWall");
 
             // generate
-            addRoom(start: true);
-
+            bool nothing = addRoom(start: true);
+            roomIndex++;
             for (int j = 0; j < 5000; j++)
             {
-                addRoom(start: false);
+                if (addRoom(start: false))
+                    roomIndex++;
+                if (roomIndex > roomCount - 1)
+                    break;
             }
 
             for (int x = 0; x < W; x++)
@@ -79,9 +110,18 @@ namespace RedKite
                     {
                         tiles[x, y] = tileTypes[1];
                         Tile colorTile = ScriptableObject.CreateInstance<Tile>();
-                        colorTile.color = new Color(roomIndices[x, y]/roomIndices.Length, 1, 1);
                         colorTile.sprite = tileSprites[1].sprite;
-                        tilemap.SetTile(new Vector3Int(x, y, 0), tileSprites[1]);
+                        if(c=='@')
+                        { 
+                            colorTile.color = colors[0];
+                            roomTiles[0].Add(new Vector2(x, y));
+                        }
+                        if ((int)c >= 48 & (int)c <= 57)
+                        { 
+                            colorTile.color = colors[(int)c - 48];
+                            roomTiles[(int)c-48].Add(new Vector2(x, y));
+                        }
+                        tilemap.SetTile(new Vector3Int(x, y, 0), colorTile);
                         if (c == '@')
                             spawnPoint = tilemap.CellToWorld(new Vector3Int(x, y, 0));
                     }
@@ -92,9 +132,9 @@ namespace RedKite
 
                     }
                     else if (c == '\0')
-                    { 
+                    {
                         tiles[x, y] = tileTypes[0];
-                        tilemap.SetTile(new Vector3Int(x ,y, 0),tileSprites[0]);
+                        tilemap.SetTile(new Vector3Int(x, y, 0), tileSprites[0]);
                     }
                 }
             }
@@ -102,12 +142,8 @@ namespace RedKite
 
         }
 
-        private void Update()
-        {
-            
-        }
 
-        static void addRoom(bool start)
+        static bool addRoom(bool start)
         {
             int h = rnd(10) + 5;
             int w = rnd(6) + 3;
@@ -116,16 +152,16 @@ namespace RedKite
 
             int doorCount = 0, doorY = 0, doorX = 0;
 
-            // generate a door
+            // generate a doorX
             if (!start)
             {
                 // See if we can process this tile
                 for (int x = rx - 1; x < rx + w + 2; x++)
                     for (int y = ry - 1; y < ry + h + 2; y++)
-                        if (map[x, y] == '.')
-                            return;
+                        if (((int)map[x, y] >= 48 & (int)map[x, y] <= 57))
+                            return false;
 
-                // find candidate tiles for the door
+                // find candidate tiles for the doorX
                 for (int x = rx - 1; x < rx + w + 2; x++)
                     for (int y = ry - 1; y < ry + h + 2; y++)
                     {
@@ -143,7 +179,7 @@ namespace RedKite
                     }
 
                 if (doorCount == 0)
-                    return;
+                    return false;
             }
 
             // generate a room
@@ -157,29 +193,28 @@ namespace RedKite
                     else if (s ^ t)
                         map[x, y] = '#';
                     else
-                    {
-                        map[x, y] = '.';
-                        roomIndices[x, y] = index;
-                    }
+                        map[x, y] = (char)(roomIndex + 48);
                 }
 
-            // place the door
+            // place the doorX
             if (doorCount > 0)
+            {
                 map[doorX, doorY] = '+';
+                return true;
+            }
 
             if (start)
             {
                 map[rnd(w) + rx, rnd(h) + ry] = '@';
+                return true;
             } /* else {
-                // place other objects
-                for(int j=0; j<(rnd(6)+1); j++)
-                    char thing = rnd(4)==0 ? '$' : (char)(65+rnd(62))
-                    map[rnd(h)+ry, rnd(w)+rx] = thing;
-            } */
+            // place other objects
+            for(int j=0; j<(rnd(6)+1); j++)
+                char thing = rnd(4)==0 ? '$' : (char)(65+rnd(62))
+                map[rnd(w)+rx, rnd(h)+ry] = thing;
+        } */
 
-            index++;
-
-
+            return false;
         }
 
     }

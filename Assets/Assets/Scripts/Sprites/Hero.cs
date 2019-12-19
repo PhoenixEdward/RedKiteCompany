@@ -22,13 +22,17 @@ namespace RedKite
         int speed = 2;
         public int movement = 2;
 
+        public static int f = 0;
+
         public override void Start()
         {
             //possibly shortcut in TileMapper code
 
             map = FindObjectOfType<TileMapper>();
 
-            transform.position = new Vector3(map.spawnPoint.x, map.spawnPoint.y + 1, -1);
+            transform.position = new Vector3(map.spawnPoint.x, map.spawnPoint.y + f, -1);
+
+            f++;
 
             tileX = (int)transform.position.x;
             tileY = (int)transform.position.y;

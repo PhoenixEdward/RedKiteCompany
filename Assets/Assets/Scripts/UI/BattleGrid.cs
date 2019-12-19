@@ -83,7 +83,7 @@ namespace RedKite
             {
                 if (destination != null)
                 {
-                    if (tileMapper.tiles[destination.cell.x, destination.cell.y].isWalkable == true & selectedHero.isMoving == false)
+                    if (tileMapper.tiles[destination.cell.x, destination.cell.y].IsWalkable == true & selectedHero.isMoving == false)
                         if (ManhattanDistance(new Vector2Int(selectedHero.tileX, selectedHero.tileY), new Vector2Int(destination.cell.x, destination.cell.y)) <= selectedHero.movement)
                         {
                             if (IsReachable(destination, withinRange))
@@ -112,7 +112,7 @@ namespace RedKite
 
         float CostToEnterTile(int x, int y)
         {
-            TileType tt = tileMapper.tiles[x, y];
+            Cell tt = tileMapper.tiles[x, y];
 
             return tt.movementCost;
         }
@@ -124,7 +124,7 @@ namespace RedKite
             // terrain flags here to see if they are allowed to enter the tile.
 
 
-            return tileMapper.tiles[x, y].isWalkable;
+            return tileMapper.tiles[x, y].IsWalkable;
         }
 
 
@@ -377,12 +377,14 @@ namespace RedKite
             highlight.z = 1;
             tilemap.SetTile(highlight, highlightTile);
 
-            if (Input.GetMouseButtonDown(1))
-            {
-                selectedHero = null;
-                destination = null;
+            if(selectedHero != null)
+            { 
+                if (Input.GetMouseButtonDown(1) & selectedHero.isMoving == false)
+                {
+                    selectedHero = null;
+                    destination = null;
+                }
             }
-
             foreach (Hero unit in units)
             {
                 if (new Vector2(unit.transform.position.x, unit.transform.position.y) == new Vector2(highlight.x, highlight.y) & selectedHero == null)
