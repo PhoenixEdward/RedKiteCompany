@@ -21,14 +21,14 @@ namespace RedKite
         {
             Colors.AmericanBlue,
             Colors.AmericanGreen,
-            Colors.AmericanPurple,
+            Colors.AmericanViolet,
             Colors.AmericanRed,
             Colors.AmericanOrange,
             Colors.AmericanYellow,
             Colors.AmericanBrown,
-            Colors.AmericanGold,
             Colors.AmericanPink,
             Colors.AmericanSilver,
+            Colors.AmericanPurple,
 
         };
 
@@ -91,12 +91,17 @@ namespace RedKite
             tileSprites[2].sprite = Resources.Load<Sprite>("Tiles/DungeonWall");
 
             // generate
-            bool nothing = addRoom(start: true);
+            bool nothing = AddRoom(start: true);
             roomIndex++;
             for (int j = 0; j < 5000; j++)
             {
-                if (addRoom(start: false))
+                if (AddRoom(start: false))
                     roomIndex++;
+
+                if (rndState.Next(0, 3) > 0)
+                    if (AddRoom(start: false, maxWidth: 3, maxHeight: 3, isHallWay:true))
+                        roomIndex++;
+
                 if (roomIndex > roomCount - 1)
                     break;
             }
@@ -143,10 +148,23 @@ namespace RedKite
         }
 
 
-        static bool addRoom(bool start)
+        static bool AddRoom(bool start, int maxWidth = 8, int maxHeight = 10, bool isHallWay = false)
         {
-            int h = rnd(10) + 5;
-            int w = rnd(6) + 3;
+
+            int h;
+            int w;
+
+            if (isHallWay)
+            { 
+                h = maxHeight ;
+                w = maxWidth;
+            }
+            else
+            { 
+                h = rnd(maxHeight) + 5;
+                w = rnd(maxWidth) + 5;
+            }
+
             int ry = rnd(H - h - 2) + 1;
             int rx = rnd(W - w - 2) + 1;
 

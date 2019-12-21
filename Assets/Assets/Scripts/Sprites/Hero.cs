@@ -5,87 +5,56 @@ using UnityEngine.Tilemaps;
 
 namespace RedKite
 { 
-    public class Hero : GameSprite
+    public class Hero : Unit
     {
+        bool failedSpawn;
+        static List<Vector2> activeSpawns = new List<Vector2>();
 
-        //Should destination be here?
+        public static Vector2[] spawnOffset = {
+            Vector2.zero,
+            new Vector2(0,2),
+            new Vector2(0,-2),
+            new Vector2(2,0),
+            new Vector2(2,2),
+            new Vector2(2,-2),
+            new Vector2(-2, 0),
+            new Vector2(-2, 2),
+            new Vector2(2,-2)
 
-        public TileMapper map;
+        };
 
-        public int tileX;
-        public int tileY;
-
-        public bool isMoving = false;
-
-        public List<Node> currentPath = null;
-
-        int speed = 2;
-        public int movement = 2;
-
-        public static int f = 0;
 
         public override void Start()
         {
-            //possibly shortcut in TileMapper code
-
-            map = FindObjectOfType<TileMapper>();
-
-            transform.position = new Vector3(map.spawnPoint.x, map.spawnPoint.y + f, -1);
-
-            f++;
-
-            tileX = (int)transform.position.x;
-            tileY = (int)transform.position.y;
-
             base.Start();
+
+            for (int i = 0; i < spawnOffset.Length; i++)
+            {
+                if (map.tiles[(int)(map.spawnPoint.x + spawnOffset[i].x), (int)(map.spawnPoint.y + spawnOffset[i].y)].IsWalkable)
+                {
+                    //check if spawn is occupied. Will need to change later to account for non hero units and other objects spawning
+                    if (!activeSpawns.Contains(spawnOffset[i]))
+                    {
+                        transform.position = new Vector3(map.spawnPoint.x + spawnOffset[i].x, map.spawnPoint.y + spawnOffset[i].y, -1);
+                        activeSpawns.Add(spawnOffset[i]);
+                        break;
+                    }
+                }
+
+                if (i == spawnOffset.Length - 1)
+                    failedSpawn = true;
+            }
+
+            if (failedSpawn)
+            {
+                this.gameObject.SetActive(false);
+            }
+
         }
 
-        private void Update()
+        public override void Update()
         {
-            if (currentPath != null)
-            {
-                isMoving = true;
-
-               int currNode = 0;
-
-                while (currNode < currentPath.Count - 1)
-                {
-
-                    Vector3 start = new Vector3(currentPath[currNode].cell.x, currentPath[currNode].cell.y) +
-                        new Vector3(0, 0, -1f);
-
-                    Vector3 end = new Vector3(currentPath[currNode + 1].cell.x, currentPath[currNode + 1].cell.y) +
-                        new Vector3(0, 0, -1f);
-
-                    Debug.DrawLine(start, end, Color.red);
-
-                    currNode++;
-                }
-                Vector3 currentPos = transform.position;
-
-                if (currentPos != new Vector3(currentPath[1].cell.x, currentPath[1].cell.y, currentPos.z))
-                {
-
-                    if (currentPos.x < currentPath[1].cell.x)
-                        currentPos.x += Mathf.Min(speed * Time.deltaTime, Mathf.Abs(currentPos.x - currentPath[1].cell.x));
-                    if (currentPos.x > currentPath[1].cell.x)
-                        currentPos.x -= Mathf.Min(speed * Time.deltaTime, Mathf.Abs(currentPos.x - currentPath[1].cell.x));
-                    if (currentPos.y < currentPath[1].cell.y)
-                        currentPos.y += Mathf.Min(speed * Time.deltaTime, Mathf.Abs(currentPos.y - currentPath[1].cell.y));
-                    if (currentPos.y > currentPath[1].cell.y)
-                        currentPos.y -= Mathf.Min(speed * Time.deltaTime, Mathf.Abs(currentPos.y - currentPath[1].cell.y));
-
-                    transform.position = currentPos;
-                }
-                else
-                    MoveNextTile();
-                if(currentPath.Count == 1)
-                {
-                    currentPath = null;
-                }
-            }
-            else
-                isMoving = false;
+            base.Update();
         }
 
         void MoveNextTile()

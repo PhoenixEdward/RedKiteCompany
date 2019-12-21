@@ -18,7 +18,7 @@ namespace RedKite
 
         Node[,] graph;
 
-        public Hero selectedHero;
+        public Unit selectedHero;
         List<Node> currentPath = null;
 
         List<Hero> units = new List<Hero>();
@@ -83,7 +83,7 @@ namespace RedKite
             {
                 if (destination != null)
                 {
-                    if (tileMapper.tiles[destination.cell.x, destination.cell.y].IsWalkable == true & selectedHero.isMoving == false)
+                    if (tileMapper.tiles[destination.cell.x, destination.cell.y].IsWalkable == true & selectedHero.IsMoving == false)
                         if (ManhattanDistance(new Vector2Int(selectedHero.tileX, selectedHero.tileY), new Vector2Int(destination.cell.x, destination.cell.y)) <= selectedHero.movement)
                         {
                             if (IsReachable(destination, withinRange))
@@ -345,7 +345,6 @@ namespace RedKite
                         float alt = dist[u] + CostToEnterTile(v.cell.x, v.cell.y);
                         if (alt < dist[v] & alt < selectedHero.movement)
                         {
-                            Debug.Log(v.cell.ToString());
                             dist[v] = alt;
                             prev[v] = u;
                         }
@@ -379,18 +378,19 @@ namespace RedKite
 
             if(selectedHero != null)
             { 
-                if (Input.GetMouseButtonDown(1) & selectedHero.isMoving == false)
+                if (Input.GetMouseButtonDown(1) & selectedHero.IsMoving == false)
                 {
                     selectedHero = null;
                     destination = null;
                 }
             }
-            foreach (Hero unit in units)
+            foreach (Unit unit in units)
             {
                 if (new Vector2(unit.transform.position.x, unit.transform.position.y) == new Vector2(highlight.x, highlight.y) & selectedHero == null)
                 {
                     if (Input.GetMouseButtonDown(0))
-                    { 
+                    {
+                        Debug.Log("Is Selection");
                         selectedHero = unit;
                         isSelection = true;
                     }
@@ -408,6 +408,7 @@ namespace RedKite
             if (highlight != temp)
             {
 
+
                 tilemap.SetTile(temp, clearTile);
 
                 temp = highlight;
@@ -416,12 +417,14 @@ namespace RedKite
 
             if (selectedHero != null)
             {
+
                 if (!isSelection)
                 {
-                    if(selectedHero.isMoving == false)
+                    if(selectedHero.IsMoving == false)
                     { 
                         if (Input.GetMouseButtonDown(0))
                         {
+                            Debug.Log("destination set");
                             Vector3 worldPoint = Camera.main.ScreenToWorldPoint(Input.mousePosition);
                             Vector3Int destCoords = grid.WorldToCell(worldPoint);
                             destCoords.z = 0;
@@ -435,6 +438,8 @@ namespace RedKite
                             {
                                 if (highlight.x == node.cell.x & highlight.y == node.cell.y)
                                 {
+                                    Debug.Log("SetRange Tile");
+
                                     tilemap.SetTile(highlight, rangeHighlightTile);
 
                                     break;
@@ -467,7 +472,7 @@ namespace RedKite
                 //draw grid of valid movement tiles
                 //may need to keep an eye out for impassible moving units. could cause issues here.
 
-                if (selectedHero.isMoving == false & withinRange == null)
+                if (selectedHero.IsMoving == false & withinRange == null)
                 {
                     //formula for area of max unit range is (n+1)^2 + n^2 where n is movement speed.
                     //for now null for withinRange will be a single array with Vector3Int.Zero (default value) indicating a non walkable cell.
@@ -538,7 +543,7 @@ namespace RedKite
                     tilemap.RefreshAllTiles();
                 }
 
-                else if (selectedHero.isMoving == true & withinRange != null & canMoveTo != null)
+                else if (selectedHero.IsMoving == true & withinRange != null & canMoveTo != null)
                 {
 
                     for (int i = 0; i < canMoveTo.Length; i++)

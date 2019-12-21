@@ -30,6 +30,9 @@ namespace RedKite
 
         public bool CanTalk;
 
+        public int verticalFrames;
+        public int horizontalFrames;
+
         protected Sprite[] spritesLoad;
         protected Sprite[,] sprites;
         protected SpriteRenderer sr;
@@ -45,15 +48,15 @@ namespace RedKite
 
             sr = GetComponent<SpriteRenderer>();
 
-            sprites = new Sprite[8, spritesLoad.Length / 8];
+            sprites = new Sprite[horizontalFrames,verticalFrames];
 
             int loop = 0;
 
-            FrameDimensions = spritesLoad[0].rect.size/100;
+            //FrameDimensions = spritesLoad[0].rect.size/32;
 
-            for (int i = 0; i < (spritesLoad.Length / 8); i++)
+            for (int i = 0; i < verticalFrames; i++)
             {
-                for (int j = 0; j < 8; j++)
+                for (int j = 0; j < horizontalFrames; j++)
                 {
                     sprites[j, i] = spritesLoad[loop];
                     loop++;
@@ -62,7 +65,7 @@ namespace RedKite
 
             //potentially uninvert the transform.position.y
 
-            if (simpleCollision)
+            /*if (simpleCollision)
             {
                 relativeCollisionBoxes.Add(new Rect(0, FrameDimensions.y - spriteDepth, FrameDimensions.x, spriteDepth));
                 CollisionBoxes.Add(new Rect(transform.position.x, -transform.position.y + FrameDimensions.y - spriteDepth, FrameDimensions.x, spriteDepth));
@@ -73,7 +76,7 @@ namespace RedKite
                     CollisionBoxes.Add(new Rect(transform.position.x + relativeCollisionBoxes[i].x, -transform.position.y + relativeCollisionBoxes[i].y, relativeCollisionBoxes[i].width, relativeCollisionBoxes[i].height));
             }
 
-            transform.position = new Vector3(transform.position.x, transform.position.y, transform.position.y - FrameDimensions.y);
+            transform.position = new Vector3(transform.position.x, transform.position.y, transform.position.y - FrameDimensions.y); */
 
         }
 
