@@ -33,11 +33,6 @@ namespace RedKite
         protected int Frame;
         protected Vector2 velocity = Vector2.zero;
 
-        protected List<GameSprite> collidables;
-
-        protected float timeSinceLastMove = 0;
-        protected float secondsPerMove = 0.0167f;
-
 
         // Start is called before the first frame update
         public override void Start()
@@ -56,7 +51,6 @@ namespace RedKite
         // Update is called once per frame
         public virtual void Update()
         {
-            //UpdateCollision();
 
             if (currentPath != null)
             {
@@ -77,6 +71,7 @@ namespace RedKite
 
                     currNode++;
                 }
+
                 Vector3 currentPos = transform.position;
 
                 if (currentPos != new Vector3(currentPath[1].cell.x, currentPath[1].cell.y, currentPos.z))
@@ -150,12 +145,28 @@ namespace RedKite
                     }
                     else if (velocity.y < 0)
                     {
-                        if(verticalFrames > 4)
+                        if (verticalFrames > 4)
                             VerticalRow = 4;
                     }
-                   
-
                 }
+
+                // move to stationary row if not moving. Could probably remove that row  and simply lock them to the first horizontal pane of the correct row.
+
+                else
+                {
+                    if (VerticalRow == 1 & 0 < horizontalFrames)
+                        HorizontalRow = 0;
+                    else if (VerticalRow == 2 & 1 < horizontalFrames)
+                        HorizontalRow = 1;
+                    else if (VerticalRow == 3 & 1 < horizontalFrames)
+                        HorizontalRow = 2;
+                    else if (VerticalRow == 4)
+                        HorizontalRow = 3;
+
+                    VerticalRow = 0;
+                }
+
+                //could move this code under "is moving" and it would probably eliminate the need of the code above.
 
                 if (HorizontalRow < horizontalFrames - 1)
                         HorizontalRow += 1;

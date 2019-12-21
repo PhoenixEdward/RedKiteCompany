@@ -75,7 +75,6 @@ namespace RedKite
         // Update is called once per frame
         void Update()
         {
-
             //unit range must proceed tiletracker so as not to clear on deselect.
             UnitRange();
             TileTracker();
@@ -390,7 +389,6 @@ namespace RedKite
                 {
                     if (Input.GetMouseButtonDown(0))
                     {
-                        Debug.Log("Is Selection");
                         selectedHero = unit;
                         isSelection = true;
                     }
@@ -417,14 +415,13 @@ namespace RedKite
 
             if (selectedHero != null)
             {
-
                 if (!isSelection)
                 {
                     if(selectedHero.IsMoving == false)
-                    { 
+                    {
+
                         if (Input.GetMouseButtonDown(0))
                         {
-                            Debug.Log("destination set");
                             Vector3 worldPoint = Camera.main.ScreenToWorldPoint(Input.mousePosition);
                             Vector3Int destCoords = grid.WorldToCell(worldPoint);
                             destCoords.z = 0;
