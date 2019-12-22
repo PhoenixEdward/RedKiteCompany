@@ -1,12 +1,14 @@
-﻿using System;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using System.Linq;
+using UnityEngine.Tilemaps;
 
 namespace RedKite
-{
+{ 
     public class Unit : GameSprite
     {
+
+        //Should destination be here?
         public TileMapper map;
 
         public int tileX;
@@ -31,21 +33,19 @@ namespace RedKite
         protected int Frame;
         protected Vector2 velocity = Vector2.zero;
 
-
-        // Start is called before the first frame update
         public override void Start()
         {
+            //possibly shortcut in TileMapper code
+
             map = FindObjectOfType<TileMapper>();
+
 
             tileX = (int)transform.position.x;
             tileY = (int)transform.position.y;
 
             base.Start();
-
         }
 
-
-        // Update is called once per frame
         public virtual void Update()
         {
 
@@ -148,7 +148,7 @@ namespace RedKite
                 //could move this code under "is moving" and it would probably eliminate the need of the code above.
 
                 if (HorizontalRow < horizontalFrames - 1)
-                        HorizontalRow += 1;
+                    HorizontalRow += 1;
                 else
                     HorizontalRow = 0;
 

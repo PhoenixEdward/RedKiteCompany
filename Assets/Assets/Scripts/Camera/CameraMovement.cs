@@ -10,14 +10,14 @@ namespace RedKite
         protected float timeSinceLastMove = 0;
         protected float secondsPerMove = 0.0167f;
         protected float pix = 32f/8;
-        protected Hero hero;
+        protected Unit hero;
         protected Tilemap map;
         protected Vector2 xBounds;
         protected Vector2 yBounds;
 
         void Start()
         {
-            hero = FindObjectOfType<Hero>();
+            hero = FindObjectOfType<Unit>();
 
             map = FindObjectOfType<Tilemap>();
 

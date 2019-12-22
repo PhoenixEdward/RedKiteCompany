@@ -50,34 +50,14 @@ namespace RedKite
                 this.gameObject.SetActive(false);
             }
 
+            tileX = (int)transform.position.x;
+            tileY = (int)transform.position.y;
+
         }
 
         public override void Update()
         {
             base.Update();
-        }
-
-        void MoveNextTile()
-        {
-
-            if (currentPath == null)
-                return;
-
-            tileX = currentPath[1].cell.x;
-            tileY = currentPath[1].cell.y;
-
-            //remove the old current/first node from the path
-
-            // Grab the new first node and move to that position
-
-            if (currentPath.Count > 1)
-            {
-                currentPath.RemoveAt(0);
-
-            }
-            // We only have one tile left in the path that MUST be our destination. So now we set current path to null
-
-
         }
 
     }

@@ -1,0 +1,83 @@
+[33mcommit 4e94e290cedecd74dcac958729e8b8d1a9e19f94[m[33m ([m[1;36mHEAD -> [m[1;32mdungeonGenerator[m[33m)[m
+Author: ChamberlainUnity <phoenixjauregui@gmail.com>
+Date:   Sun Dec 22 01:06:52 2019 -0600
+
+    switching to master branch for checking
+
+[33mcommit 6a65a80b17a4136ebae6784f098786ee934a3e8e[m[33m ([m[1;31morigin/dungeonGenerator[m[33m)[m
+Author: ChamberlainUnity <phoenixjauregui@gmail.com>
+Date:   Sat Dec 21 12:10:18 2019 -0600
+
+    pushing to run git diff. Like I said, may have fucked things up
+
+[33mcommit 63ead54831f12b26d59cbebf208bf521a62eb6fe[m
+Author: ChamberlainUnity <phoenixjauregui@gmail.com>
+Date:   Sat Dec 21 01:44:55 2019 -0600
+
+    May have fucked up. Unit class is fucked and tile tracking not printing anything
+
+[33mcommit 2f90e2476335e0e799724210afe33ef23fe3753d[m[33m ([m[1;32msomethingWentWrong[m[33m, [m[1;32mrecover[m[33m)[m
+Author: ChamberlainUnity <phoenixjauregui@gmail.com>
+Date:   Thu Dec 19 01:23:08 2019 -0600
+
+    rooms are now indexed. Tiles are aware of the room they are in and an array of coordinate lists is supplied to choose tiles to spawn on. Unit spawn points can now be set relative to each other by using a static variable.
+
+[33mcommit e6fac0e5484929bc48dc1ef7f559eef261fb5a32[m[33m ([m[1;31morigin/master[m[33m, [m[1;32mrecovered2[m[33m, [m[1;32mrecovered[m[33m, [m[1;32mmaster[m[33m)[m
+Merge: 0595f47 1cc768d
+Author: phoenixedward <39966324+phoenixedward@users.noreply.github.com>
+Date:   Wed Dec 18 02:21:02 2019 -0600
+
+    Merge pull request #2 from phoenixedward/unitRange
+    
+    Unit range
+
+[33mcommit 1cc768d270e98edc9884aee3c542f780f30a231a[m[33m ([m[1;31morigin/unitRange[m[33m, [m[1;32munitRange[m[33m)[m
+Author: ChamberlainUnity <phoenixjauregui@gmail.com>
+Date:   Wed Dec 18 02:20:10 2019 -0600
+
+    tile mapper and tile tracker are now seperated. Cleaned UI now that I realized cells can be stacked. Added different reticle colors based on possible actions.
+
+[33mcommit 2f0f00d207a6f00559febfb9636067def61d4620[m
+Author: ChamberlainUnity <phoenixjauregui@gmail.com>
+Date:   Tue Dec 17 06:34:29 2019 -0600
+
+    Leaving for work. Shits kinda messed up while I try to separate tilemapper and tracker
+
+[33mcommit 0595f47426d01898f4d8e3dc3b34486a969c377a[m
+Merge: 408033c e6e8ada
+Author: phoenixedward <39966324+phoenixedward@users.noreply.github.com>
+Date:   Tue Dec 17 04:29:15 2019 -0600
+
+    Merge pull request #1 from phoenixedward/unitRange
+    
+    Unit visual now responds to pathfinding. Unit only moves within range
+
+[33mcommit e6e8ada2a3d1676dce1324a65681a50eed082996[m
+Author: ChamberlainUnity <phoenixjauregui@gmail.com>
+Date:   Tue Dec 17 04:28:30 2019 -0600
+
+    Unit visual now responds to pathfinding. Unit only moves within range
+
+[33mcommit 408033cfdb30c05de60d683734236b3109db08d9[m
+Author: ChamberlainUnity <phoenixjauregui@gmail.com>
+Date:   Mon Dec 16 22:45:32 2019 -0600
+
+    Unit range is now displayed graphically. It does not include unwalkable tiles but still shows tiles that should be cut off routes. Will convert GeneratePathTo() to so that it can be run for all tiles in range. Could be super slow unless I can include some way to break out of the range. formula for the number of times it needs to run is (n+1)^2 + n^2. Yikes.
+
+[33mcommit 5090467357a020f10d9b71645243d4405aaac346[m
+Author: ChamberlainUnity <phoenixjauregui@gmail.com>
+Date:   Sun Dec 15 23:32:07 2019 -0600
+
+    highlight is flickering all over the place. Attempt to rollback
+
+[33mcommit 1ef3980dd34e8a77c10de574e15787fa29285dff[m
+Author: ChamberlainUnity <phoenixjauregui@gmail.com>
+Date:   Sun Dec 15 21:20:56 2019 -0600
+
+    Moved TileTracker class to be a function of TileMapper. This should consolidate the amount of GetComponent calls and hopefull make things more efficient. It also just kind of makes more sense this way.
+
+[33mcommit ec72c92fe1ec7a2c0b3268ffc50d9bd57b2dc8a1[m
+Author: ChamberlainUnity <phoenixjauregui@gmail.com>
+Date:   Sun Dec 15 20:49:53 2019 -0600
+
+    Real first commit

@@ -51,7 +51,7 @@ namespace RedKite
         public Vector2 spawnPoint;
         public static int index = 0;
         //to delete below
-        List<Hero> units = new List<Hero>();
+        List<Unit> units = new List<Unit>();
         Grid grid;
 
         void Awake()

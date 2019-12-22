@@ -21,7 +21,7 @@ namespace RedKite
         public Unit selectedHero;
         List<Node> currentPath = null;
 
-        List<Hero> units = new List<Hero>();
+        List<Unit> units = new List<Unit>();
 
         bool isSelection;
 
@@ -67,7 +67,7 @@ namespace RedKite
                 }
             }
 
-            units = GameSpriteManager.Instance.Heroes;
+            units = GameSpriteManager.Instance.Units;
 
             GenerateGraph();
         }
