@@ -90,23 +90,6 @@ namespace RedKite
                         }
                 }
             }
-            //draw debug line
-            if (currentPath != null)
-            {
-                int currNode = 0;
-
-                while (currNode < currentPath.Count - 1)
-                {
-                    Vector3 start = new Vector3(selectedHero.currentPath[currNode].cell.x, selectedHero.currentPath[currNode].cell.y);
-
-                    //needs optimization. selected Hero needs to be cached somehow
-                    Vector3 end = new Vector3(selectedHero.currentPath[currNode + 1].cell.x, selectedHero.currentPath[currNode + 1].cell.y);
-
-                    Debug.DrawLine(start, end);
-
-                    currNode++;
-                }
-            }
         }
 
         float CostToEnterTile(int x, int y)
@@ -422,6 +405,7 @@ namespace RedKite
 
                         if (Input.GetMouseButtonDown(0))
                         {
+                            Debug.Log("desitnation set");
                             Vector3 worldPoint = Camera.main.ScreenToWorldPoint(Input.mousePosition);
                             Vector3Int destCoords = grid.WorldToCell(worldPoint);
                             destCoords.z = 0;
@@ -471,6 +455,7 @@ namespace RedKite
 
                 if (selectedHero.IsMoving == false & withinRange == null)
                 {
+
                     //formula for area of max unit range is (n+1)^2 + n^2 where n is movement speed.
                     //for now null for withinRange will be a single array with Vector3Int.Zero (default value) indicating a non walkable cell.
                     //this will either need a second array or be converted to a dictionary later to record WHY the cell isn't walkable (enemy unit, chest, wall).
@@ -478,6 +463,8 @@ namespace RedKite
 
                     canMoveTo = new Node[(int)Mathf.Pow(selectedHero.movement + 1, 2) + (int)Mathf.Pow(selectedHero.movement, 2)];
                     withinRange = new Node[(int)Mathf.Pow(selectedHero.movement + 1, 2) + (int)Mathf.Pow(selectedHero.movement, 2)];
+
+                    Debug.Log(withinRange.Length);
 
                     int withinRangeIndex = 0;
 
@@ -498,10 +485,11 @@ namespace RedKite
 
                             if (ManhattanDistance(new Vector2Int(selectedHero.tileX, selectedHero.tileY), new Vector2Int(cell.x, cell.y)) <= selectedHero.movement)
                             {
+                                Debug.Log("?");
 
                                 if (cell.x >= 0 & cell.x < TileMapper.W & cell.y >= 0 & cell.y < TileMapper.H )
                                 {
-
+                                    Debug.Log("!");
                                     withinRange[withinRangeIndex] = graph[cell.x, cell.y];
 
                                 }
@@ -520,6 +508,7 @@ namespace RedKite
                         {
                             if (!IsReachable(withinRange[i], withinRange))
                             {
+                                Debug.Log("&");
                                 canMoveTo[i] = null;
                             }
                             else
@@ -533,6 +522,7 @@ namespace RedKite
                     {
                         if (canMoveTo[i] != null)
                         {
+                            Debug.Log("*");
                             tilemap.SetTile(canMoveTo[i].cell, rangeTile);
                         }
                     }

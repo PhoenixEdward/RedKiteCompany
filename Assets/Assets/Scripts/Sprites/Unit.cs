@@ -25,8 +25,6 @@ namespace RedKite
         public bool IsMoving { get; protected set; }
         public bool IsAnimated { get; set; }
         public bool IsReverseAnimated { get; set; }
-        public bool IsComplete { get; private set; }
-        public string State { get; set; }
 
         protected float timeSinceLastFrame = 0;
         protected readonly float charSecondsPerFrame = .125f;
@@ -37,13 +35,12 @@ namespace RedKite
         // Start is called before the first frame update
         public override void Start()
         {
-            base.Start();
-
             map = FindObjectOfType<TileMapper>();
 
             tileX = (int)transform.position.x;
             tileY = (int)transform.position.y;
 
+            base.Start();
 
         }
 
@@ -55,22 +52,6 @@ namespace RedKite
             if (currentPath != null)
             {
                 IsMoving = true;
-
-                int currNode = 0;
-
-                while (currNode < currentPath.Count - 1)
-                {
-
-                    Vector3 start = new Vector3(currentPath[currNode].cell.x, currentPath[currNode].cell.y) +
-                        new Vector3(0, 0, -1f);
-
-                    Vector3 end = new Vector3(currentPath[currNode + 1].cell.x, currentPath[currNode + 1].cell.y) +
-                        new Vector3(0, 0, -1f);
-
-                    Debug.DrawLine(start, end, Color.red);
-
-                    currNode++;
-                }
 
                 Vector3 currentPos = transform.position;
 
@@ -118,8 +99,6 @@ namespace RedKite
                     currentPath = null;
                 }
             }
-            else
-                IsMoving = false;
 
             if (timeSinceLastFrame > charSecondsPerFrame)
             {
@@ -196,12 +175,8 @@ namespace RedKite
             {
                 velocity = Vector2.zero;
                 IsMoving = false;
-                IsComplete = true;
             }
-            else
-            {
-                IsComplete = false;
-            }
+
 
             timeSinceLastFrame += Time.deltaTime;
 
