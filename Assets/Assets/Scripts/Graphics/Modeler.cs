@@ -50,15 +50,17 @@ namespace RedKite
 
                 floorRender.material.SetColor("_Color", colors[area.RoomIndex]);
 
-                floor.transform.position = new Vector3(area.Floor.Center.x,1,area.Floor.Center.y);
+                floor.transform.position = new Vector3(area.Floor.Center.x,1,area.Floor.Center.z);
 
                 floor.transform.localScale = new Vector3(area.Floor.TrueWidth, 1, area.Floor.TrueHeight);
 
-                foreach (Area.Wall wall in area.Walls)
+                /*foreach (Area.Wall wall in area.Walls)
                 {
                     foreach(Area.Wall.Segment seg in wall.Segments)
                     {
+
                         GameObject segment = GameObject.CreatePrimitive(PrimitiveType.Cube);
+
 
                         segment.name = "Room " + area.RoomIndex + " " + wall.Orientation.Name + "Wall " + seg.Max; 
 
@@ -66,7 +68,7 @@ namespace RedKite
 
                         segRender.material.SetColor("_Color", colors[area.RoomIndex]);
                         
-                        segment.transform.position = new Vector3(seg.Center.x, 1, seg.Center.y);
+                        segment.transform.position = new Vector3(seg.Center.x, 1, seg.Center.z);
 
                         //now for scaling to 3D based on wall orientation
 
@@ -94,23 +96,40 @@ namespace RedKite
 
                                 segRender.material.SetColor("_Color", colors[area.RoomIndex]);
 
-                                segment.transform.position = new Vector3(path.Center.x, 1, path.Center.y);
+                                segment.transform.position = new Vector3(path.Center.x, 1, path.Center.z);
 
                                 //now for scaling to 3D based on wall orientation
 
-                                if (wall.Orientation == Orient.North | wall.Orientation == Orient.South)
-                                {
-                                    segment.transform.localScale = new Vector3(path.Length, 1, path.Thickness);
-                                }
-                                else
-                                {
-                                    segment.transform.localScale = new Vector3(path.Thickness, 1, path.Length);
-                                }
+                                segment.transform.localScale = new Vector3(path.Length, 1, path.Thickness);
+   
 
                             }
                         }
                     }
-                }
+
+                    if (wall.Corners.Count != 0)
+                    {
+                        foreach (Vector3 corner in wall.Corners)
+                        {
+
+                            GameObject segment = GameObject.CreatePrimitive(PrimitiveType.Cube);
+
+                            segment.name = "Room " + area.RoomIndex + " " + wall.Orientation.Name + "Corner " + corner.x;
+
+                            var segRender = segment.GetComponent<Renderer>();
+
+                            segRender.material.SetColor("_Color", colors[area.RoomIndex]);
+
+                            segment.transform.position = new Vector3(corner.x, 1, corner.z);
+
+                            //now for scaling to 3D based on wall orientation
+
+                            segment.transform.localScale = new Vector3(1, 2, 1);
+
+
+                        }
+                    }
+                }*/
             }
         }
     }

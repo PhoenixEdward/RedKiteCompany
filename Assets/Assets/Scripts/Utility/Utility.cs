@@ -30,8 +30,8 @@ namespace RedKite
 
         public static VectorExtrema GetVectorExtrema(Vector3[] vecArray)
         {
-            Vector3 tempMax = new Vector3(Vector3.negativeInfinity.x, Vector3.negativeInfinity.y,0);
-            Vector3 tempMin = new Vector3(Vector3.positiveInfinity.x,Vector3.positiveInfinity.y,0);
+            Vector3 tempMax = new Vector3(Vector3.negativeInfinity.x, Vector3.negativeInfinity.z,0);
+            Vector3 tempMin = new Vector3(Vector3.positiveInfinity.x,Vector3.positiveInfinity.z,0);
 
             foreach (Vector3 vector in vecArray)
             {
@@ -39,14 +39,14 @@ namespace RedKite
                     tempMax.x = vector.x;
                 if (tempMin.x > vector.x)
                     tempMin.x = vector.x;
-                if (tempMax.y < vector.y)
-                    tempMax.y = vector.y;
-                if (tempMin.y > vector.y)
-                    tempMin.y = vector.y;
                 if (tempMax.z < vector.z)
                     tempMax.z = vector.z;
                 if (tempMin.z > vector.z)
                     tempMin.z = vector.z;
+                if (tempMax.y < vector.y)
+                    tempMax.y = vector.y;
+                if (tempMin.y > vector.y)
+                    tempMin.y = vector.y;
             }
 
             Vector3 outMin = tempMin;
@@ -60,7 +60,7 @@ namespace RedKite
         {
             float outDist = 0;
 
-            if (end.x > start.x | end.y > start.y)
+            if (end.x > start.x | end.z > start.z)
                 outDist = -Vector3.Distance(start, end);
             else
                 outDist = Vector3.Distance(start, end);
@@ -81,9 +81,9 @@ namespace RedKite
                     outVectors.Add(Vector3.Lerp(first + (new Vector3(1, 0, 0) * i), second, 1 / Vector3.Distance(first + (new Vector3(1, 0, 0) * i), second)));
                 else if (second.x < first.x)
                     outVectors.Add(Vector3.Lerp(first + (new Vector3(-1, 0, 0) * i), second, 1 / Vector3.Distance(first + (new Vector3(-1, 0, 0) * i), second)));
-                else if (first.y < second.y)
+                else if (first.z < second.z)
                     outVectors.Add(Vector3.Lerp(first + (new Vector3(0, 1, 0) * i), second, 1 / Vector3.Distance(first + (new Vector3(0, 1, 0) * i), second)));
-                else if (second.y < first.y)
+                else if (second.z < first.z)
                     outVectors.Add(Vector3.Lerp(first + (new Vector3(0, -1, 0) * i), second, 1 / Vector3.Distance(first + (new Vector3(0, -1, 0) * i), second)));
 
             }
@@ -153,8 +153,8 @@ namespace RedKite
         */
         public static bool WithinBounds(Vector3 point, int width, int height)
         {
-            bool tooHigh = point.y >= height;
-            bool tooLow = point.y < 0;
+            bool tooHigh = point.z >= height;
+            bool tooLow = point.z < 0;
             bool tooEast = point.x >= width;
             bool tooWest = point.x < 0;
 
@@ -180,13 +180,14 @@ namespace RedKite
             {
                 return Mathf.Abs(a.x - b.x) + Mathf.Abs(a.y - b.y);
             }
+
         }
 
         public static int ManhattanDistance(Vector3Int a, Vector3Int b)
         {
             checked
             {
-                return Mathf.Abs(a.x - b.x) + Mathf.Abs(a.y - b.y) + Mathf.Abs(a.z - b.z);
+                return Mathf.Abs(a.x - b.x) + Mathf.Abs(a.z - b.z) + Mathf.Abs(a.y - b.y);
             }
         }
 
@@ -199,15 +200,15 @@ namespace RedKite
             else if (second.x > first.x)
                 outVector.x = rand.Next((int)second.x, (int)first.x);
 
-            if (first.y > second.y)
-                outVector.y = rand.Next((int)first.y, (int)second.y);
-            else if (second.y > first.y)
-                outVector.y = rand.Next((int)second.y, (int)first.y);
-
             if (first.z > second.z)
                 outVector.z = rand.Next((int)first.z, (int)second.z);
             else if (second.z > first.z)
                 outVector.z = rand.Next((int)second.z, (int)first.z);
+
+            if (first.y > second.y)
+                outVector.y = rand.Next((int)first.y, (int)second.y);
+            else if (second.y > first.y)
+                outVector.y = rand.Next((int)second.y, (int)first.y);
 
             return outVector;
 
@@ -217,9 +218,9 @@ namespace RedKite
         {
             List<Vector3Int> outVectors = new List<Vector3Int>();
 
-            if (first.x < second.x | first.y < second.y)
+            if (first.x < second.x | first.z < second.z)
                 outVectors.Add(first);
-            if (first.x > second.x | first.y > second.y)
+            if (first.x > second.x | first.z > second.z)
                 outVectors.Add(second);
 
 
@@ -229,10 +230,10 @@ namespace RedKite
                     outVectors.Add(Vector3Int.RoundToInt(Vector3.Lerp(first + Vector3.right * i, second, 1 / Vector3.Distance(first + Vector3.right * i, second))));
                 else if (second.x < first.x)
                     outVectors.Add(Vector3Int.RoundToInt(Vector3.Lerp(first + Vector3.left * i, second, 1 / Vector3.Distance(first + Vector3.left * i, second))));
-                else if (first.y < second.y)
-                    outVectors.Add(Vector3Int.RoundToInt(Vector3.Lerp(first + Vector3.up * i, second, 1 / Vector3.Distance(first + Vector3.up * i, second))));
-                else if (second.y < first.y)
-                    outVectors.Add(Vector3Int.RoundToInt(Vector3.Lerp(first + Vector3.down * i, second, 1 / Vector3.Distance(first + Vector3.down * i, second))));
+                else if (first.z < second.z)
+                    outVectors.Add(Vector3Int.RoundToInt(Vector3.Lerp(first + Vector3.forward * i, second, 1 / Vector3.Distance(first + Vector3.forward * i, second))));
+                else if (second.z < first.z)
+                    outVectors.Add(Vector3Int.RoundToInt(Vector3.Lerp(first + Vector3.back * i, second, 1 / Vector3.Distance(first + Vector3.back * i, second))));
 
             }
 
@@ -241,7 +242,7 @@ namespace RedKite
 
         public static Vector3 ToVector3(Vector3Int inVector)
         {
-            Vector3 outVector = new Vector3((float)inVector.x, (float)inVector.y, (float)inVector.z);
+            Vector3 outVector = new Vector3((float)inVector.x, (float)inVector.z, (float)inVector.y);
 
             return outVector;
         }
@@ -260,7 +261,7 @@ namespace RedKite
             min = _min;
             max = _max;
             width = _max.x - _min.x + 1;
-            height = _max.y - _min.y + 1;
+            height = _max.z - _min.z + 1;
         }
 
     }

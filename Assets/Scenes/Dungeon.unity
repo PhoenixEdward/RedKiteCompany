@@ -137,7 +137,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!212 &660000
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -221,8 +221,8 @@ MonoBehaviour:
   spriteDepth: 0
   relativeCollisionBoxes: []
   CanTalk: 0
-  verticalFrames: 1
-  horizontalFrames: 1
+  verticalFrames: 0
+  horizontalFrames: 0
   map: {fileID: 0}
   tileX: 0
   tileY: 0
@@ -673,7 +673,6 @@ GameObject:
   m_Component:
   - component: {fileID: 1355533296}
   - component: {fileID: 1355533295}
-  - component: {fileID: 1355533294}
   - component: {fileID: 1355533293}
   m_Layer: 0
   m_Name: Main Camera
@@ -694,14 +693,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6f121eab5d244954d9c394fb4842eacf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!81 &1355533294
-AudioListener:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1355533292}
-  m_Enabled: 1
 --- !u!20 &1355533295
 Camera:
   m_ObjectHideFlags: 0
@@ -776,7 +767,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!212 &1385304607
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -860,8 +851,8 @@ MonoBehaviour:
   spriteDepth: 0
   relativeCollisionBoxes: []
   CanTalk: 0
-  verticalFrames: 1
-  horizontalFrames: 1
+  verticalFrames: 0
+  horizontalFrames: 0
   map: {fileID: 0}
   tileX: 0
   tileY: 0

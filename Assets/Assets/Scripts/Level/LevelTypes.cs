@@ -58,10 +58,10 @@ namespace RedKite
             else if (v.x > 0)
                 a.W += v.x;
 
-            if (v.y < 0)
-                a.S += v.y;
-            else if (v.y > 0)
-                a.N += v.y;
+            if (v.z < 0)
+                a.S += v.z;
+            else if (v.z > 0)
+                a.N += v.z;
 
             return a;
         }
@@ -73,10 +73,10 @@ namespace RedKite
             else if (v.x > 0)
                 a.W -= v.x;
 
-            if (v.y < 0)
-                a.S -= v.y;
-            else if (v.y > 0)
-                a.N -= v.y;
+            if (v.z < 0)
+                a.S -= v.z;
+            else if (v.z > 0)
+                a.N -= v.z;
 
             return a;
         }
@@ -110,24 +110,24 @@ namespace RedKite
 
         Orient(Side _side)
         {
-            Forward = new Vector3(0, 1, 0);
-            Back = new Vector3(0, -1, 0);
+            Forward = new Vector3(0, 0, 1);
+            Back = new Vector3(0, 0, -1);
             Right = new Vector3(1, 0, 0);
             Left = new Vector3(-1, 0, 0);
 
             if (_side == Side.North)
             {
                 Name = "North";
-                Forward = new Vector3(0, 1, 0);
-                Back = new Vector3(0, -1, 0);
+                Forward = new Vector3(0, 0, 1);
+                Back = new Vector3(0, 0, -1);
                 Right = new Vector3(1, 0, 0);
                 Left = new Vector3(-1, 0, 0);
             }
             else if (_side == Side.South)
             {
                 Name = "South";
-                Forward = new Vector3(0, -1, 0);
-                Back = new Vector3(0, 1, 0);
+                Forward = new Vector3(0, 0, -1);
+                Back = new Vector3(0, 0, 1);
                 Right = new Vector3(-1, 0, 0);
                 Left = new Vector3(1, 0, 0);
             }
@@ -136,20 +136,20 @@ namespace RedKite
                 Name = "West";
                 Forward = new Vector3(-1, 0, 0);
                 Back = new Vector3(1, 0, 0);
-                Right = new Vector3(0, 1, 0);
-                Left = new Vector3(0, -1, 0);
+                Right = new Vector3(0, 0, 1);
+                Left = new Vector3(0, 0, -1);
             }
             else
             {
                 Name = "East";
                 Forward = new Vector3(1, 0, 0);
                 Back = new Vector3(-1, 0, 0);
-                Right = new Vector3(0, -1, 0);
-                Left = new Vector3(0, 1, 0);
+                Right = new Vector3(0, 0, -1);
+                Left = new Vector3(0, 0, 1);
             }
 
-            foreUnit = Forward.x == 0 ? Forward.y : Forward.x;
-            rightUnit = Right.x == 0 ? Right.y : Right.x;
+            foreUnit = Forward.x == 0 ? Forward.z : Forward.x;
+            rightUnit = Right.x == 0 ? Right.z : Right.x;
 
         }
 

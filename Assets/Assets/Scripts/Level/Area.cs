@@ -150,9 +150,9 @@ namespace RedKite
                     _orientation == Orient.South ? BottomLeft : BottomRight;
 
                 TrueWidth = TrueNE.x - TrueSW.x + 1;
-                TrueHeight = TrueNE.y - TrueSW.y + 1;
+                TrueHeight = TrueNE.z - TrueSW.z + 1;
 
-                Center = new Vector3((TrueSW.x + (TrueWidth - 1) / 2), (TrueSW.y + (TrueHeight - 1) / 2), 1);
+                Center = new Vector3((TrueSW.x + (TrueWidth - 1) / 2), 1, (TrueSW.z + (TrueHeight - 1) / 2));
             }
         }
 
@@ -163,6 +163,7 @@ namespace RedKite
             public Orient Orientation;
             public Vector3 Min;
             public Vector3 Max;
+            public List<Vector3> Corners = new List<Vector3>();
             public List<Segment> Paths = new List<Segment>();
             public List<Segment> Segments = new List<Segment>();
             public Vector3 Center;
@@ -295,89 +296,54 @@ namespace RedKite
 
                 Center = Min + (Vector3.Scale((Max - Min) / 2, Orientation.Forward)) + ((Thickness/2) * Orientation.Back);
 
+                Segments = new List<Segment> { new Segment(Orientation,Min,Max, Height) };
+
                 if (_orientation == Orient.North | _orientation == Orient.South)
-                    length = Mathf.Abs((Max - Min).y);
+                    length = Mathf.Abs((Max - Min).z);
                 else
                     length = Mathf.Abs((Max - Min).x);
 
-                Segments = new List<Segment> { new Segment(Orientation, Min, Max, Height)};
-
             }
-            //will be used to segment walls after hallways have been placed. Everything will be cardinalized 
-            //so it shouldn't be looped over twice.
+
             public void Split()
             {
-                List<Segment> newSegments = new List<Segment>();
 
-                List<Vector3> wallRange;
+                Vector3 up = Orientation == Orient.North | Orientation == Orient.South ? Vector3.right : Vector3.forward;
+                Vector3 down = up == Vector3.forward ? Vector3.back : Vector3.left;
 
-                if(Orientation == Orient.North | Orientation == Orient.South)
-                    wallRange = Utility.CoordRange(Min + Vector3.up, Max + Vector3.down).ToList();
-                else
-                    wallRange = Utility.CoordRange(Min, Max).ToList();
-
-                for (int i = 0; i < Paths.Count; i++)
+                if (Paths.Count > 0)
                 {
-
-                    Vector3 first = Paths[i].Min;
-                    Vector3 last = Paths[i].Max;
-
-                    if (Orientation == Orient.North | Orientation == Orient.South)
-                        wallRange.OrderBy(x => x.x);
+                    if(Orientation == Orient.North | Orientation == Orient.East)
+                        Paths.OrderBy(x => x.Min.x).ToList();
                     else
-                        wallRange.OrderBy(x => x.y);
+                        Paths.OrderBy(x => x.Min.y).ToList();
 
-                    int firstIndex = wallRange.FindIndex(x => x == first);
-                    int lastIndex = wallRange.FindIndex(x => x == last);
+                List<Segment> segments = new List<Segment>();
+       
 
-
-                    if (i == 0 & Paths.Count == 1)
+                for (int i = 0; i <= Paths.Count; i++)
+                {
+                    if (Paths.Count == 1)
                     {
-                        if (first != Min & Max != last)
-                        {
-                            newSegments.Add(new Segment(Orientation, Min, first, Height));
-                            newSegments.Add(new Segment(Orientation, last, Max, Height));
-                        }
-                        else
-                            continue;
+                        segments.Add(new Segment(Orientation, Min + up, Paths[i].Min + down, Height));
+                        segments.Add(new Segment(Orientation, Paths[i].Max + up, Max + down, Height));
+                        break;
                     }
-
-                    else if (i == 0 & Paths.Count > 1)
+                    else if (i == 0)
                     {
-                        newSegments.Add(new Segment(Orientation,Min,first, Height));
+                        segments.Add(new Segment(Orientation, Min + up, Paths[i].Min + down, Height));
                     }
-
-                    else if (i < Paths.Count - 1)
+                    else if (Paths.Count < Paths.Count - 1)
                     {
-
-                        Vector3 nextFirst = Paths[i + 1].Min;
-                        int nextFirstIndex = wallRange.FindIndex(x => x == last);
-
-                        Vector3 start = nextFirstIndex > lastIndex ? last : first;
-                        int startIndex = nextFirstIndex > lastIndex ? lastIndex : firstIndex;
-
-                        if (nextFirstIndex > startIndex)
-                        {
-                            newSegments.Add(new Segment(Orientation, start, nextFirst, Height));
-
-                        }
-                        else
-                        {
-                            newSegments.Add(new Segment(Orientation, nextFirst, start, Height));
-                        }
-
+                        segments.Add(new Segment(Orientation, Paths[i - 1].Max + up, Paths[i].Min + down, Height));
                     }
                     else
                     {
-                        if(last != Max)
-                            newSegments.Add(new Segment(Orientation, last,Max, Height));
+                        segments.Add(new Segment(Orientation, Paths[i].Max + up, Max + down, Height));
                     }
-
                 }
-
-                if (newSegments.Count > 0)
-                    Segments = newSegments;
-
+                    Segments = segments;
+                }
             }
 
             public struct Segment
@@ -401,21 +367,12 @@ namespace RedKite
                     Min = _min;
                     Max = _max;
 
-                    if(_orientation == Orient.North | _orientation == Orient.South)
-                    {
-                        Thickness = 1;
-                        Length = Max.x - Min.x + 1;
-                        Center = Min + Vector3.Scale(((Max - Min) / 2), Vector3.right);
-                    }
 
-                    else
-                    {
-                        Thickness = 1;
-                        Length = Max.y - Min.y + 1;
-                        Center = Min + Vector3.Scale(((Max - Min) / 2), Vector3.up);
-                    }
+                    Thickness = Max.z - Min.z + 1;
+                    Length = Max.x - Min.x + 1;
+                    Center = Min + Vector3.Scale(((Max - Min) / 2), Vector3.right);
+
                     Height = _height;
-
 
                 }
             }
