@@ -39,10 +39,6 @@ namespace RedKite
 
             map = FindObjectOfType<TileMapper>();
 
-
-            tileX = (int)transform.position.x;
-            tileY = (int)transform.position.y;
-
             base.Start();
         }
 

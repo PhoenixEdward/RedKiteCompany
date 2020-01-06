@@ -17,12 +17,11 @@ namespace RedKite
 
         void Start()
         {
-            hero = FindObjectOfType<Unit>();
+            hero = FindObjectOfType<Hero>();
 
             map = FindObjectOfType<Tilemap>();
 
-
-            transform.position = new Vector3(hero.transform.position.x, hero.transform.position.y, -10);
+            //transform.position = new Vector3(hero.transform.position.x, hero.transform.position.y, -10);
 
             xBounds = new Vector2(map.cellBounds.xMin, map.cellBounds.xMax);
             yBounds = new Vector2(map.cellBounds.yMin, map.cellBounds.yMax);
@@ -32,7 +31,7 @@ namespace RedKite
         {
 
             Vector3 pos = transform.position;
-
+            /*
             if (Input.GetKey(KeyCode.W) & pos.y < yBounds.y)
             {
                 pos.y += pix * Time.deltaTime;
@@ -49,6 +48,25 @@ namespace RedKite
             {
                 pos.x -= pix * Time.deltaTime;
             }
+            */
+
+            if (Input.GetKey(KeyCode.W))
+            {
+                pos.y += pix * Time.deltaTime;
+            }
+            if (Input.GetKey(KeyCode.S))
+            {
+                pos.y -= pix * Time.deltaTime;
+            }
+            if (Input.GetKey(KeyCode.D))
+            {
+                pos.x += pix * Time.deltaTime;
+            }
+            if (Input.GetKey(KeyCode.A))
+            {
+                pos.x -= pix * Time.deltaTime;
+            }
+
 
             transform.position = pos;
 

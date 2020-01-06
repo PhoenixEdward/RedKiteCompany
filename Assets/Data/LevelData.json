@@ -1,0 +1,6647 @@
+{
+  "0": {
+    "creationTime": "2020-01-06T01:54:10.9330086-06:00",
+    "Walls": [
+      {
+        "Orientation": {
+          "Name": "West",
+          "foreUnit": -1.0,
+          "rightUnit": 1.0,
+          "Forward": {
+            "x": -1.0,
+            "y": 0.0,
+            "z": 0.0
+          },
+          "Back": {
+            "x": 1.0,
+            "y": 0.0,
+            "z": 0.0
+          },
+          "Left": {
+            "x": 0.0,
+            "y": -1.0,
+            "z": 0.0
+          },
+          "Right": {
+            "x": 0.0,
+            "y": 1.0,
+            "z": 0.0
+          }
+        },
+        "Min": {
+          "x": 3.0,
+          "y": 35.0,
+          "z": 1.0
+        },
+        "Max": {
+          "x": 3.0,
+          "y": 42.0,
+          "z": 1.0
+        },
+        "Paths": [],
+        "Segments": [
+          {
+            "IsPath": false,
+            "IsRemoved": false,
+            "Orientation": {
+              "Name": "West",
+              "foreUnit": -1.0,
+              "rightUnit": 1.0,
+              "Forward": {
+                "x": -1.0,
+                "y": 0.0,
+                "z": 0.0
+              },
+              "Back": {
+                "x": 1.0,
+                "y": 0.0,
+                "z": 0.0
+              },
+              "Left": {
+                "x": 0.0,
+                "y": -1.0,
+                "z": 0.0
+              },
+              "Right": {
+                "x": 0.0,
+                "y": 1.0,
+                "z": 0.0
+              }
+            },
+            "Min": {
+              "x": 3.0,
+              "y": 35.0,
+              "z": 1.0
+            },
+            "Max": {
+              "x": 3.0,
+              "y": 42.0,
+              "z": 1.0
+            },
+            "Center": {
+              "x": 3.0,
+              "y": 38.5,
+              "z": 1.0
+            },
+            "Thickness": 1.0,
+            "Length": 8.0,
+            "Height": 2.0
+          }
+        ],
+        "Center": {
+          "x": 3.5,
+          "y": 35.0,
+          "z": 1.0
+        },
+        "Thickness": 1.0,
+        "length": 0.0,
+        "Height": 2.0
+      },
+      {
+        "Orientation": {
+          "Name": "East",
+          "foreUnit": 1.0,
+          "rightUnit": -1.0,
+          "Forward": {
+            "x": 1.0,
+            "y": 0.0,
+            "z": 0.0
+          },
+          "Back": {
+            "x": -1.0,
+            "y": 0.0,
+            "z": 0.0
+          },
+          "Left": {
+            "x": 0.0,
+            "y": 1.0,
+            "z": 0.0
+          },
+          "Right": {
+            "x": 0.0,
+            "y": -1.0,
+            "z": 0.0
+          }
+        },
+        "Min": {
+          "x": 10.0,
+          "y": 35.0,
+          "z": 1.0
+        },
+        "Max": {
+          "x": 10.0,
+          "y": 42.0,
+          "z": 1.0
+        },
+        "Paths": [
+          {
+            "IsPath": true,
+            "IsRemoved": false,
+            "Orientation": {
+              "Name": "East",
+              "foreUnit": 1.0,
+              "rightUnit": -1.0,
+              "Forward": {
+                "x": 1.0,
+                "y": 0.0,
+                "z": 0.0
+              },
+              "Back": {
+                "x": -1.0,
+                "y": 0.0,
+                "z": 0.0
+              },
+              "Left": {
+                "x": 0.0,
+                "y": 1.0,
+                "z": 0.0
+              },
+              "Right": {
+                "x": 0.0,
+                "y": -1.0,
+                "z": 0.0
+              }
+            },
+            "Min": {
+              "x": 10.0,
+              "y": 36.0,
+              "z": 1.0
+            },
+            "Max": {
+              "x": 10.0,
+              "y": 41.0,
+              "z": 1.0
+            },
+            "Center": {
+              "x": 10.0,
+              "y": 38.5,
+              "z": 1.0
+            },
+            "Thickness": 1.0,
+            "Length": 6.0,
+            "Height": 2.0
+          },
+          {
+            "IsPath": true,
+            "IsRemoved": false,
+            "Orientation": {
+              "Name": "East",
+              "foreUnit": 1.0,
+              "rightUnit": -1.0,
+              "Forward": {
+                "x": 1.0,
+                "y": 0.0,
+                "z": 0.0
+              },
+              "Back": {
+                "x": -1.0,
+                "y": 0.0,
+                "z": 0.0
+              },
+              "Left": {
+                "x": 0.0,
+                "y": 1.0,
+                "z": 0.0
+              },
+              "Right": {
+                "x": 0.0,
+                "y": -1.0,
+                "z": 0.0
+              }
+            },
+            "Min": {
+              "x": 10.0,
+              "y": 36.0,
+              "z": 1.0
+            },
+            "Max": {
+              "x": 10.0,
+              "y": 34.0,
+              "z": 1.0
+            },
+            "Center": {
+              "x": 10.0,
+              "y": 35.0,
+              "z": 1.0
+            },
+            "Thickness": 1.0,
+            "Length": -1.0,
+            "Height": 2.0
+          }
+        ],
+        "Segments": [
+          {
+            "IsPath": false,
+            "IsRemoved": false,
+            "Orientation": {
+              "Name": "East",
+              "foreUnit": 1.0,
+              "rightUnit": -1.0,
+              "Forward": {
+                "x": 1.0,
+                "y": 0.0,
+                "z": 0.0
+              },
+              "Back": {
+                "x": -1.0,
+                "y": 0.0,
+                "z": 0.0
+              },
+              "Left": {
+                "x": 0.0,
+                "y": 1.0,
+                "z": 0.0
+              },
+              "Right": {
+                "x": 0.0,
+                "y": -1.0,
+                "z": 0.0
+              }
+            },
+            "Min": {
+              "x": 10.0,
+              "y": 35.0,
+              "z": 1.0
+            },
+            "Max": {
+              "x": 10.0,
+              "y": 36.0,
+              "z": 1.0
+            },
+            "Center": {
+              "x": 10.0,
+              "y": 35.5,
+              "z": 1.0
+            },
+            "Thickness": 1.0,
+            "Length": 2.0,
+            "Height": 2.0
+          },
+          {
+            "IsPath": false,
+            "IsRemoved": false,
+            "Orientation": {
+              "Name": "East",
+              "foreUnit": 1.0,
+              "rightUnit": -1.0,
+              "Forward": {
+                "x": 1.0,
+                "y": 0.0,
+                "z": 0.0
+              },
+              "Back": {
+                "x": -1.0,
+                "y": 0.0,
+                "z": 0.0
+              },
+              "Left": {
+                "x": 0.0,
+                "y": 1.0,
+                "z": 0.0
+              },
+              "Right": {
+                "x": 0.0,
+                "y": -1.0,
+                "z": 0.0
+              }
+            },
+            "Min": {
+              "x": 10.0,
+              "y": 34.0,
+              "z": 1.0
+            },
+            "Max": {
+              "x": 10.0,
+              "y": 42.0,
+              "z": 1.0
+            },
+            "Center": {
+              "x": 10.0,
+              "y": 38.0,
+              "z": 1.0
+            },
+            "Thickness": 1.0,
+            "Length": 9.0,
+            "Height": 2.0
+          }
+        ],
+        "Center": {
+          "x": 9.5,
+          "y": 35.0,
+          "z": 1.0
+        },
+        "Thickness": 1.0,
+        "length": 0.0,
+        "Height": 2.0
+      },
+      {
+        "Orientation": {
+          "Name": "South",
+          "foreUnit": -1.0,
+          "rightUnit": -1.0,
+          "Forward": {
+            "x": 0.0,
+            "y": -1.0,
+            "z": 0.0
+          },
+          "Back": {
+            "x": 0.0,
+            "y": 1.0,
+            "z": 0.0
+          },
+          "Left": {
+            "x": 1.0,
+            "y": 0.0,
+            "z": 0.0
+          },
+          "Right": {
+            "x": -1.0,
+            "y": 0.0,
+            "z": 0.0
+          }
+        },
+        "Min": {
+          "x": 3.0,
+          "y": 35.0,
+          "z": 1.0
+        },
+        "Max": {
+          "x": 10.0,
+          "y": 35.0,
+          "z": 1.0
+        },
+        "Paths": [
+          {
+            "IsPath": true,
+            "IsRemoved": false,
+            "Orientation": {
+              "Name": "South",
+              "foreUnit": -1.0,
+              "rightUnit": -1.0,
+              "Forward": {
+                "x": 0.0,
+                "y": -1.0,
+                "z": 0.0
+              },
+              "Back": {
+                "x": 0.0,
+                "y": 1.0,
+                "z": 0.0
+              },
+              "Left": {
+                "x": 1.0,
+                "y": 0.0,
+                "z": 0.0
+              },
+              "Right": {
+                "x": -1.0,
+                "y": 0.0,
+                "z": 0.0
+              }
+            },
+            "Min": {
+              "x": 11.0,
+              "y": 35.0,
+              "z": 1.0
+            },
+            "Max": {
+              "x": 9.0,
+              "y": 35.0,
+              "z": 1.0
+            },
+            "Center": {
+              "x": 10.0,
+              "y": 35.0,
+              "z": 1.0
+            },
+            "Thickness": 1.0,
+            "Length": -1.0,
+            "Height": 2.0
+          }
+        ],
+        "Segments": [
+          {
+            "IsPath": false,
+            "IsRemoved": false,
+            "Orientation": {
+              "Name": "South",
+              "foreUnit": -1.0,
+              "rightUnit": -1.0,
+              "Forward": {
+                "x": 0.0,
+                "y": -1.0,
+                "z": 0.0
+              },
+              "Back": {
+                "x": 0.0,
+                "y": 1.0,
+                "z": 0.0
+              },
+              "Left": {
+                "x": 1.0,
+                "y": 0.0,
+                "z": 0.0
+              },
+              "Right": {
+                "x": -1.0,
+                "y": 0.0,
+                "z": 0.0
+              }
+            },
+            "Min": {
+              "x": 3.0,
+              "y": 35.0,
+              "z": 1.0
+            },
+            "Max": {
+              "x": 11.0,
+              "y": 35.0,
+              "z": 1.0
+            },
+            "Center": {
+              "x": 7.0,
+              "y": 35.0,
+              "z": 1.0
+            },
+            "Thickness": 1.0,
+            "Length": 9.0,
+            "Height": 2.0
+          },
+          {
+            "IsPath": false,
+            "IsRemoved": false,
+            "Orientation": {
+              "Name": "South",
+              "foreUnit": -1.0,
+              "rightUnit": -1.0,
+              "Forward": {
+                "x": 0.0,
+                "y": -1.0,
+                "z": 0.0
+              },
+              "Back": {
+                "x": 0.0,
+                "y": 1.0,
+                "z": 0.0
+              },
+              "Left": {
+                "x": 1.0,
+                "y": 0.0,
+                "z": 0.0
+              },
+              "Right": {
+                "x": -1.0,
+                "y": 0.0,
+                "z": 0.0
+              }
+            },
+            "Min": {
+              "x": 9.0,
+              "y": 35.0,
+              "z": 1.0
+            },
+            "Max": {
+              "x": 10.0,
+              "y": 35.0,
+              "z": 1.0
+            },
+            "Center": {
+              "x": 9.5,
+              "y": 35.0,
+              "z": 1.0
+            },
+            "Thickness": 1.0,
+            "Length": 2.0,
+            "Height": 2.0
+          }
+        ],
+        "Center": {
+          "x": 3.0,
+          "y": 35.5,
+          "z": 1.0
+        },
+        "Thickness": 1.0,
+        "length": 0.0,
+        "Height": 2.0
+      },
+      {
+        "Orientation": {
+          "Name": "North",
+          "foreUnit": 1.0,
+          "rightUnit": 1.0,
+          "Forward": {
+            "x": 0.0,
+            "y": 1.0,
+            "z": 0.0
+          },
+          "Back": {
+            "x": 0.0,
+            "y": -1.0,
+            "z": 0.0
+          },
+          "Left": {
+            "x": -1.0,
+            "y": 0.0,
+            "z": 0.0
+          },
+          "Right": {
+            "x": 1.0,
+            "y": 0.0,
+            "z": 0.0
+          }
+        },
+        "Min": {
+          "x": 3.0,
+          "y": 42.0,
+          "z": 1.0
+        },
+        "Max": {
+          "x": 10.0,
+          "y": 42.0,
+          "z": 1.0
+        },
+        "Paths": [],
+        "Segments": [
+          {
+            "IsPath": false,
+            "IsRemoved": false,
+            "Orientation": {
+              "Name": "North",
+              "foreUnit": 1.0,
+              "rightUnit": 1.0,
+              "Forward": {
+                "x": 0.0,
+                "y": 1.0,
+                "z": 0.0
+              },
+              "Back": {
+                "x": 0.0,
+                "y": -1.0,
+                "z": 0.0
+              },
+              "Left": {
+                "x": -1.0,
+                "y": 0.0,
+                "z": 0.0
+              },
+              "Right": {
+                "x": 1.0,
+                "y": 0.0,
+                "z": 0.0
+              }
+            },
+            "Min": {
+              "x": 3.0,
+              "y": 42.0,
+              "z": 1.0
+            },
+            "Max": {
+              "x": 10.0,
+              "y": 42.0,
+              "z": 1.0
+            },
+            "Center": {
+              "x": 6.5,
+              "y": 42.0,
+              "z": 1.0
+            },
+            "Thickness": 1.0,
+            "Length": 8.0,
+            "Height": 2.0
+          }
+        ],
+        "Center": {
+          "x": 3.0,
+          "y": 41.5,
+          "z": 1.0
+        },
+        "Thickness": 1.0,
+        "length": 0.0,
+        "Height": 2.0
+      }
+    ],
+    "ConnectedAreas": [
+      1
+    ],
+    "Orientation": {
+      "Name": "North",
+      "foreUnit": 1.0,
+      "rightUnit": 1.0,
+      "Forward": {
+        "x": 0.0,
+        "y": 1.0,
+        "z": 0.0
+      },
+      "Back": {
+        "x": 0.0,
+        "y": -1.0,
+        "z": 0.0
+      },
+      "Left": {
+        "x": -1.0,
+        "y": 0.0,
+        "z": 0.0
+      },
+      "Right": {
+        "x": 1.0,
+        "y": 0.0,
+        "z": 0.0
+      }
+    },
+    "RoomIndex": 0,
+    "Floor": {
+      "BottomLeft": {
+        "x": 4.0,
+        "y": 36.0,
+        "z": 1.0
+      },
+      "TopRight": {
+        "x": 9.0,
+        "y": 41.0,
+        "z": 1.0
+      },
+      "BottomRight": {
+        "x": 9.0,
+        "y": 36.0,
+        "z": 1.0
+      },
+      "TopLeft": {
+        "x": 4.0,
+        "y": 41.0,
+        "z": 1.0
+      },
+      "width": 6.0,
+      "height": 6.0,
+      "Center": {
+        "x": 6.5,
+        "y": 38.5,
+        "z": 1.0
+      },
+      "TrueSW": {
+        "x": 4.0,
+        "y": 36.0,
+        "z": 1.0
+      },
+      "TrueNE": {
+        "x": 9.0,
+        "y": 41.0,
+        "z": 1.0
+      },
+      "TrueWidth": 6.0,
+      "TrueHeight": 6.0
+    }
+  },
+  "1": {
+    "creationTime": "2020-01-06T01:54:10.94592-06:00",
+    "Walls": [
+      {
+        "Orientation": {
+          "Name": "East",
+          "foreUnit": 1.0,
+          "rightUnit": -1.0,
+          "Forward": {
+            "x": 1.0,
+            "y": 0.0,
+            "z": 0.0
+          },
+          "Back": {
+            "x": -1.0,
+            "y": 0.0,
+            "z": 0.0
+          },
+          "Left": {
+            "x": 0.0,
+            "y": 1.0,
+            "z": 0.0
+          },
+          "Right": {
+            "x": 0.0,
+            "y": -1.0,
+            "z": 0.0
+          }
+        },
+        "Min": {
+          "x": 17.0,
+          "y": 35.0,
+          "z": 1.0
+        },
+        "Max": {
+          "x": 17.0,
+          "y": 46.0,
+          "z": 1.0
+        },
+        "Paths": [
+          {
+            "IsPath": true,
+            "IsRemoved": false,
+            "Orientation": {
+              "Name": "East",
+              "foreUnit": 1.0,
+              "rightUnit": -1.0,
+              "Forward": {
+                "x": 1.0,
+                "y": 0.0,
+                "z": 0.0
+              },
+              "Back": {
+                "x": -1.0,
+                "y": 0.0,
+                "z": 0.0
+              },
+              "Left": {
+                "x": 0.0,
+                "y": 1.0,
+                "z": 0.0
+              },
+              "Right": {
+                "x": 0.0,
+                "y": -1.0,
+                "z": 0.0
+              }
+            },
+            "Min": {
+              "x": 17.0,
+              "y": 38.0,
+              "z": 1.0
+            },
+            "Max": {
+              "x": 17.0,
+              "y": 39.0,
+              "z": 1.0
+            },
+            "Center": {
+              "x": 17.0,
+              "y": 38.5,
+              "z": 1.0
+            },
+            "Thickness": 1.0,
+            "Length": 2.0,
+            "Height": 2.0
+          }
+        ],
+        "Segments": [
+          {
+            "IsPath": false,
+            "IsRemoved": false,
+            "Orientation": {
+              "Name": "East",
+              "foreUnit": 1.0,
+              "rightUnit": -1.0,
+              "Forward": {
+                "x": 1.0,
+                "y": 0.0,
+                "z": 0.0
+              },
+              "Back": {
+                "x": -1.0,
+                "y": 0.0,
+                "z": 0.0
+              },
+              "Left": {
+                "x": 0.0,
+                "y": 1.0,
+                "z": 0.0
+              },
+              "Right": {
+                "x": 0.0,
+                "y": -1.0,
+                "z": 0.0
+              }
+            },
+            "Min": {
+              "x": 17.0,
+              "y": 35.0,
+              "z": 1.0
+            },
+            "Max": {
+              "x": 17.0,
+              "y": 38.0,
+              "z": 1.0
+            },
+            "Center": {
+              "x": 17.0,
+              "y": 36.5,
+              "z": 1.0
+            },
+            "Thickness": 1.0,
+            "Length": 4.0,
+            "Height": 2.0
+          },
+          {
+            "IsPath": false,
+            "IsRemoved": false,
+            "Orientation": {
+              "Name": "East",
+              "foreUnit": 1.0,
+              "rightUnit": -1.0,
+              "Forward": {
+                "x": 1.0,
+                "y": 0.0,
+                "z": 0.0
+              },
+              "Back": {
+                "x": -1.0,
+                "y": 0.0,
+                "z": 0.0
+              },
+              "Left": {
+                "x": 0.0,
+                "y": 1.0,
+                "z": 0.0
+              },
+              "Right": {
+                "x": 0.0,
+                "y": -1.0,
+                "z": 0.0
+              }
+            },
+            "Min": {
+              "x": 17.0,
+              "y": 39.0,
+              "z": 1.0
+            },
+            "Max": {
+              "x": 17.0,
+              "y": 46.0,
+              "z": 1.0
+            },
+            "Center": {
+              "x": 17.0,
+              "y": 42.5,
+              "z": 1.0
+            },
+            "Thickness": 1.0,
+            "Length": 8.0,
+            "Height": 2.0
+          }
+        ],
+        "Center": {
+          "x": 16.5,
+          "y": 35.0,
+          "z": 1.0
+        },
+        "Thickness": 1.0,
+        "length": 0.0,
+        "Height": 2.0
+      },
+      {
+        "Orientation": {
+          "Name": "North",
+          "foreUnit": 1.0,
+          "rightUnit": 1.0,
+          "Forward": {
+            "x": 0.0,
+            "y": 1.0,
+            "z": 0.0
+          },
+          "Back": {
+            "x": 0.0,
+            "y": -1.0,
+            "z": 0.0
+          },
+          "Left": {
+            "x": -1.0,
+            "y": 0.0,
+            "z": 0.0
+          },
+          "Right": {
+            "x": 1.0,
+            "y": 0.0,
+            "z": 0.0
+          }
+        },
+        "Min": {
+          "x": 10.0,
+          "y": 46.0,
+          "z": 1.0
+        },
+        "Max": {
+          "x": 17.0,
+          "y": 46.0,
+          "z": 1.0
+        },
+        "Paths": [],
+        "Segments": [
+          {
+            "IsPath": false,
+            "IsRemoved": false,
+            "Orientation": {
+              "Name": "North",
+              "foreUnit": 1.0,
+              "rightUnit": 1.0,
+              "Forward": {
+                "x": 0.0,
+                "y": 1.0,
+                "z": 0.0
+              },
+              "Back": {
+                "x": 0.0,
+                "y": -1.0,
+                "z": 0.0
+              },
+              "Left": {
+                "x": -1.0,
+                "y": 0.0,
+                "z": 0.0
+              },
+              "Right": {
+                "x": 1.0,
+                "y": 0.0,
+                "z": 0.0
+              }
+            },
+            "Min": {
+              "x": 10.0,
+              "y": 46.0,
+              "z": 1.0
+            },
+            "Max": {
+              "x": 17.0,
+              "y": 46.0,
+              "z": 1.0
+            },
+            "Center": {
+              "x": 13.5,
+              "y": 46.0,
+              "z": 1.0
+            },
+            "Thickness": 1.0,
+            "Length": 8.0,
+            "Height": 2.0
+          }
+        ],
+        "Center": {
+          "x": 10.0,
+          "y": 45.5,
+          "z": 1.0
+        },
+        "Thickness": 1.0,
+        "length": 0.0,
+        "Height": 2.0
+      },
+      {
+        "Orientation": {
+          "Name": "South",
+          "foreUnit": -1.0,
+          "rightUnit": -1.0,
+          "Forward": {
+            "x": 0.0,
+            "y": -1.0,
+            "z": 0.0
+          },
+          "Back": {
+            "x": 0.0,
+            "y": 1.0,
+            "z": 0.0
+          },
+          "Left": {
+            "x": 1.0,
+            "y": 0.0,
+            "z": 0.0
+          },
+          "Right": {
+            "x": -1.0,
+            "y": 0.0,
+            "z": 0.0
+          }
+        },
+        "Min": {
+          "x": 10.0,
+          "y": 35.0,
+          "z": 1.0
+        },
+        "Max": {
+          "x": 17.0,
+          "y": 35.0,
+          "z": 1.0
+        },
+        "Paths": [
+          {
+            "IsPath": true,
+            "IsRemoved": false,
+            "Orientation": {
+              "Name": "South",
+              "foreUnit": -1.0,
+              "rightUnit": -1.0,
+              "Forward": {
+                "x": 0.0,
+                "y": -1.0,
+                "z": 0.0
+              },
+              "Back": {
+                "x": 0.0,
+                "y": 1.0,
+                "z": 0.0
+              },
+              "Left": {
+                "x": 1.0,
+                "y": 0.0,
+                "z": 0.0
+              },
+              "Right": {
+                "x": -1.0,
+                "y": 0.0,
+                "z": 0.0
+              }
+            },
+            "Min": {
+              "x": 11.0,
+              "y": 35.0,
+              "z": 1.0
+            },
+            "Max": {
+              "x": 16.0,
+              "y": 35.0,
+              "z": 1.0
+            },
+            "Center": {
+              "x": 13.5,
+              "y": 35.0,
+              "z": 1.0
+            },
+            "Thickness": 1.0,
+            "Length": 6.0,
+            "Height": 2.0
+          }
+        ],
+        "Segments": [
+          {
+            "IsPath": false,
+            "IsRemoved": false,
+            "Orientation": {
+              "Name": "South",
+              "foreUnit": -1.0,
+              "rightUnit": -1.0,
+              "Forward": {
+                "x": 0.0,
+                "y": -1.0,
+                "z": 0.0
+              },
+              "Back": {
+                "x": 0.0,
+                "y": 1.0,
+                "z": 0.0
+              },
+              "Left": {
+                "x": 1.0,
+                "y": 0.0,
+                "z": 0.0
+              },
+              "Right": {
+                "x": -1.0,
+                "y": 0.0,
+                "z": 0.0
+              }
+            },
+            "Min": {
+              "x": 10.0,
+              "y": 35.0,
+              "z": 1.0
+            },
+            "Max": {
+              "x": 11.0,
+              "y": 35.0,
+              "z": 1.0
+            },
+            "Center": {
+              "x": 10.5,
+              "y": 35.0,
+              "z": 1.0
+            },
+            "Thickness": 1.0,
+            "Length": 2.0,
+            "Height": 2.0
+          },
+          {
+            "IsPath": false,
+            "IsRemoved": false,
+            "Orientation": {
+              "Name": "South",
+              "foreUnit": -1.0,
+              "rightUnit": -1.0,
+              "Forward": {
+                "x": 0.0,
+                "y": -1.0,
+                "z": 0.0
+              },
+              "Back": {
+                "x": 0.0,
+                "y": 1.0,
+                "z": 0.0
+              },
+              "Left": {
+                "x": 1.0,
+                "y": 0.0,
+                "z": 0.0
+              },
+              "Right": {
+                "x": -1.0,
+                "y": 0.0,
+                "z": 0.0
+              }
+            },
+            "Min": {
+              "x": 16.0,
+              "y": 35.0,
+              "z": 1.0
+            },
+            "Max": {
+              "x": 17.0,
+              "y": 35.0,
+              "z": 1.0
+            },
+            "Center": {
+              "x": 16.5,
+              "y": 35.0,
+              "z": 1.0
+            },
+            "Thickness": 1.0,
+            "Length": 2.0,
+            "Height": 2.0
+          }
+        ],
+        "Center": {
+          "x": 10.0,
+          "y": 35.5,
+          "z": 1.0
+        },
+        "Thickness": 1.0,
+        "length": 0.0,
+        "Height": 2.0
+      },
+      {
+        "Orientation": {
+          "Name": "West",
+          "foreUnit": -1.0,
+          "rightUnit": 1.0,
+          "Forward": {
+            "x": -1.0,
+            "y": 0.0,
+            "z": 0.0
+          },
+          "Back": {
+            "x": 1.0,
+            "y": 0.0,
+            "z": 0.0
+          },
+          "Left": {
+            "x": 0.0,
+            "y": -1.0,
+            "z": 0.0
+          },
+          "Right": {
+            "x": 0.0,
+            "y": 1.0,
+            "z": 0.0
+          }
+        },
+        "Min": {
+          "x": 10.0,
+          "y": 35.0,
+          "z": 1.0
+        },
+        "Max": {
+          "x": 10.0,
+          "y": 46.0,
+          "z": 1.0
+        },
+        "Paths": [
+          {
+            "IsPath": true,
+            "IsRemoved": true,
+            "Orientation": {
+              "Name": "West",
+              "foreUnit": -1.0,
+              "rightUnit": 1.0,
+              "Forward": {
+                "x": -1.0,
+                "y": 0.0,
+                "z": 0.0
+              },
+              "Back": {
+                "x": 1.0,
+                "y": 0.0,
+                "z": 0.0
+              },
+              "Left": {
+                "x": 0.0,
+                "y": -1.0,
+                "z": 0.0
+              },
+              "Right": {
+                "x": 0.0,
+                "y": 1.0,
+                "z": 0.0
+              }
+            },
+            "Min": {
+              "x": 10.0,
+              "y": 36.0,
+              "z": 1.0
+            },
+            "Max": {
+              "x": 10.0,
+              "y": 41.0,
+              "z": 1.0
+            },
+            "Center": {
+              "x": 10.0,
+              "y": 38.5,
+              "z": 1.0
+            },
+            "Thickness": 1.0,
+            "Length": 6.0,
+            "Height": 2.0
+          }
+        ],
+        "Segments": [
+          {
+            "IsPath": false,
+            "IsRemoved": false,
+            "Orientation": {
+              "Name": "West",
+              "foreUnit": -1.0,
+              "rightUnit": 1.0,
+              "Forward": {
+                "x": -1.0,
+                "y": 0.0,
+                "z": 0.0
+              },
+              "Back": {
+                "x": 1.0,
+                "y": 0.0,
+                "z": 0.0
+              },
+              "Left": {
+                "x": 0.0,
+                "y": -1.0,
+                "z": 0.0
+              },
+              "Right": {
+                "x": 0.0,
+                "y": 1.0,
+                "z": 0.0
+              }
+            },
+            "Min": {
+              "x": 10.0,
+              "y": 35.0,
+              "z": 1.0
+            },
+            "Max": {
+              "x": 10.0,
+              "y": 36.0,
+              "z": 1.0
+            },
+            "Center": {
+              "x": 10.0,
+              "y": 35.5,
+              "z": 1.0
+            },
+            "Thickness": 1.0,
+            "Length": 2.0,
+            "Height": 2.0
+          },
+          {
+            "IsPath": false,
+            "IsRemoved": false,
+            "Orientation": {
+              "Name": "West",
+              "foreUnit": -1.0,
+              "rightUnit": 1.0,
+              "Forward": {
+                "x": -1.0,
+                "y": 0.0,
+                "z": 0.0
+              },
+              "Back": {
+                "x": 1.0,
+                "y": 0.0,
+                "z": 0.0
+              },
+              "Left": {
+                "x": 0.0,
+                "y": -1.0,
+                "z": 0.0
+              },
+              "Right": {
+                "x": 0.0,
+                "y": 1.0,
+                "z": 0.0
+              }
+            },
+            "Min": {
+              "x": 10.0,
+              "y": 41.0,
+              "z": 1.0
+            },
+            "Max": {
+              "x": 10.0,
+              "y": 46.0,
+              "z": 1.0
+            },
+            "Center": {
+              "x": 10.0,
+              "y": 43.5,
+              "z": 1.0
+            },
+            "Thickness": 1.0,
+            "Length": 6.0,
+            "Height": 2.0
+          }
+        ],
+        "Center": {
+          "x": 10.5,
+          "y": 35.0,
+          "z": 1.0
+        },
+        "Thickness": 1.0,
+        "length": 0.0,
+        "Height": 2.0
+      }
+    ],
+    "ConnectedAreas": [
+      0,
+      2,
+      3
+    ],
+    "Orientation": {
+      "Name": "East",
+      "foreUnit": 1.0,
+      "rightUnit": -1.0,
+      "Forward": {
+        "x": 1.0,
+        "y": 0.0,
+        "z": 0.0
+      },
+      "Back": {
+        "x": -1.0,
+        "y": 0.0,
+        "z": 0.0
+      },
+      "Left": {
+        "x": 0.0,
+        "y": 1.0,
+        "z": 0.0
+      },
+      "Right": {
+        "x": 0.0,
+        "y": -1.0,
+        "z": 0.0
+      }
+    },
+    "RoomIndex": 1,
+    "Floor": {
+      "BottomLeft": {
+        "x": 11.0,
+        "y": 45.0,
+        "z": 1.0
+      },
+      "TopRight": {
+        "x": 16.0,
+        "y": 36.0,
+        "z": 1.0
+      },
+      "BottomRight": {
+        "x": 11.0,
+        "y": 36.0,
+        "z": 1.0
+      },
+      "TopLeft": {
+        "x": 16.0,
+        "y": 45.0,
+        "z": 1.0
+      },
+      "width": 10.0,
+      "height": 6.0,
+      "Center": {
+        "x": 13.5,
+        "y": 40.5,
+        "z": 1.0
+      },
+      "TrueSW": {
+        "x": 11.0,
+        "y": 36.0,
+        "z": 1.0
+      },
+      "TrueNE": {
+        "x": 16.0,
+        "y": 45.0,
+        "z": 1.0
+      },
+      "TrueWidth": 6.0,
+      "TrueHeight": 10.0
+    }
+  },
+  "2": {
+    "creationTime": "2020-01-06T01:54:10.9539313-06:00",
+    "Walls": [
+      {
+        "Orientation": {
+          "Name": "West",
+          "foreUnit": -1.0,
+          "rightUnit": 1.0,
+          "Forward": {
+            "x": -1.0,
+            "y": 0.0,
+            "z": 0.0
+          },
+          "Back": {
+            "x": 1.0,
+            "y": 0.0,
+            "z": 0.0
+          },
+          "Left": {
+            "x": 0.0,
+            "y": -1.0,
+            "z": 0.0
+          },
+          "Right": {
+            "x": 0.0,
+            "y": 1.0,
+            "z": 0.0
+          }
+        },
+        "Min": {
+          "x": 10.0,
+          "y": 27.0,
+          "z": 1.0
+        },
+        "Max": {
+          "x": 10.0,
+          "y": 35.0,
+          "z": 1.0
+        },
+        "Paths": [
+          {
+            "IsPath": true,
+            "IsRemoved": true,
+            "Orientation": {
+              "Name": "West",
+              "foreUnit": -1.0,
+              "rightUnit": 1.0,
+              "Forward": {
+                "x": -1.0,
+                "y": 0.0,
+                "z": 0.0
+              },
+              "Back": {
+                "x": 1.0,
+                "y": 0.0,
+                "z": 0.0
+              },
+              "Left": {
+                "x": 0.0,
+                "y": -1.0,
+                "z": 0.0
+              },
+              "Right": {
+                "x": 0.0,
+                "y": 1.0,
+                "z": 0.0
+              }
+            },
+            "Min": {
+              "x": 10.0,
+              "y": 36.0,
+              "z": 1.0
+            },
+            "Max": {
+              "x": 10.0,
+              "y": 34.0,
+              "z": 1.0
+            },
+            "Center": {
+              "x": 10.0,
+              "y": 35.0,
+              "z": 1.0
+            },
+            "Thickness": 1.0,
+            "Length": -1.0,
+            "Height": 2.0
+          },
+          {
+            "IsPath": true,
+            "IsRemoved": false,
+            "Orientation": {
+              "Name": "West",
+              "foreUnit": -1.0,
+              "rightUnit": 1.0,
+              "Forward": {
+                "x": -1.0,
+                "y": 0.0,
+                "z": 0.0
+              },
+              "Back": {
+                "x": 1.0,
+                "y": 0.0,
+                "z": 0.0
+              },
+              "Left": {
+                "x": 0.0,
+                "y": -1.0,
+                "z": 0.0
+              },
+              "Right": {
+                "x": 0.0,
+                "y": 1.0,
+                "z": 0.0
+              }
+            },
+            "Min": {
+              "x": 10.0,
+              "y": 28.0,
+              "z": 1.0
+            },
+            "Max": {
+              "x": 10.0,
+              "y": 28.0,
+              "z": 1.0
+            },
+            "Center": {
+              "x": 10.0,
+              "y": 28.0,
+              "z": 1.0
+            },
+            "Thickness": 1.0,
+            "Length": 1.0,
+            "Height": 2.0
+          },
+          {
+            "IsPath": true,
+            "IsRemoved": false,
+            "Orientation": {
+              "Name": "West",
+              "foreUnit": -1.0,
+              "rightUnit": 1.0,
+              "Forward": {
+                "x": -1.0,
+                "y": 0.0,
+                "z": 0.0
+              },
+              "Back": {
+                "x": 1.0,
+                "y": 0.0,
+                "z": 0.0
+              },
+              "Left": {
+                "x": 0.0,
+                "y": -1.0,
+                "z": 0.0
+              },
+              "Right": {
+                "x": 0.0,
+                "y": 1.0,
+                "z": 0.0
+              }
+            },
+            "Min": {
+              "x": 10.0,
+              "y": 28.0,
+              "z": 1.0
+            },
+            "Max": {
+              "x": 10.0,
+              "y": 31.0,
+              "z": 1.0
+            },
+            "Center": {
+              "x": 10.0,
+              "y": 29.5,
+              "z": 1.0
+            },
+            "Thickness": 1.0,
+            "Length": 4.0,
+            "Height": 2.0
+          }
+        ],
+        "Segments": [
+          {
+            "IsPath": false,
+            "IsRemoved": false,
+            "Orientation": {
+              "Name": "West",
+              "foreUnit": -1.0,
+              "rightUnit": 1.0,
+              "Forward": {
+                "x": -1.0,
+                "y": 0.0,
+                "z": 0.0
+              },
+              "Back": {
+                "x": 1.0,
+                "y": 0.0,
+                "z": 0.0
+              },
+              "Left": {
+                "x": 0.0,
+                "y": -1.0,
+                "z": 0.0
+              },
+              "Right": {
+                "x": 0.0,
+                "y": 1.0,
+                "z": 0.0
+              }
+            },
+            "Min": {
+              "x": 10.0,
+              "y": 27.0,
+              "z": 1.0
+            },
+            "Max": {
+              "x": 10.0,
+              "y": 36.0,
+              "z": 1.0
+            },
+            "Center": {
+              "x": 10.0,
+              "y": 31.5,
+              "z": 1.0
+            },
+            "Thickness": 1.0,
+            "Length": 10.0,
+            "Height": 2.0
+          },
+          {
+            "IsPath": false,
+            "IsRemoved": false,
+            "Orientation": {
+              "Name": "West",
+              "foreUnit": -1.0,
+              "rightUnit": 1.0,
+              "Forward": {
+                "x": -1.0,
+                "y": 0.0,
+                "z": 0.0
+              },
+              "Back": {
+                "x": 1.0,
+                "y": 0.0,
+                "z": 0.0
+              },
+              "Left": {
+                "x": 0.0,
+                "y": -1.0,
+                "z": 0.0
+              },
+              "Right": {
+                "x": 0.0,
+                "y": 1.0,
+                "z": 0.0
+              }
+            },
+            "Min": {
+              "x": 10.0,
+              "y": 28.0,
+              "z": 1.0
+            },
+            "Max": {
+              "x": 10.0,
+              "y": 28.0,
+              "z": 1.0
+            },
+            "Center": {
+              "x": 10.0,
+              "y": 28.0,
+              "z": 1.0
+            },
+            "Thickness": 1.0,
+            "Length": 1.0,
+            "Height": 2.0
+          },
+          {
+            "IsPath": false,
+            "IsRemoved": false,
+            "Orientation": {
+              "Name": "West",
+              "foreUnit": -1.0,
+              "rightUnit": 1.0,
+              "Forward": {
+                "x": -1.0,
+                "y": 0.0,
+                "z": 0.0
+              },
+              "Back": {
+                "x": 1.0,
+                "y": 0.0,
+                "z": 0.0
+              },
+              "Left": {
+                "x": 0.0,
+                "y": -1.0,
+                "z": 0.0
+              },
+              "Right": {
+                "x": 0.0,
+                "y": 1.0,
+                "z": 0.0
+              }
+            },
+            "Min": {
+              "x": 10.0,
+              "y": 31.0,
+              "z": 1.0
+            },
+            "Max": {
+              "x": 10.0,
+              "y": 35.0,
+              "z": 1.0
+            },
+            "Center": {
+              "x": 10.0,
+              "y": 33.0,
+              "z": 1.0
+            },
+            "Thickness": 1.0,
+            "Length": 5.0,
+            "Height": 2.0
+          }
+        ],
+        "Center": {
+          "x": 10.5,
+          "y": 27.0,
+          "z": 1.0
+        },
+        "Thickness": 1.0,
+        "length": 0.0,
+        "Height": 2.0
+      },
+      {
+        "Orientation": {
+          "Name": "South",
+          "foreUnit": -1.0,
+          "rightUnit": -1.0,
+          "Forward": {
+            "x": 0.0,
+            "y": -1.0,
+            "z": 0.0
+          },
+          "Back": {
+            "x": 0.0,
+            "y": 1.0,
+            "z": 0.0
+          },
+          "Left": {
+            "x": 1.0,
+            "y": 0.0,
+            "z": 0.0
+          },
+          "Right": {
+            "x": -1.0,
+            "y": 0.0,
+            "z": 0.0
+          }
+        },
+        "Min": {
+          "x": 10.0,
+          "y": 27.0,
+          "z": 1.0
+        },
+        "Max": {
+          "x": 21.0,
+          "y": 27.0,
+          "z": 1.0
+        },
+        "Paths": [],
+        "Segments": [
+          {
+            "IsPath": false,
+            "IsRemoved": false,
+            "Orientation": {
+              "Name": "South",
+              "foreUnit": -1.0,
+              "rightUnit": -1.0,
+              "Forward": {
+                "x": 0.0,
+                "y": -1.0,
+                "z": 0.0
+              },
+              "Back": {
+                "x": 0.0,
+                "y": 1.0,
+                "z": 0.0
+              },
+              "Left": {
+                "x": 1.0,
+                "y": 0.0,
+                "z": 0.0
+              },
+              "Right": {
+                "x": -1.0,
+                "y": 0.0,
+                "z": 0.0
+              }
+            },
+            "Min": {
+              "x": 10.0,
+              "y": 27.0,
+              "z": 1.0
+            },
+            "Max": {
+              "x": 21.0,
+              "y": 27.0,
+              "z": 1.0
+            },
+            "Center": {
+              "x": 15.5,
+              "y": 27.0,
+              "z": 1.0
+            },
+            "Thickness": 1.0,
+            "Length": 12.0,
+            "Height": 2.0
+          }
+        ],
+        "Center": {
+          "x": 10.0,
+          "y": 27.5,
+          "z": 1.0
+        },
+        "Thickness": 1.0,
+        "length": 0.0,
+        "Height": 2.0
+      },
+      {
+        "Orientation": {
+          "Name": "North",
+          "foreUnit": 1.0,
+          "rightUnit": 1.0,
+          "Forward": {
+            "x": 0.0,
+            "y": 1.0,
+            "z": 0.0
+          },
+          "Back": {
+            "x": 0.0,
+            "y": -1.0,
+            "z": 0.0
+          },
+          "Left": {
+            "x": -1.0,
+            "y": 0.0,
+            "z": 0.0
+          },
+          "Right": {
+            "x": 1.0,
+            "y": 0.0,
+            "z": 0.0
+          }
+        },
+        "Min": {
+          "x": 10.0,
+          "y": 35.0,
+          "z": 1.0
+        },
+        "Max": {
+          "x": 21.0,
+          "y": 35.0,
+          "z": 1.0
+        },
+        "Paths": [
+          {
+            "IsPath": true,
+            "IsRemoved": true,
+            "Orientation": {
+              "Name": "North",
+              "foreUnit": 1.0,
+              "rightUnit": 1.0,
+              "Forward": {
+                "x": 0.0,
+                "y": 1.0,
+                "z": 0.0
+              },
+              "Back": {
+                "x": 0.0,
+                "y": -1.0,
+                "z": 0.0
+              },
+              "Left": {
+                "x": -1.0,
+                "y": 0.0,
+                "z": 0.0
+              },
+              "Right": {
+                "x": 1.0,
+                "y": 0.0,
+                "z": 0.0
+              }
+            },
+            "Min": {
+              "x": 11.0,
+              "y": 35.0,
+              "z": 1.0
+            },
+            "Max": {
+              "x": 9.0,
+              "y": 35.0,
+              "z": 1.0
+            },
+            "Center": {
+              "x": 10.0,
+              "y": 35.0,
+              "z": 1.0
+            },
+            "Thickness": 1.0,
+            "Length": -1.0,
+            "Height": 2.0
+          },
+          {
+            "IsPath": true,
+            "IsRemoved": true,
+            "Orientation": {
+              "Name": "North",
+              "foreUnit": 1.0,
+              "rightUnit": 1.0,
+              "Forward": {
+                "x": 0.0,
+                "y": 1.0,
+                "z": 0.0
+              },
+              "Back": {
+                "x": 0.0,
+                "y": -1.0,
+                "z": 0.0
+              },
+              "Left": {
+                "x": -1.0,
+                "y": 0.0,
+                "z": 0.0
+              },
+              "Right": {
+                "x": 1.0,
+                "y": 0.0,
+                "z": 0.0
+              }
+            },
+            "Min": {
+              "x": 11.0,
+              "y": 35.0,
+              "z": 1.0
+            },
+            "Max": {
+              "x": 16.0,
+              "y": 35.0,
+              "z": 1.0
+            },
+            "Center": {
+              "x": 13.5,
+              "y": 35.0,
+              "z": 1.0
+            },
+            "Thickness": 1.0,
+            "Length": 6.0,
+            "Height": 2.0
+          }
+        ],
+        "Segments": [
+          {
+            "IsPath": false,
+            "IsRemoved": false,
+            "Orientation": {
+              "Name": "North",
+              "foreUnit": 1.0,
+              "rightUnit": 1.0,
+              "Forward": {
+                "x": 0.0,
+                "y": 1.0,
+                "z": 0.0
+              },
+              "Back": {
+                "x": 0.0,
+                "y": -1.0,
+                "z": 0.0
+              },
+              "Left": {
+                "x": -1.0,
+                "y": 0.0,
+                "z": 0.0
+              },
+              "Right": {
+                "x": 1.0,
+                "y": 0.0,
+                "z": 0.0
+              }
+            },
+            "Min": {
+              "x": 10.0,
+              "y": 35.0,
+              "z": 1.0
+            },
+            "Max": {
+              "x": 11.0,
+              "y": 35.0,
+              "z": 1.0
+            },
+            "Center": {
+              "x": 10.5,
+              "y": 35.0,
+              "z": 1.0
+            },
+            "Thickness": 1.0,
+            "Length": 2.0,
+            "Height": 2.0
+          },
+          {
+            "IsPath": false,
+            "IsRemoved": false,
+            "Orientation": {
+              "Name": "North",
+              "foreUnit": 1.0,
+              "rightUnit": 1.0,
+              "Forward": {
+                "x": 0.0,
+                "y": 1.0,
+                "z": 0.0
+              },
+              "Back": {
+                "x": 0.0,
+                "y": -1.0,
+                "z": 0.0
+              },
+              "Left": {
+                "x": -1.0,
+                "y": 0.0,
+                "z": 0.0
+              },
+              "Right": {
+                "x": 1.0,
+                "y": 0.0,
+                "z": 0.0
+              }
+            },
+            "Min": {
+              "x": 16.0,
+              "y": 35.0,
+              "z": 1.0
+            },
+            "Max": {
+              "x": 21.0,
+              "y": 35.0,
+              "z": 1.0
+            },
+            "Center": {
+              "x": 18.5,
+              "y": 35.0,
+              "z": 1.0
+            },
+            "Thickness": 1.0,
+            "Length": 6.0,
+            "Height": 2.0
+          }
+        ],
+        "Center": {
+          "x": 10.0,
+          "y": 34.5,
+          "z": 1.0
+        },
+        "Thickness": 1.0,
+        "length": 0.0,
+        "Height": 2.0
+      },
+      {
+        "Orientation": {
+          "Name": "East",
+          "foreUnit": 1.0,
+          "rightUnit": -1.0,
+          "Forward": {
+            "x": 1.0,
+            "y": 0.0,
+            "z": 0.0
+          },
+          "Back": {
+            "x": -1.0,
+            "y": 0.0,
+            "z": 0.0
+          },
+          "Left": {
+            "x": 0.0,
+            "y": 1.0,
+            "z": 0.0
+          },
+          "Right": {
+            "x": 0.0,
+            "y": -1.0,
+            "z": 0.0
+          }
+        },
+        "Min": {
+          "x": 21.0,
+          "y": 27.0,
+          "z": 1.0
+        },
+        "Max": {
+          "x": 21.0,
+          "y": 35.0,
+          "z": 1.0
+        },
+        "Paths": [
+          {
+            "IsPath": true,
+            "IsRemoved": false,
+            "Orientation": {
+              "Name": "East",
+              "foreUnit": 1.0,
+              "rightUnit": -1.0,
+              "Forward": {
+                "x": 1.0,
+                "y": 0.0,
+                "z": 0.0
+              },
+              "Back": {
+                "x": -1.0,
+                "y": 0.0,
+                "z": 0.0
+              },
+              "Left": {
+                "x": 0.0,
+                "y": 1.0,
+                "z": 0.0
+              },
+              "Right": {
+                "x": 0.0,
+                "y": -1.0,
+                "z": 0.0
+              }
+            },
+            "Min": {
+              "x": 21.0,
+              "y": 32.0,
+              "z": 1.0
+            },
+            "Max": {
+              "x": 21.0,
+              "y": 34.0,
+              "z": 1.0
+            },
+            "Center": {
+              "x": 21.0,
+              "y": 33.0,
+              "z": 1.0
+            },
+            "Thickness": 1.0,
+            "Length": 3.0,
+            "Height": 2.0
+          },
+          {
+            "IsPath": true,
+            "IsRemoved": false,
+            "Orientation": {
+              "Name": "East",
+              "foreUnit": 1.0,
+              "rightUnit": -1.0,
+              "Forward": {
+                "x": 1.0,
+                "y": 0.0,
+                "z": 0.0
+              },
+              "Back": {
+                "x": -1.0,
+                "y": 0.0,
+                "z": 0.0
+              },
+              "Left": {
+                "x": 0.0,
+                "y": 1.0,
+                "z": 0.0
+              },
+              "Right": {
+                "x": 0.0,
+                "y": -1.0,
+                "z": 0.0
+              }
+            },
+            "Min": {
+              "x": 21.0,
+              "y": 28.0,
+              "z": 1.0
+            },
+            "Max": {
+              "x": 21.0,
+              "y": 34.0,
+              "z": 1.0
+            },
+            "Center": {
+              "x": 21.0,
+              "y": 31.0,
+              "z": 1.0
+            },
+            "Thickness": 1.0,
+            "Length": 7.0,
+            "Height": 2.0
+          }
+        ],
+        "Segments": [
+          {
+            "IsPath": false,
+            "IsRemoved": false,
+            "Orientation": {
+              "Name": "East",
+              "foreUnit": 1.0,
+              "rightUnit": -1.0,
+              "Forward": {
+                "x": 1.0,
+                "y": 0.0,
+                "z": 0.0
+              },
+              "Back": {
+                "x": -1.0,
+                "y": 0.0,
+                "z": 0.0
+              },
+              "Left": {
+                "x": 0.0,
+                "y": 1.0,
+                "z": 0.0
+              },
+              "Right": {
+                "x": 0.0,
+                "y": -1.0,
+                "z": 0.0
+              }
+            },
+            "Min": {
+              "x": 21.0,
+              "y": 27.0,
+              "z": 1.0
+            },
+            "Max": {
+              "x": 21.0,
+              "y": 32.0,
+              "z": 1.0
+            },
+            "Center": {
+              "x": 21.0,
+              "y": 29.5,
+              "z": 1.0
+            },
+            "Thickness": 1.0,
+            "Length": 6.0,
+            "Height": 2.0
+          },
+          {
+            "IsPath": false,
+            "IsRemoved": false,
+            "Orientation": {
+              "Name": "East",
+              "foreUnit": 1.0,
+              "rightUnit": -1.0,
+              "Forward": {
+                "x": 1.0,
+                "y": 0.0,
+                "z": 0.0
+              },
+              "Back": {
+                "x": -1.0,
+                "y": 0.0,
+                "z": 0.0
+              },
+              "Left": {
+                "x": 0.0,
+                "y": 1.0,
+                "z": 0.0
+              },
+              "Right": {
+                "x": 0.0,
+                "y": -1.0,
+                "z": 0.0
+              }
+            },
+            "Min": {
+              "x": 21.0,
+              "y": 34.0,
+              "z": 1.0
+            },
+            "Max": {
+              "x": 21.0,
+              "y": 35.0,
+              "z": 1.0
+            },
+            "Center": {
+              "x": 21.0,
+              "y": 34.5,
+              "z": 1.0
+            },
+            "Thickness": 1.0,
+            "Length": 2.0,
+            "Height": 2.0
+          }
+        ],
+        "Center": {
+          "x": 20.5,
+          "y": 27.0,
+          "z": 1.0
+        },
+        "Thickness": 1.0,
+        "length": 0.0,
+        "Height": 2.0
+      }
+    ],
+    "ConnectedAreas": [
+      1,
+      4,
+      5
+    ],
+    "Orientation": {
+      "Name": "South",
+      "foreUnit": -1.0,
+      "rightUnit": -1.0,
+      "Forward": {
+        "x": 0.0,
+        "y": -1.0,
+        "z": 0.0
+      },
+      "Back": {
+        "x": 0.0,
+        "y": 1.0,
+        "z": 0.0
+      },
+      "Left": {
+        "x": 1.0,
+        "y": 0.0,
+        "z": 0.0
+      },
+      "Right": {
+        "x": -1.0,
+        "y": 0.0,
+        "z": 0.0
+      }
+    },
+    "RoomIndex": 2,
+    "Floor": {
+      "BottomLeft": {
+        "x": 20.0,
+        "y": 34.0,
+        "z": 1.0
+      },
+      "TopRight": {
+        "x": 11.0,
+        "y": 28.0,
+        "z": 1.0
+      },
+      "BottomRight": {
+        "x": 11.0,
+        "y": 34.0,
+        "z": 1.0
+      },
+      "TopLeft": {
+        "x": 20.0,
+        "y": 28.0,
+        "z": 1.0
+      },
+      "width": 10.0,
+      "height": 7.0,
+      "Center": {
+        "x": 15.5,
+        "y": 31.0,
+        "z": 1.0
+      },
+      "TrueSW": {
+        "x": 11.0,
+        "y": 28.0,
+        "z": 1.0
+      },
+      "TrueNE": {
+        "x": 20.0,
+        "y": 34.0,
+        "z": 1.0
+      },
+      "TrueWidth": 10.0,
+      "TrueHeight": 7.0
+    }
+  },
+  "3": {
+    "creationTime": "2020-01-06T01:54:10.954932-06:00",
+    "Walls": [
+      {
+        "Orientation": {
+          "Name": "East",
+          "foreUnit": 1.0,
+          "rightUnit": -1.0,
+          "Forward": {
+            "x": 1.0,
+            "y": 0.0,
+            "z": 0.0
+          },
+          "Back": {
+            "x": -1.0,
+            "y": 0.0,
+            "z": 0.0
+          },
+          "Left": {
+            "x": 0.0,
+            "y": 1.0,
+            "z": 0.0
+          },
+          "Right": {
+            "x": 0.0,
+            "y": -1.0,
+            "z": 0.0
+          }
+        },
+        "Min": {
+          "x": 31.0,
+          "y": 37.0,
+          "z": 1.0
+        },
+        "Max": {
+          "x": 31.0,
+          "y": 44.0,
+          "z": 1.0
+        },
+        "Paths": [],
+        "Segments": [
+          {
+            "IsPath": false,
+            "IsRemoved": false,
+            "Orientation": {
+              "Name": "East",
+              "foreUnit": 1.0,
+              "rightUnit": -1.0,
+              "Forward": {
+                "x": 1.0,
+                "y": 0.0,
+                "z": 0.0
+              },
+              "Back": {
+                "x": -1.0,
+                "y": 0.0,
+                "z": 0.0
+              },
+              "Left": {
+                "x": 0.0,
+                "y": 1.0,
+                "z": 0.0
+              },
+              "Right": {
+                "x": 0.0,
+                "y": -1.0,
+                "z": 0.0
+              }
+            },
+            "Min": {
+              "x": 31.0,
+              "y": 37.0,
+              "z": 1.0
+            },
+            "Max": {
+              "x": 31.0,
+              "y": 44.0,
+              "z": 1.0
+            },
+            "Center": {
+              "x": 31.0,
+              "y": 40.5,
+              "z": 1.0
+            },
+            "Thickness": 1.0,
+            "Length": 8.0,
+            "Height": 2.0
+          }
+        ],
+        "Center": {
+          "x": 30.5,
+          "y": 37.0,
+          "z": 1.0
+        },
+        "Thickness": 1.0,
+        "length": 0.0,
+        "Height": 2.0
+      },
+      {
+        "Orientation": {
+          "Name": "North",
+          "foreUnit": 1.0,
+          "rightUnit": 1.0,
+          "Forward": {
+            "x": 0.0,
+            "y": 1.0,
+            "z": 0.0
+          },
+          "Back": {
+            "x": 0.0,
+            "y": -1.0,
+            "z": 0.0
+          },
+          "Left": {
+            "x": -1.0,
+            "y": 0.0,
+            "z": 0.0
+          },
+          "Right": {
+            "x": 1.0,
+            "y": 0.0,
+            "z": 0.0
+          }
+        },
+        "Min": {
+          "x": 17.0,
+          "y": 44.0,
+          "z": 1.0
+        },
+        "Max": {
+          "x": 31.0,
+          "y": 44.0,
+          "z": 1.0
+        },
+        "Paths": [],
+        "Segments": [
+          {
+            "IsPath": false,
+            "IsRemoved": false,
+            "Orientation": {
+              "Name": "North",
+              "foreUnit": 1.0,
+              "rightUnit": 1.0,
+              "Forward": {
+                "x": 0.0,
+                "y": 1.0,
+                "z": 0.0
+              },
+              "Back": {
+                "x": 0.0,
+                "y": -1.0,
+                "z": 0.0
+              },
+              "Left": {
+                "x": -1.0,
+                "y": 0.0,
+                "z": 0.0
+              },
+              "Right": {
+                "x": 1.0,
+                "y": 0.0,
+                "z": 0.0
+              }
+            },
+            "Min": {
+              "x": 17.0,
+              "y": 44.0,
+              "z": 1.0
+            },
+            "Max": {
+              "x": 31.0,
+              "y": 44.0,
+              "z": 1.0
+            },
+            "Center": {
+              "x": 24.0,
+              "y": 44.0,
+              "z": 1.0
+            },
+            "Thickness": 1.0,
+            "Length": 15.0,
+            "Height": 2.0
+          }
+        ],
+        "Center": {
+          "x": 17.0,
+          "y": 43.5,
+          "z": 1.0
+        },
+        "Thickness": 1.0,
+        "length": 0.0,
+        "Height": 2.0
+      },
+      {
+        "Orientation": {
+          "Name": "South",
+          "foreUnit": -1.0,
+          "rightUnit": -1.0,
+          "Forward": {
+            "x": 0.0,
+            "y": -1.0,
+            "z": 0.0
+          },
+          "Back": {
+            "x": 0.0,
+            "y": 1.0,
+            "z": 0.0
+          },
+          "Left": {
+            "x": 1.0,
+            "y": 0.0,
+            "z": 0.0
+          },
+          "Right": {
+            "x": -1.0,
+            "y": 0.0,
+            "z": 0.0
+          }
+        },
+        "Min": {
+          "x": 17.0,
+          "y": 37.0,
+          "z": 1.0
+        },
+        "Max": {
+          "x": 31.0,
+          "y": 37.0,
+          "z": 1.0
+        },
+        "Paths": [],
+        "Segments": [
+          {
+            "IsPath": false,
+            "IsRemoved": false,
+            "Orientation": {
+              "Name": "South",
+              "foreUnit": -1.0,
+              "rightUnit": -1.0,
+              "Forward": {
+                "x": 0.0,
+                "y": -1.0,
+                "z": 0.0
+              },
+              "Back": {
+                "x": 0.0,
+                "y": 1.0,
+                "z": 0.0
+              },
+              "Left": {
+                "x": 1.0,
+                "y": 0.0,
+                "z": 0.0
+              },
+              "Right": {
+                "x": -1.0,
+                "y": 0.0,
+                "z": 0.0
+              }
+            },
+            "Min": {
+              "x": 17.0,
+              "y": 37.0,
+              "z": 1.0
+            },
+            "Max": {
+              "x": 31.0,
+              "y": 37.0,
+              "z": 1.0
+            },
+            "Center": {
+              "x": 24.0,
+              "y": 37.0,
+              "z": 1.0
+            },
+            "Thickness": 1.0,
+            "Length": 15.0,
+            "Height": 2.0
+          }
+        ],
+        "Center": {
+          "x": 17.0,
+          "y": 37.5,
+          "z": 1.0
+        },
+        "Thickness": 1.0,
+        "length": 0.0,
+        "Height": 2.0
+      },
+      {
+        "Orientation": {
+          "Name": "West",
+          "foreUnit": -1.0,
+          "rightUnit": 1.0,
+          "Forward": {
+            "x": -1.0,
+            "y": 0.0,
+            "z": 0.0
+          },
+          "Back": {
+            "x": 1.0,
+            "y": 0.0,
+            "z": 0.0
+          },
+          "Left": {
+            "x": 0.0,
+            "y": -1.0,
+            "z": 0.0
+          },
+          "Right": {
+            "x": 0.0,
+            "y": 1.0,
+            "z": 0.0
+          }
+        },
+        "Min": {
+          "x": 17.0,
+          "y": 37.0,
+          "z": 1.0
+        },
+        "Max": {
+          "x": 17.0,
+          "y": 44.0,
+          "z": 1.0
+        },
+        "Paths": [
+          {
+            "IsPath": true,
+            "IsRemoved": true,
+            "Orientation": {
+              "Name": "West",
+              "foreUnit": -1.0,
+              "rightUnit": 1.0,
+              "Forward": {
+                "x": -1.0,
+                "y": 0.0,
+                "z": 0.0
+              },
+              "Back": {
+                "x": 1.0,
+                "y": 0.0,
+                "z": 0.0
+              },
+              "Left": {
+                "x": 0.0,
+                "y": -1.0,
+                "z": 0.0
+              },
+              "Right": {
+                "x": 0.0,
+                "y": 1.0,
+                "z": 0.0
+              }
+            },
+            "Min": {
+              "x": 17.0,
+              "y": 38.0,
+              "z": 1.0
+            },
+            "Max": {
+              "x": 17.0,
+              "y": 43.0,
+              "z": 1.0
+            },
+            "Center": {
+              "x": 17.0,
+              "y": 40.5,
+              "z": 1.0
+            },
+            "Thickness": 1.0,
+            "Length": 6.0,
+            "Height": 2.0
+          }
+        ],
+        "Segments": [
+          {
+            "IsPath": false,
+            "IsRemoved": false,
+            "Orientation": {
+              "Name": "West",
+              "foreUnit": -1.0,
+              "rightUnit": 1.0,
+              "Forward": {
+                "x": -1.0,
+                "y": 0.0,
+                "z": 0.0
+              },
+              "Back": {
+                "x": 1.0,
+                "y": 0.0,
+                "z": 0.0
+              },
+              "Left": {
+                "x": 0.0,
+                "y": -1.0,
+                "z": 0.0
+              },
+              "Right": {
+                "x": 0.0,
+                "y": 1.0,
+                "z": 0.0
+              }
+            },
+            "Min": {
+              "x": 17.0,
+              "y": 37.0,
+              "z": 1.0
+            },
+            "Max": {
+              "x": 17.0,
+              "y": 38.0,
+              "z": 1.0
+            },
+            "Center": {
+              "x": 17.0,
+              "y": 37.5,
+              "z": 1.0
+            },
+            "Thickness": 1.0,
+            "Length": 2.0,
+            "Height": 2.0
+          },
+          {
+            "IsPath": false,
+            "IsRemoved": false,
+            "Orientation": {
+              "Name": "West",
+              "foreUnit": -1.0,
+              "rightUnit": 1.0,
+              "Forward": {
+                "x": -1.0,
+                "y": 0.0,
+                "z": 0.0
+              },
+              "Back": {
+                "x": 1.0,
+                "y": 0.0,
+                "z": 0.0
+              },
+              "Left": {
+                "x": 0.0,
+                "y": -1.0,
+                "z": 0.0
+              },
+              "Right": {
+                "x": 0.0,
+                "y": 1.0,
+                "z": 0.0
+              }
+            },
+            "Min": {
+              "x": 17.0,
+              "y": 43.0,
+              "z": 1.0
+            },
+            "Max": {
+              "x": 17.0,
+              "y": 44.0,
+              "z": 1.0
+            },
+            "Center": {
+              "x": 17.0,
+              "y": 43.5,
+              "z": 1.0
+            },
+            "Thickness": 1.0,
+            "Length": 2.0,
+            "Height": 2.0
+          }
+        ],
+        "Center": {
+          "x": 17.5,
+          "y": 37.0,
+          "z": 1.0
+        },
+        "Thickness": 1.0,
+        "length": 0.0,
+        "Height": 2.0
+      }
+    ],
+    "ConnectedAreas": [
+      1
+    ],
+    "Orientation": {
+      "Name": "East",
+      "foreUnit": 1.0,
+      "rightUnit": -1.0,
+      "Forward": {
+        "x": 1.0,
+        "y": 0.0,
+        "z": 0.0
+      },
+      "Back": {
+        "x": -1.0,
+        "y": 0.0,
+        "z": 0.0
+      },
+      "Left": {
+        "x": 0.0,
+        "y": 1.0,
+        "z": 0.0
+      },
+      "Right": {
+        "x": 0.0,
+        "y": -1.0,
+        "z": 0.0
+      }
+    },
+    "RoomIndex": 3,
+    "Floor": {
+      "BottomLeft": {
+        "x": 18.0,
+        "y": 43.0,
+        "z": 1.0
+      },
+      "TopRight": {
+        "x": 30.0,
+        "y": 38.0,
+        "z": 1.0
+      },
+      "BottomRight": {
+        "x": 18.0,
+        "y": 38.0,
+        "z": 1.0
+      },
+      "TopLeft": {
+        "x": 30.0,
+        "y": 43.0,
+        "z": 1.0
+      },
+      "width": 6.0,
+      "height": 13.0,
+      "Center": {
+        "x": 24.0,
+        "y": 40.5,
+        "z": 1.0
+      },
+      "TrueSW": {
+        "x": 18.0,
+        "y": 38.0,
+        "z": 1.0
+      },
+      "TrueNE": {
+        "x": 30.0,
+        "y": 43.0,
+        "z": 1.0
+      },
+      "TrueWidth": 13.0,
+      "TrueHeight": 6.0
+    }
+  },
+  "4": {
+    "creationTime": "2020-01-06T01:54:10.956926-06:00",
+    "Walls": [
+      {
+        "Orientation": {
+          "Name": "East",
+          "foreUnit": 1.0,
+          "rightUnit": -1.0,
+          "Forward": {
+            "x": 1.0,
+            "y": 0.0,
+            "z": 0.0
+          },
+          "Back": {
+            "x": -1.0,
+            "y": 0.0,
+            "z": 0.0
+          },
+          "Left": {
+            "x": 0.0,
+            "y": 1.0,
+            "z": 0.0
+          },
+          "Right": {
+            "x": 0.0,
+            "y": -1.0,
+            "z": 0.0
+          }
+        },
+        "Min": {
+          "x": 29.0,
+          "y": 26.0,
+          "z": 1.0
+        },
+        "Max": {
+          "x": 29.0,
+          "y": 37.0,
+          "z": 1.0
+        },
+        "Paths": [],
+        "Segments": [
+          {
+            "IsPath": false,
+            "IsRemoved": false,
+            "Orientation": {
+              "Name": "East",
+              "foreUnit": 1.0,
+              "rightUnit": -1.0,
+              "Forward": {
+                "x": 1.0,
+                "y": 0.0,
+                "z": 0.0
+              },
+              "Back": {
+                "x": -1.0,
+                "y": 0.0,
+                "z": 0.0
+              },
+              "Left": {
+                "x": 0.0,
+                "y": 1.0,
+                "z": 0.0
+              },
+              "Right": {
+                "x": 0.0,
+                "y": -1.0,
+                "z": 0.0
+              }
+            },
+            "Min": {
+              "x": 29.0,
+              "y": 26.0,
+              "z": 1.0
+            },
+            "Max": {
+              "x": 29.0,
+              "y": 37.0,
+              "z": 1.0
+            },
+            "Center": {
+              "x": 29.0,
+              "y": 31.5,
+              "z": 1.0
+            },
+            "Thickness": 1.0,
+            "Length": 12.0,
+            "Height": 2.0
+          }
+        ],
+        "Center": {
+          "x": 28.5,
+          "y": 26.0,
+          "z": 1.0
+        },
+        "Thickness": 1.0,
+        "length": 0.0,
+        "Height": 2.0
+      },
+      {
+        "Orientation": {
+          "Name": "North",
+          "foreUnit": 1.0,
+          "rightUnit": 1.0,
+          "Forward": {
+            "x": 0.0,
+            "y": 1.0,
+            "z": 0.0
+          },
+          "Back": {
+            "x": 0.0,
+            "y": -1.0,
+            "z": 0.0
+          },
+          "Left": {
+            "x": -1.0,
+            "y": 0.0,
+            "z": 0.0
+          },
+          "Right": {
+            "x": 1.0,
+            "y": 0.0,
+            "z": 0.0
+          }
+        },
+        "Min": {
+          "x": 21.0,
+          "y": 37.0,
+          "z": 1.0
+        },
+        "Max": {
+          "x": 29.0,
+          "y": 37.0,
+          "z": 1.0
+        },
+        "Paths": [],
+        "Segments": [
+          {
+            "IsPath": false,
+            "IsRemoved": false,
+            "Orientation": {
+              "Name": "North",
+              "foreUnit": 1.0,
+              "rightUnit": 1.0,
+              "Forward": {
+                "x": 0.0,
+                "y": 1.0,
+                "z": 0.0
+              },
+              "Back": {
+                "x": 0.0,
+                "y": -1.0,
+                "z": 0.0
+              },
+              "Left": {
+                "x": -1.0,
+                "y": 0.0,
+                "z": 0.0
+              },
+              "Right": {
+                "x": 1.0,
+                "y": 0.0,
+                "z": 0.0
+              }
+            },
+            "Min": {
+              "x": 21.0,
+              "y": 37.0,
+              "z": 1.0
+            },
+            "Max": {
+              "x": 29.0,
+              "y": 37.0,
+              "z": 1.0
+            },
+            "Center": {
+              "x": 25.0,
+              "y": 37.0,
+              "z": 1.0
+            },
+            "Thickness": 1.0,
+            "Length": 9.0,
+            "Height": 2.0
+          }
+        ],
+        "Center": {
+          "x": 21.0,
+          "y": 36.5,
+          "z": 1.0
+        },
+        "Thickness": 1.0,
+        "length": 0.0,
+        "Height": 2.0
+      },
+      {
+        "Orientation": {
+          "Name": "West",
+          "foreUnit": -1.0,
+          "rightUnit": 1.0,
+          "Forward": {
+            "x": -1.0,
+            "y": 0.0,
+            "z": 0.0
+          },
+          "Back": {
+            "x": 1.0,
+            "y": 0.0,
+            "z": 0.0
+          },
+          "Left": {
+            "x": 0.0,
+            "y": -1.0,
+            "z": 0.0
+          },
+          "Right": {
+            "x": 0.0,
+            "y": 1.0,
+            "z": 0.0
+          }
+        },
+        "Min": {
+          "x": 21.0,
+          "y": 26.0,
+          "z": 1.0
+        },
+        "Max": {
+          "x": 21.0,
+          "y": 37.0,
+          "z": 1.0
+        },
+        "Paths": [
+          {
+            "IsPath": true,
+            "IsRemoved": true,
+            "Orientation": {
+              "Name": "West",
+              "foreUnit": -1.0,
+              "rightUnit": 1.0,
+              "Forward": {
+                "x": -1.0,
+                "y": 0.0,
+                "z": 0.0
+              },
+              "Back": {
+                "x": 1.0,
+                "y": 0.0,
+                "z": 0.0
+              },
+              "Left": {
+                "x": 0.0,
+                "y": -1.0,
+                "z": 0.0
+              },
+              "Right": {
+                "x": 0.0,
+                "y": 1.0,
+                "z": 0.0
+              }
+            },
+            "Min": {
+              "x": 21.0,
+              "y": 28.0,
+              "z": 1.0
+            },
+            "Max": {
+              "x": 21.0,
+              "y": 34.0,
+              "z": 1.0
+            },
+            "Center": {
+              "x": 21.0,
+              "y": 31.0,
+              "z": 1.0
+            },
+            "Thickness": 1.0,
+            "Length": 7.0,
+            "Height": 2.0
+          }
+        ],
+        "Segments": [
+          {
+            "IsPath": false,
+            "IsRemoved": false,
+            "Orientation": {
+              "Name": "West",
+              "foreUnit": -1.0,
+              "rightUnit": 1.0,
+              "Forward": {
+                "x": -1.0,
+                "y": 0.0,
+                "z": 0.0
+              },
+              "Back": {
+                "x": 1.0,
+                "y": 0.0,
+                "z": 0.0
+              },
+              "Left": {
+                "x": 0.0,
+                "y": -1.0,
+                "z": 0.0
+              },
+              "Right": {
+                "x": 0.0,
+                "y": 1.0,
+                "z": 0.0
+              }
+            },
+            "Min": {
+              "x": 21.0,
+              "y": 26.0,
+              "z": 1.0
+            },
+            "Max": {
+              "x": 21.0,
+              "y": 28.0,
+              "z": 1.0
+            },
+            "Center": {
+              "x": 21.0,
+              "y": 27.0,
+              "z": 1.0
+            },
+            "Thickness": 1.0,
+            "Length": 3.0,
+            "Height": 2.0
+          },
+          {
+            "IsPath": false,
+            "IsRemoved": false,
+            "Orientation": {
+              "Name": "West",
+              "foreUnit": -1.0,
+              "rightUnit": 1.0,
+              "Forward": {
+                "x": -1.0,
+                "y": 0.0,
+                "z": 0.0
+              },
+              "Back": {
+                "x": 1.0,
+                "y": 0.0,
+                "z": 0.0
+              },
+              "Left": {
+                "x": 0.0,
+                "y": -1.0,
+                "z": 0.0
+              },
+              "Right": {
+                "x": 0.0,
+                "y": 1.0,
+                "z": 0.0
+              }
+            },
+            "Min": {
+              "x": 21.0,
+              "y": 34.0,
+              "z": 1.0
+            },
+            "Max": {
+              "x": 21.0,
+              "y": 37.0,
+              "z": 1.0
+            },
+            "Center": {
+              "x": 21.0,
+              "y": 35.5,
+              "z": 1.0
+            },
+            "Thickness": 1.0,
+            "Length": 4.0,
+            "Height": 2.0
+          }
+        ],
+        "Center": {
+          "x": 21.5,
+          "y": 26.0,
+          "z": 1.0
+        },
+        "Thickness": 1.0,
+        "length": 0.0,
+        "Height": 2.0
+      },
+      {
+        "Orientation": {
+          "Name": "South",
+          "foreUnit": -1.0,
+          "rightUnit": -1.0,
+          "Forward": {
+            "x": 0.0,
+            "y": -1.0,
+            "z": 0.0
+          },
+          "Back": {
+            "x": 0.0,
+            "y": 1.0,
+            "z": 0.0
+          },
+          "Left": {
+            "x": 1.0,
+            "y": 0.0,
+            "z": 0.0
+          },
+          "Right": {
+            "x": -1.0,
+            "y": 0.0,
+            "z": 0.0
+          }
+        },
+        "Min": {
+          "x": 21.0,
+          "y": 26.0,
+          "z": 1.0
+        },
+        "Max": {
+          "x": 29.0,
+          "y": 26.0,
+          "z": 1.0
+        },
+        "Paths": [
+          {
+            "IsPath": true,
+            "IsRemoved": false,
+            "Orientation": {
+              "Name": "South",
+              "foreUnit": -1.0,
+              "rightUnit": -1.0,
+              "Forward": {
+                "x": 0.0,
+                "y": -1.0,
+                "z": 0.0
+              },
+              "Back": {
+                "x": 0.0,
+                "y": 1.0,
+                "z": 0.0
+              },
+              "Left": {
+                "x": 1.0,
+                "y": 0.0,
+                "z": 0.0
+              },
+              "Right": {
+                "x": -1.0,
+                "y": 0.0,
+                "z": 0.0
+              }
+            },
+            "Min": {
+              "x": 25.0,
+              "y": 26.0,
+              "z": 1.0
+            },
+            "Max": {
+              "x": 26.0,
+              "y": 26.0,
+              "z": 1.0
+            },
+            "Center": {
+              "x": 25.5,
+              "y": 26.0,
+              "z": 1.0
+            },
+            "Thickness": 1.0,
+            "Length": 2.0,
+            "Height": 2.0
+          }
+        ],
+        "Segments": [
+          {
+            "IsPath": false,
+            "IsRemoved": false,
+            "Orientation": {
+              "Name": "South",
+              "foreUnit": -1.0,
+              "rightUnit": -1.0,
+              "Forward": {
+                "x": 0.0,
+                "y": -1.0,
+                "z": 0.0
+              },
+              "Back": {
+                "x": 0.0,
+                "y": 1.0,
+                "z": 0.0
+              },
+              "Left": {
+                "x": 1.0,
+                "y": 0.0,
+                "z": 0.0
+              },
+              "Right": {
+                "x": -1.0,
+                "y": 0.0,
+                "z": 0.0
+              }
+            },
+            "Min": {
+              "x": 21.0,
+              "y": 26.0,
+              "z": 1.0
+            },
+            "Max": {
+              "x": 25.0,
+              "y": 26.0,
+              "z": 1.0
+            },
+            "Center": {
+              "x": 23.0,
+              "y": 26.0,
+              "z": 1.0
+            },
+            "Thickness": 1.0,
+            "Length": 5.0,
+            "Height": 2.0
+          },
+          {
+            "IsPath": false,
+            "IsRemoved": false,
+            "Orientation": {
+              "Name": "South",
+              "foreUnit": -1.0,
+              "rightUnit": -1.0,
+              "Forward": {
+                "x": 0.0,
+                "y": -1.0,
+                "z": 0.0
+              },
+              "Back": {
+                "x": 0.0,
+                "y": 1.0,
+                "z": 0.0
+              },
+              "Left": {
+                "x": 1.0,
+                "y": 0.0,
+                "z": 0.0
+              },
+              "Right": {
+                "x": -1.0,
+                "y": 0.0,
+                "z": 0.0
+              }
+            },
+            "Min": {
+              "x": 26.0,
+              "y": 26.0,
+              "z": 1.0
+            },
+            "Max": {
+              "x": 29.0,
+              "y": 26.0,
+              "z": 1.0
+            },
+            "Center": {
+              "x": 27.5,
+              "y": 26.0,
+              "z": 1.0
+            },
+            "Thickness": 1.0,
+            "Length": 4.0,
+            "Height": 2.0
+          }
+        ],
+        "Center": {
+          "x": 21.0,
+          "y": 26.5,
+          "z": 1.0
+        },
+        "Thickness": 1.0,
+        "length": 0.0,
+        "Height": 2.0
+      }
+    ],
+    "ConnectedAreas": [
+      2,
+      7
+    ],
+    "Orientation": {
+      "Name": "South",
+      "foreUnit": -1.0,
+      "rightUnit": -1.0,
+      "Forward": {
+        "x": 0.0,
+        "y": -1.0,
+        "z": 0.0
+      },
+      "Back": {
+        "x": 0.0,
+        "y": 1.0,
+        "z": 0.0
+      },
+      "Left": {
+        "x": 1.0,
+        "y": 0.0,
+        "z": 0.0
+      },
+      "Right": {
+        "x": -1.0,
+        "y": 0.0,
+        "z": 0.0
+      }
+    },
+    "RoomIndex": 4,
+    "Floor": {
+      "BottomLeft": {
+        "x": 28.0,
+        "y": 36.0,
+        "z": 1.0
+      },
+      "TopRight": {
+        "x": 22.0,
+        "y": 27.0,
+        "z": 1.0
+      },
+      "BottomRight": {
+        "x": 22.0,
+        "y": 36.0,
+        "z": 1.0
+      },
+      "TopLeft": {
+        "x": 28.0,
+        "y": 27.0,
+        "z": 1.0
+      },
+      "width": 7.0,
+      "height": 10.0,
+      "Center": {
+        "x": 25.0,
+        "y": 31.5,
+        "z": 1.0
+      },
+      "TrueSW": {
+        "x": 22.0,
+        "y": 27.0,
+        "z": 1.0
+      },
+      "TrueNE": {
+        "x": 28.0,
+        "y": 36.0,
+        "z": 1.0
+      },
+      "TrueWidth": 7.0,
+      "TrueHeight": 10.0
+    }
+  },
+  "5": {
+    "creationTime": "2020-01-06T01:54:10.9579206-06:00",
+    "Walls": [
+      {
+        "Orientation": {
+          "Name": "West",
+          "foreUnit": -1.0,
+          "rightUnit": 1.0,
+          "Forward": {
+            "x": -1.0,
+            "y": 0.0,
+            "z": 0.0
+          },
+          "Back": {
+            "x": 1.0,
+            "y": 0.0,
+            "z": 0.0
+          },
+          "Left": {
+            "x": 0.0,
+            "y": -1.0,
+            "z": 0.0
+          },
+          "Right": {
+            "x": 0.0,
+            "y": 1.0,
+            "z": 0.0
+          }
+        },
+        "Min": {
+          "x": 2.0,
+          "y": 20.0,
+          "z": 1.0
+        },
+        "Max": {
+          "x": 2.0,
+          "y": 32.0,
+          "z": 1.0
+        },
+        "Paths": [],
+        "Segments": [
+          {
+            "IsPath": false,
+            "IsRemoved": false,
+            "Orientation": {
+              "Name": "West",
+              "foreUnit": -1.0,
+              "rightUnit": 1.0,
+              "Forward": {
+                "x": -1.0,
+                "y": 0.0,
+                "z": 0.0
+              },
+              "Back": {
+                "x": 1.0,
+                "y": 0.0,
+                "z": 0.0
+              },
+              "Left": {
+                "x": 0.0,
+                "y": -1.0,
+                "z": 0.0
+              },
+              "Right": {
+                "x": 0.0,
+                "y": 1.0,
+                "z": 0.0
+              }
+            },
+            "Min": {
+              "x": 2.0,
+              "y": 20.0,
+              "z": 1.0
+            },
+            "Max": {
+              "x": 2.0,
+              "y": 32.0,
+              "z": 1.0
+            },
+            "Center": {
+              "x": 2.0,
+              "y": 26.0,
+              "z": 1.0
+            },
+            "Thickness": 1.0,
+            "Length": 13.0,
+            "Height": 2.0
+          }
+        ],
+        "Center": {
+          "x": 2.5,
+          "y": 20.0,
+          "z": 1.0
+        },
+        "Thickness": 1.0,
+        "length": 0.0,
+        "Height": 2.0
+      },
+      {
+        "Orientation": {
+          "Name": "North",
+          "foreUnit": 1.0,
+          "rightUnit": 1.0,
+          "Forward": {
+            "x": 0.0,
+            "y": 1.0,
+            "z": 0.0
+          },
+          "Back": {
+            "x": 0.0,
+            "y": -1.0,
+            "z": 0.0
+          },
+          "Left": {
+            "x": -1.0,
+            "y": 0.0,
+            "z": 0.0
+          },
+          "Right": {
+            "x": 1.0,
+            "y": 0.0,
+            "z": 0.0
+          }
+        },
+        "Min": {
+          "x": 2.0,
+          "y": 32.0,
+          "z": 1.0
+        },
+        "Max": {
+          "x": 10.0,
+          "y": 32.0,
+          "z": 1.0
+        },
+        "Paths": [],
+        "Segments": [
+          {
+            "IsPath": false,
+            "IsRemoved": false,
+            "Orientation": {
+              "Name": "North",
+              "foreUnit": 1.0,
+              "rightUnit": 1.0,
+              "Forward": {
+                "x": 0.0,
+                "y": 1.0,
+                "z": 0.0
+              },
+              "Back": {
+                "x": 0.0,
+                "y": -1.0,
+                "z": 0.0
+              },
+              "Left": {
+                "x": -1.0,
+                "y": 0.0,
+                "z": 0.0
+              },
+              "Right": {
+                "x": 1.0,
+                "y": 0.0,
+                "z": 0.0
+              }
+            },
+            "Min": {
+              "x": 2.0,
+              "y": 32.0,
+              "z": 1.0
+            },
+            "Max": {
+              "x": 10.0,
+              "y": 32.0,
+              "z": 1.0
+            },
+            "Center": {
+              "x": 6.0,
+              "y": 32.0,
+              "z": 1.0
+            },
+            "Thickness": 1.0,
+            "Length": 9.0,
+            "Height": 2.0
+          }
+        ],
+        "Center": {
+          "x": 2.0,
+          "y": 31.5,
+          "z": 1.0
+        },
+        "Thickness": 1.0,
+        "length": 0.0,
+        "Height": 2.0
+      },
+      {
+        "Orientation": {
+          "Name": "East",
+          "foreUnit": 1.0,
+          "rightUnit": -1.0,
+          "Forward": {
+            "x": 1.0,
+            "y": 0.0,
+            "z": 0.0
+          },
+          "Back": {
+            "x": -1.0,
+            "y": 0.0,
+            "z": 0.0
+          },
+          "Left": {
+            "x": 0.0,
+            "y": 1.0,
+            "z": 0.0
+          },
+          "Right": {
+            "x": 0.0,
+            "y": -1.0,
+            "z": 0.0
+          }
+        },
+        "Min": {
+          "x": 10.0,
+          "y": 20.0,
+          "z": 1.0
+        },
+        "Max": {
+          "x": 10.0,
+          "y": 32.0,
+          "z": 1.0
+        },
+        "Paths": [
+          {
+            "IsPath": true,
+            "IsRemoved": true,
+            "Orientation": {
+              "Name": "East",
+              "foreUnit": 1.0,
+              "rightUnit": -1.0,
+              "Forward": {
+                "x": 1.0,
+                "y": 0.0,
+                "z": 0.0
+              },
+              "Back": {
+                "x": -1.0,
+                "y": 0.0,
+                "z": 0.0
+              },
+              "Left": {
+                "x": 0.0,
+                "y": 1.0,
+                "z": 0.0
+              },
+              "Right": {
+                "x": 0.0,
+                "y": -1.0,
+                "z": 0.0
+              }
+            },
+            "Min": {
+              "x": 10.0,
+              "y": 28.0,
+              "z": 1.0
+            },
+            "Max": {
+              "x": 10.0,
+              "y": 31.0,
+              "z": 1.0
+            },
+            "Center": {
+              "x": 10.0,
+              "y": 29.5,
+              "z": 1.0
+            },
+            "Thickness": 1.0,
+            "Length": 4.0,
+            "Height": 2.0
+          }
+        ],
+        "Segments": [
+          {
+            "IsPath": false,
+            "IsRemoved": false,
+            "Orientation": {
+              "Name": "East",
+              "foreUnit": 1.0,
+              "rightUnit": -1.0,
+              "Forward": {
+                "x": 1.0,
+                "y": 0.0,
+                "z": 0.0
+              },
+              "Back": {
+                "x": -1.0,
+                "y": 0.0,
+                "z": 0.0
+              },
+              "Left": {
+                "x": 0.0,
+                "y": 1.0,
+                "z": 0.0
+              },
+              "Right": {
+                "x": 0.0,
+                "y": -1.0,
+                "z": 0.0
+              }
+            },
+            "Min": {
+              "x": 10.0,
+              "y": 20.0,
+              "z": 1.0
+            },
+            "Max": {
+              "x": 10.0,
+              "y": 28.0,
+              "z": 1.0
+            },
+            "Center": {
+              "x": 10.0,
+              "y": 24.0,
+              "z": 1.0
+            },
+            "Thickness": 1.0,
+            "Length": 9.0,
+            "Height": 2.0
+          },
+          {
+            "IsPath": false,
+            "IsRemoved": false,
+            "Orientation": {
+              "Name": "East",
+              "foreUnit": 1.0,
+              "rightUnit": -1.0,
+              "Forward": {
+                "x": 1.0,
+                "y": 0.0,
+                "z": 0.0
+              },
+              "Back": {
+                "x": -1.0,
+                "y": 0.0,
+                "z": 0.0
+              },
+              "Left": {
+                "x": 0.0,
+                "y": 1.0,
+                "z": 0.0
+              },
+              "Right": {
+                "x": 0.0,
+                "y": -1.0,
+                "z": 0.0
+              }
+            },
+            "Min": {
+              "x": 10.0,
+              "y": 31.0,
+              "z": 1.0
+            },
+            "Max": {
+              "x": 10.0,
+              "y": 32.0,
+              "z": 1.0
+            },
+            "Center": {
+              "x": 10.0,
+              "y": 31.5,
+              "z": 1.0
+            },
+            "Thickness": 1.0,
+            "Length": 2.0,
+            "Height": 2.0
+          }
+        ],
+        "Center": {
+          "x": 9.5,
+          "y": 20.0,
+          "z": 1.0
+        },
+        "Thickness": 1.0,
+        "length": 0.0,
+        "Height": 2.0
+      },
+      {
+        "Orientation": {
+          "Name": "South",
+          "foreUnit": -1.0,
+          "rightUnit": -1.0,
+          "Forward": {
+            "x": 0.0,
+            "y": -1.0,
+            "z": 0.0
+          },
+          "Back": {
+            "x": 0.0,
+            "y": 1.0,
+            "z": 0.0
+          },
+          "Left": {
+            "x": 1.0,
+            "y": 0.0,
+            "z": 0.0
+          },
+          "Right": {
+            "x": -1.0,
+            "y": 0.0,
+            "z": 0.0
+          }
+        },
+        "Min": {
+          "x": 2.0,
+          "y": 20.0,
+          "z": 1.0
+        },
+        "Max": {
+          "x": 10.0,
+          "y": 20.0,
+          "z": 1.0
+        },
+        "Paths": [
+          {
+            "IsPath": true,
+            "IsRemoved": false,
+            "Orientation": {
+              "Name": "South",
+              "foreUnit": -1.0,
+              "rightUnit": -1.0,
+              "Forward": {
+                "x": 0.0,
+                "y": -1.0,
+                "z": 0.0
+              },
+              "Back": {
+                "x": 0.0,
+                "y": 1.0,
+                "z": 0.0
+              },
+              "Left": {
+                "x": 1.0,
+                "y": 0.0,
+                "z": 0.0
+              },
+              "Right": {
+                "x": -1.0,
+                "y": 0.0,
+                "z": 0.0
+              }
+            },
+            "Min": {
+              "x": 4.0,
+              "y": 20.0,
+              "z": 1.0
+            },
+            "Max": {
+              "x": 5.0,
+              "y": 20.0,
+              "z": 1.0
+            },
+            "Center": {
+              "x": 4.5,
+              "y": 20.0,
+              "z": 1.0
+            },
+            "Thickness": 1.0,
+            "Length": 2.0,
+            "Height": 2.0
+          }
+        ],
+        "Segments": [
+          {
+            "IsPath": false,
+            "IsRemoved": false,
+            "Orientation": {
+              "Name": "South",
+              "foreUnit": -1.0,
+              "rightUnit": -1.0,
+              "Forward": {
+                "x": 0.0,
+                "y": -1.0,
+                "z": 0.0
+              },
+              "Back": {
+                "x": 0.0,
+                "y": 1.0,
+                "z": 0.0
+              },
+              "Left": {
+                "x": 1.0,
+                "y": 0.0,
+                "z": 0.0
+              },
+              "Right": {
+                "x": -1.0,
+                "y": 0.0,
+                "z": 0.0
+              }
+            },
+            "Min": {
+              "x": 2.0,
+              "y": 20.0,
+              "z": 1.0
+            },
+            "Max": {
+              "x": 4.0,
+              "y": 20.0,
+              "z": 1.0
+            },
+            "Center": {
+              "x": 3.0,
+              "y": 20.0,
+              "z": 1.0
+            },
+            "Thickness": 1.0,
+            "Length": 3.0,
+            "Height": 2.0
+          },
+          {
+            "IsPath": false,
+            "IsRemoved": false,
+            "Orientation": {
+              "Name": "South",
+              "foreUnit": -1.0,
+              "rightUnit": -1.0,
+              "Forward": {
+                "x": 0.0,
+                "y": -1.0,
+                "z": 0.0
+              },
+              "Back": {
+                "x": 0.0,
+                "y": 1.0,
+                "z": 0.0
+              },
+              "Left": {
+                "x": 1.0,
+                "y": 0.0,
+                "z": 0.0
+              },
+              "Right": {
+                "x": -1.0,
+                "y": 0.0,
+                "z": 0.0
+              }
+            },
+            "Min": {
+              "x": 5.0,
+              "y": 20.0,
+              "z": 1.0
+            },
+            "Max": {
+              "x": 10.0,
+              "y": 20.0,
+              "z": 1.0
+            },
+            "Center": {
+              "x": 7.5,
+              "y": 20.0,
+              "z": 1.0
+            },
+            "Thickness": 1.0,
+            "Length": 6.0,
+            "Height": 2.0
+          }
+        ],
+        "Center": {
+          "x": 2.0,
+          "y": 20.5,
+          "z": 1.0
+        },
+        "Thickness": 1.0,
+        "length": 0.0,
+        "Height": 2.0
+      }
+    ],
+    "ConnectedAreas": [
+      2,
+      6
+    ],
+    "Orientation": {
+      "Name": "West",
+      "foreUnit": -1.0,
+      "rightUnit": 1.0,
+      "Forward": {
+        "x": -1.0,
+        "y": 0.0,
+        "z": 0.0
+      },
+      "Back": {
+        "x": 1.0,
+        "y": 0.0,
+        "z": 0.0
+      },
+      "Left": {
+        "x": 0.0,
+        "y": -1.0,
+        "z": 0.0
+      },
+      "Right": {
+        "x": 0.0,
+        "y": 1.0,
+        "z": 0.0
+      }
+    },
+    "RoomIndex": 5,
+    "Floor": {
+      "BottomLeft": {
+        "x": 9.0,
+        "y": 21.0,
+        "z": 1.0
+      },
+      "TopRight": {
+        "x": 3.0,
+        "y": 31.0,
+        "z": 1.0
+      },
+      "BottomRight": {
+        "x": 9.0,
+        "y": 31.0,
+        "z": 1.0
+      },
+      "TopLeft": {
+        "x": 3.0,
+        "y": 21.0,
+        "z": 1.0
+      },
+      "width": 11.0,
+      "height": 7.0,
+      "Center": {
+        "x": 6.0,
+        "y": 26.0,
+        "z": 1.0
+      },
+      "TrueSW": {
+        "x": 3.0,
+        "y": 21.0,
+        "z": 1.0
+      },
+      "TrueNE": {
+        "x": 9.0,
+        "y": 31.0,
+        "z": 1.0
+      },
+      "TrueWidth": 7.0,
+      "TrueHeight": 11.0
+    }
+  },
+  "6": {
+    "creationTime": "2020-01-06T01:54:10.9589183-06:00",
+    "Walls": [
+      {
+        "Orientation": {
+          "Name": "North",
+          "foreUnit": 1.0,
+          "rightUnit": 1.0,
+          "Forward": {
+            "x": 0.0,
+            "y": 1.0,
+            "z": 0.0
+          },
+          "Back": {
+            "x": 0.0,
+            "y": -1.0,
+            "z": 0.0
+          },
+          "Left": {
+            "x": -1.0,
+            "y": 0.0,
+            "z": 0.0
+          },
+          "Right": {
+            "x": 1.0,
+            "y": 0.0,
+            "z": 0.0
+          }
+        },
+        "Min": {
+          "x": 2.0,
+          "y": 20.0,
+          "z": 1.0
+        },
+        "Max": {
+          "x": 13.0,
+          "y": 20.0,
+          "z": 1.0
+        },
+        "Paths": [
+          {
+            "IsPath": true,
+            "IsRemoved": true,
+            "Orientation": {
+              "Name": "North",
+              "foreUnit": 1.0,
+              "rightUnit": 1.0,
+              "Forward": {
+                "x": 0.0,
+                "y": 1.0,
+                "z": 0.0
+              },
+              "Back": {
+                "x": 0.0,
+                "y": -1.0,
+                "z": 0.0
+              },
+              "Left": {
+                "x": -1.0,
+                "y": 0.0,
+                "z": 0.0
+              },
+              "Right": {
+                "x": 1.0,
+                "y": 0.0,
+                "z": 0.0
+              }
+            },
+            "Min": {
+              "x": 3.0,
+              "y": 20.0,
+              "z": 1.0
+            },
+            "Max": {
+              "x": 9.0,
+              "y": 20.0,
+              "z": 1.0
+            },
+            "Center": {
+              "x": 6.0,
+              "y": 20.0,
+              "z": 1.0
+            },
+            "Thickness": 1.0,
+            "Length": 7.0,
+            "Height": 2.0
+          }
+        ],
+        "Segments": [
+          {
+            "IsPath": false,
+            "IsRemoved": false,
+            "Orientation": {
+              "Name": "North",
+              "foreUnit": 1.0,
+              "rightUnit": 1.0,
+              "Forward": {
+                "x": 0.0,
+                "y": 1.0,
+                "z": 0.0
+              },
+              "Back": {
+                "x": 0.0,
+                "y": -1.0,
+                "z": 0.0
+              },
+              "Left": {
+                "x": -1.0,
+                "y": 0.0,
+                "z": 0.0
+              },
+              "Right": {
+                "x": 1.0,
+                "y": 0.0,
+                "z": 0.0
+              }
+            },
+            "Min": {
+              "x": 2.0,
+              "y": 20.0,
+              "z": 1.0
+            },
+            "Max": {
+              "x": 3.0,
+              "y": 20.0,
+              "z": 1.0
+            },
+            "Center": {
+              "x": 2.5,
+              "y": 20.0,
+              "z": 1.0
+            },
+            "Thickness": 1.0,
+            "Length": 2.0,
+            "Height": 2.0
+          },
+          {
+            "IsPath": false,
+            "IsRemoved": false,
+            "Orientation": {
+              "Name": "North",
+              "foreUnit": 1.0,
+              "rightUnit": 1.0,
+              "Forward": {
+                "x": 0.0,
+                "y": 1.0,
+                "z": 0.0
+              },
+              "Back": {
+                "x": 0.0,
+                "y": -1.0,
+                "z": 0.0
+              },
+              "Left": {
+                "x": -1.0,
+                "y": 0.0,
+                "z": 0.0
+              },
+              "Right": {
+                "x": 1.0,
+                "y": 0.0,
+                "z": 0.0
+              }
+            },
+            "Min": {
+              "x": 9.0,
+              "y": 20.0,
+              "z": 1.0
+            },
+            "Max": {
+              "x": 13.0,
+              "y": 20.0,
+              "z": 1.0
+            },
+            "Center": {
+              "x": 11.0,
+              "y": 20.0,
+              "z": 1.0
+            },
+            "Thickness": 1.0,
+            "Length": 5.0,
+            "Height": 2.0
+          }
+        ],
+        "Center": {
+          "x": 2.0,
+          "y": 19.5,
+          "z": 1.0
+        },
+        "Thickness": 1.0,
+        "length": 0.0,
+        "Height": 2.0
+      },
+      {
+        "Orientation": {
+          "Name": "East",
+          "foreUnit": 1.0,
+          "rightUnit": -1.0,
+          "Forward": {
+            "x": 1.0,
+            "y": 0.0,
+            "z": 0.0
+          },
+          "Back": {
+            "x": -1.0,
+            "y": 0.0,
+            "z": 0.0
+          },
+          "Left": {
+            "x": 0.0,
+            "y": 1.0,
+            "z": 0.0
+          },
+          "Right": {
+            "x": 0.0,
+            "y": -1.0,
+            "z": 0.0
+          }
+        },
+        "Min": {
+          "x": 13.0,
+          "y": 13.0,
+          "z": 1.0
+        },
+        "Max": {
+          "x": 13.0,
+          "y": 20.0,
+          "z": 1.0
+        },
+        "Paths": [],
+        "Segments": [
+          {
+            "IsPath": false,
+            "IsRemoved": false,
+            "Orientation": {
+              "Name": "East",
+              "foreUnit": 1.0,
+              "rightUnit": -1.0,
+              "Forward": {
+                "x": 1.0,
+                "y": 0.0,
+                "z": 0.0
+              },
+              "Back": {
+                "x": -1.0,
+                "y": 0.0,
+                "z": 0.0
+              },
+              "Left": {
+                "x": 0.0,
+                "y": 1.0,
+                "z": 0.0
+              },
+              "Right": {
+                "x": 0.0,
+                "y": -1.0,
+                "z": 0.0
+              }
+            },
+            "Min": {
+              "x": 13.0,
+              "y": 13.0,
+              "z": 1.0
+            },
+            "Max": {
+              "x": 13.0,
+              "y": 20.0,
+              "z": 1.0
+            },
+            "Center": {
+              "x": 13.0,
+              "y": 16.5,
+              "z": 1.0
+            },
+            "Thickness": 1.0,
+            "Length": 8.0,
+            "Height": 2.0
+          }
+        ],
+        "Center": {
+          "x": 12.5,
+          "y": 13.0,
+          "z": 1.0
+        },
+        "Thickness": 1.0,
+        "length": 0.0,
+        "Height": 2.0
+      },
+      {
+        "Orientation": {
+          "Name": "South",
+          "foreUnit": -1.0,
+          "rightUnit": -1.0,
+          "Forward": {
+            "x": 0.0,
+            "y": -1.0,
+            "z": 0.0
+          },
+          "Back": {
+            "x": 0.0,
+            "y": 1.0,
+            "z": 0.0
+          },
+          "Left": {
+            "x": 1.0,
+            "y": 0.0,
+            "z": 0.0
+          },
+          "Right": {
+            "x": -1.0,
+            "y": 0.0,
+            "z": 0.0
+          }
+        },
+        "Min": {
+          "x": 2.0,
+          "y": 13.0,
+          "z": 1.0
+        },
+        "Max": {
+          "x": 13.0,
+          "y": 13.0,
+          "z": 1.0
+        },
+        "Paths": [
+          {
+            "IsPath": true,
+            "IsRemoved": false,
+            "Orientation": {
+              "Name": "South",
+              "foreUnit": -1.0,
+              "rightUnit": -1.0,
+              "Forward": {
+                "x": 0.0,
+                "y": -1.0,
+                "z": 0.0
+              },
+              "Back": {
+                "x": 0.0,
+                "y": 1.0,
+                "z": 0.0
+              },
+              "Left": {
+                "x": 1.0,
+                "y": 0.0,
+                "z": 0.0
+              },
+              "Right": {
+                "x": -1.0,
+                "y": 0.0,
+                "z": 0.0
+              }
+            },
+            "Min": {
+              "x": 5.0,
+              "y": 13.0,
+              "z": 1.0
+            },
+            "Max": {
+              "x": 10.0,
+              "y": 13.0,
+              "z": 1.0
+            },
+            "Center": {
+              "x": 7.5,
+              "y": 13.0,
+              "z": 1.0
+            },
+            "Thickness": 1.0,
+            "Length": 6.0,
+            "Height": 2.0
+          }
+        ],
+        "Segments": [
+          {
+            "IsPath": false,
+            "IsRemoved": false,
+            "Orientation": {
+              "Name": "South",
+              "foreUnit": -1.0,
+              "rightUnit": -1.0,
+              "Forward": {
+                "x": 0.0,
+                "y": -1.0,
+                "z": 0.0
+              },
+              "Back": {
+                "x": 0.0,
+                "y": 1.0,
+                "z": 0.0
+              },
+              "Left": {
+                "x": 1.0,
+                "y": 0.0,
+                "z": 0.0
+              },
+              "Right": {
+                "x": -1.0,
+                "y": 0.0,
+                "z": 0.0
+              }
+            },
+            "Min": {
+              "x": 2.0,
+              "y": 13.0,
+              "z": 1.0
+            },
+            "Max": {
+              "x": 5.0,
+              "y": 13.0,
+              "z": 1.0
+            },
+            "Center": {
+              "x": 3.5,
+              "y": 13.0,
+              "z": 1.0
+            },
+            "Thickness": 1.0,
+            "Length": 4.0,
+            "Height": 2.0
+          },
+          {
+            "IsPath": false,
+            "IsRemoved": false,
+            "Orientation": {
+              "Name": "South",
+              "foreUnit": -1.0,
+              "rightUnit": -1.0,
+              "Forward": {
+                "x": 0.0,
+                "y": -1.0,
+                "z": 0.0
+              },
+              "Back": {
+                "x": 0.0,
+                "y": 1.0,
+                "z": 0.0
+              },
+              "Left": {
+                "x": 1.0,
+                "y": 0.0,
+                "z": 0.0
+              },
+              "Right": {
+                "x": -1.0,
+                "y": 0.0,
+                "z": 0.0
+              }
+            },
+            "Min": {
+              "x": 10.0,
+              "y": 13.0,
+              "z": 1.0
+            },
+            "Max": {
+              "x": 13.0,
+              "y": 13.0,
+              "z": 1.0
+            },
+            "Center": {
+              "x": 11.5,
+              "y": 13.0,
+              "z": 1.0
+            },
+            "Thickness": 1.0,
+            "Length": 4.0,
+            "Height": 2.0
+          }
+        ],
+        "Center": {
+          "x": 2.0,
+          "y": 13.5,
+          "z": 1.0
+        },
+        "Thickness": 1.0,
+        "length": 0.0,
+        "Height": 2.0
+      },
+      {
+        "Orientation": {
+          "Name": "West",
+          "foreUnit": -1.0,
+          "rightUnit": 1.0,
+          "Forward": {
+            "x": -1.0,
+            "y": 0.0,
+            "z": 0.0
+          },
+          "Back": {
+            "x": 1.0,
+            "y": 0.0,
+            "z": 0.0
+          },
+          "Left": {
+            "x": 0.0,
+            "y": -1.0,
+            "z": 0.0
+          },
+          "Right": {
+            "x": 0.0,
+            "y": 1.0,
+            "z": 0.0
+          }
+        },
+        "Min": {
+          "x": 2.0,
+          "y": 13.0,
+          "z": 1.0
+        },
+        "Max": {
+          "x": 2.0,
+          "y": 20.0,
+          "z": 1.0
+        },
+        "Paths": [],
+        "Segments": [
+          {
+            "IsPath": false,
+            "IsRemoved": false,
+            "Orientation": {
+              "Name": "West",
+              "foreUnit": -1.0,
+              "rightUnit": 1.0,
+              "Forward": {
+                "x": -1.0,
+                "y": 0.0,
+                "z": 0.0
+              },
+              "Back": {
+                "x": 1.0,
+                "y": 0.0,
+                "z": 0.0
+              },
+              "Left": {
+                "x": 0.0,
+                "y": -1.0,
+                "z": 0.0
+              },
+              "Right": {
+                "x": 0.0,
+                "y": 1.0,
+                "z": 0.0
+              }
+            },
+            "Min": {
+              "x": 2.0,
+              "y": 13.0,
+              "z": 1.0
+            },
+            "Max": {
+              "x": 2.0,
+              "y": 20.0,
+              "z": 1.0
+            },
+            "Center": {
+              "x": 2.0,
+              "y": 16.5,
+              "z": 1.0
+            },
+            "Thickness": 1.0,
+            "Length": 8.0,
+            "Height": 2.0
+          }
+        ],
+        "Center": {
+          "x": 2.5,
+          "y": 13.0,
+          "z": 1.0
+        },
+        "Thickness": 1.0,
+        "length": 0.0,
+        "Height": 2.0
+      }
+    ],
+    "ConnectedAreas": [
+      5,
+      9
+    ],
+    "Orientation": {
+      "Name": "South",
+      "foreUnit": -1.0,
+      "rightUnit": -1.0,
+      "Forward": {
+        "x": 0.0,
+        "y": -1.0,
+        "z": 0.0
+      },
+      "Back": {
+        "x": 0.0,
+        "y": 1.0,
+        "z": 0.0
+      },
+      "Left": {
+        "x": 1.0,
+        "y": 0.0,
+        "z": 0.0
+      },
+      "Right": {
+        "x": -1.0,
+        "y": 0.0,
+        "z": 0.0
+      }
+    },
+    "RoomIndex": 6,
+    "Floor": {
+      "BottomLeft": {
+        "x": 12.0,
+        "y": 19.0,
+        "z": 1.0
+      },
+      "TopRight": {
+        "x": 3.0,
+        "y": 14.0,
+        "z": 1.0
+      },
+      "BottomRight": {
+        "x": 3.0,
+        "y": 19.0,
+        "z": 1.0
+      },
+      "TopLeft": {
+        "x": 12.0,
+        "y": 14.0,
+        "z": 1.0
+      },
+      "width": 10.0,
+      "height": 6.0,
+      "Center": {
+        "x": 7.5,
+        "y": 16.5,
+        "z": 1.0
+      },
+      "TrueSW": {
+        "x": 3.0,
+        "y": 14.0,
+        "z": 1.0
+      },
+      "TrueNE": {
+        "x": 12.0,
+        "y": 19.0,
+        "z": 1.0
+      },
+      "TrueWidth": 10.0,
+      "TrueHeight": 6.0
+    }
+  },
+  "7": {
+    "creationTime": "2020-01-06T01:54:10.95993-06:00",
+    "Walls": [
+      {
+        "Orientation": {
+          "Name": "North",
+          "foreUnit": 1.0,
+          "rightUnit": 1.0,
+          "Forward": {
+            "x": 0.0,
+            "y": 1.0,
+            "z": 0.0
+          },
+          "Back": {
+            "x": 0.0,
+            "y": -1.0,
+            "z": 0.0
+          },
+          "Left": {
+            "x": -1.0,
+            "y": 0.0,
+            "z": 0.0
+          },
+          "Right": {
+            "x": 1.0,
+            "y": 0.0,
+            "z": 0.0
+          }
+        },
+        "Min": {
+          "x": 21.0,
+          "y": 26.0,
+          "z": 1.0
+        },
+        "Max": {
+          "x": 35.0,
+          "y": 26.0,
+          "z": 1.0
+        },
+        "Paths": [
+          {
+            "IsPath": true,
+            "IsRemoved": true,
+            "Orientation": {
+              "Name": "North",
+              "foreUnit": 1.0,
+              "rightUnit": 1.0,
+              "Forward": {
+                "x": 0.0,
+                "y": 1.0,
+                "z": 0.0
+              },
+              "Back": {
+                "x": 0.0,
+                "y": -1.0,
+                "z": 0.0
+              },
+              "Left": {
+                "x": -1.0,
+                "y": 0.0,
+                "z": 0.0
+              },
+              "Right": {
+                "x": 1.0,
+                "y": 0.0,
+                "z": 0.0
+              }
+            },
+            "Min": {
+              "x": 22.0,
+              "y": 26.0,
+              "z": 1.0
+            },
+            "Max": {
+              "x": 28.0,
+              "y": 26.0,
+              "z": 1.0
+            },
+            "Center": {
+              "x": 25.0,
+              "y": 26.0,
+              "z": 1.0
+            },
+            "Thickness": 1.0,
+            "Length": 7.0,
+            "Height": 2.0
+          }
+        ],
+        "Segments": [
+          {
+            "IsPath": false,
+            "IsRemoved": false,
+            "Orientation": {
+              "Name": "North",
+              "foreUnit": 1.0,
+              "rightUnit": 1.0,
+              "Forward": {
+                "x": 0.0,
+                "y": 1.0,
+                "z": 0.0
+              },
+              "Back": {
+                "x": 0.0,
+                "y": -1.0,
+                "z": 0.0
+              },
+              "Left": {
+                "x": -1.0,
+                "y": 0.0,
+                "z": 0.0
+              },
+              "Right": {
+                "x": 1.0,
+                "y": 0.0,
+                "z": 0.0
+              }
+            },
+            "Min": {
+              "x": 21.0,
+              "y": 26.0,
+              "z": 1.0
+            },
+            "Max": {
+              "x": 22.0,
+              "y": 26.0,
+              "z": 1.0
+            },
+            "Center": {
+              "x": 21.5,
+              "y": 26.0,
+              "z": 1.0
+            },
+            "Thickness": 1.0,
+            "Length": 2.0,
+            "Height": 2.0
+          },
+          {
+            "IsPath": false,
+            "IsRemoved": false,
+            "Orientation": {
+              "Name": "North",
+              "foreUnit": 1.0,
+              "rightUnit": 1.0,
+              "Forward": {
+                "x": 0.0,
+                "y": 1.0,
+                "z": 0.0
+              },
+              "Back": {
+                "x": 0.0,
+                "y": -1.0,
+                "z": 0.0
+              },
+              "Left": {
+                "x": -1.0,
+                "y": 0.0,
+                "z": 0.0
+              },
+              "Right": {
+                "x": 1.0,
+                "y": 0.0,
+                "z": 0.0
+              }
+            },
+            "Min": {
+              "x": 28.0,
+              "y": 26.0,
+              "z": 1.0
+            },
+            "Max": {
+              "x": 35.0,
+              "y": 26.0,
+              "z": 1.0
+            },
+            "Center": {
+              "x": 31.5,
+              "y": 26.0,
+              "z": 1.0
+            },
+            "Thickness": 1.0,
+            "Length": 8.0,
+            "Height": 2.0
+          }
+        ],
+        "Center": {
+          "x": 21.0,
+          "y": 25.5,
+          "z": 1.0
+        },
+        "Thickness": 1.0,
+        "length": 0.0,
+        "Height": 2.0
+      },
+      {
+        "Orientation": {
+          "Name": "East",
+          "foreUnit": 1.0,
+          "rightUnit": -1.0,
+          "Forward": {
+            "x": 1.0,
+            "y": 0.0,
+            "z": 0.0
+          },
+          "Back": {
+            "x": -1.0,
+            "y": 0.0,
+            "z": 0.0
+          },
+          "Left": {
+            "x": 0.0,
+            "y": 1.0,
+            "z": 0.0
+          },
+          "Right": {
+            "x": 0.0,
+            "y": -1.0,
+            "z": 0.0
+          }
+        },
+        "Min": {
+          "x": 35.0,
+          "y": 19.0,
+          "z": 1.0
+        },
+        "Max": {
+          "x": 35.0,
+          "y": 26.0,
+          "z": 1.0
+        },
+        "Paths": [],
+        "Segments": [
+          {
+            "IsPath": false,
+            "IsRemoved": false,
+            "Orientation": {
+              "Name": "East",
+              "foreUnit": 1.0,
+              "rightUnit": -1.0,
+              "Forward": {
+                "x": 1.0,
+                "y": 0.0,
+                "z": 0.0
+              },
+              "Back": {
+                "x": -1.0,
+                "y": 0.0,
+                "z": 0.0
+              },
+              "Left": {
+                "x": 0.0,
+                "y": 1.0,
+                "z": 0.0
+              },
+              "Right": {
+                "x": 0.0,
+                "y": -1.0,
+                "z": 0.0
+              }
+            },
+            "Min": {
+              "x": 35.0,
+              "y": 19.0,
+              "z": 1.0
+            },
+            "Max": {
+              "x": 35.0,
+              "y": 26.0,
+              "z": 1.0
+            },
+            "Center": {
+              "x": 35.0,
+              "y": 22.5,
+              "z": 1.0
+            },
+            "Thickness": 1.0,
+            "Length": 8.0,
+            "Height": 2.0
+          }
+        ],
+        "Center": {
+          "x": 34.5,
+          "y": 19.0,
+          "z": 1.0
+        },
+        "Thickness": 1.0,
+        "length": 0.0,
+        "Height": 2.0
+      },
+      {
+        "Orientation": {
+          "Name": "West",
+          "foreUnit": -1.0,
+          "rightUnit": 1.0,
+          "Forward": {
+            "x": -1.0,
+            "y": 0.0,
+            "z": 0.0
+          },
+          "Back": {
+            "x": 1.0,
+            "y": 0.0,
+            "z": 0.0
+          },
+          "Left": {
+            "x": 0.0,
+            "y": -1.0,
+            "z": 0.0
+          },
+          "Right": {
+            "x": 0.0,
+            "y": 1.0,
+            "z": 0.0
+          }
+        },
+        "Min": {
+          "x": 21.0,
+          "y": 19.0,
+          "z": 1.0
+        },
+        "Max": {
+          "x": 21.0,
+          "y": 26.0,
+          "z": 1.0
+        },
+        "Paths": [],
+        "Segments": [
+          {
+            "IsPath": false,
+            "IsRemoved": false,
+            "Orientation": {
+              "Name": "West",
+              "foreUnit": -1.0,
+              "rightUnit": 1.0,
+              "Forward": {
+                "x": -1.0,
+                "y": 0.0,
+                "z": 0.0
+              },
+              "Back": {
+                "x": 1.0,
+                "y": 0.0,
+                "z": 0.0
+              },
+              "Left": {
+                "x": 0.0,
+                "y": -1.0,
+                "z": 0.0
+              },
+              "Right": {
+                "x": 0.0,
+                "y": 1.0,
+                "z": 0.0
+              }
+            },
+            "Min": {
+              "x": 21.0,
+              "y": 19.0,
+              "z": 1.0
+            },
+            "Max": {
+              "x": 21.0,
+              "y": 26.0,
+              "z": 1.0
+            },
+            "Center": {
+              "x": 21.0,
+              "y": 22.5,
+              "z": 1.0
+            },
+            "Thickness": 1.0,
+            "Length": 8.0,
+            "Height": 2.0
+          }
+        ],
+        "Center": {
+          "x": 21.5,
+          "y": 19.0,
+          "z": 1.0
+        },
+        "Thickness": 1.0,
+        "length": 0.0,
+        "Height": 2.0
+      },
+      {
+        "Orientation": {
+          "Name": "South",
+          "foreUnit": -1.0,
+          "rightUnit": -1.0,
+          "Forward": {
+            "x": 0.0,
+            "y": -1.0,
+            "z": 0.0
+          },
+          "Back": {
+            "x": 0.0,
+            "y": 1.0,
+            "z": 0.0
+          },
+          "Left": {
+            "x": 1.0,
+            "y": 0.0,
+            "z": 0.0
+          },
+          "Right": {
+            "x": -1.0,
+            "y": 0.0,
+            "z": 0.0
+          }
+        },
+        "Min": {
+          "x": 21.0,
+          "y": 19.0,
+          "z": 1.0
+        },
+        "Max": {
+          "x": 35.0,
+          "y": 19.0,
+          "z": 1.0
+        },
+        "Paths": [
+          {
+            "IsPath": true,
+            "IsRemoved": false,
+            "Orientation": {
+              "Name": "South",
+              "foreUnit": -1.0,
+              "rightUnit": -1.0,
+              "Forward": {
+                "x": 0.0,
+                "y": -1.0,
+                "z": 0.0
+              },
+              "Back": {
+                "x": 0.0,
+                "y": 1.0,
+                "z": 0.0
+              },
+              "Left": {
+                "x": 1.0,
+                "y": 0.0,
+                "z": 0.0
+              },
+              "Right": {
+                "x": -1.0,
+                "y": 0.0,
+                "z": 0.0
+              }
+            },
+            "Min": {
+              "x": 23.0,
+              "y": 19.0,
+              "z": 1.0
+            },
+            "Max": {
+              "x": 24.0,
+              "y": 19.0,
+              "z": 1.0
+            },
+            "Center": {
+              "x": 23.5,
+              "y": 19.0,
+              "z": 1.0
+            },
+            "Thickness": 1.0,
+            "Length": 2.0,
+            "Height": 2.0
+          }
+        ],
+        "Segments": [
+          {
+            "IsPath": false,
+            "IsRemoved": false,
+            "Orientation": {
+              "Name": "South",
+              "foreUnit": -1.0,
+              "rightUnit": -1.0,
+              "Forward": {
+                "x": 0.0,
+                "y": -1.0,
+                "z": 0.0
+              },
+              "Back": {
+                "x": 0.0,
+                "y": 1.0,
+                "z": 0.0
+              },
+              "Left": {
+                "x": 1.0,
+                "y": 0.0,
+                "z": 0.0
+              },
+              "Right": {
+                "x": -1.0,
+                "y": 0.0,
+                "z": 0.0
+              }
+            },
+            "Min": {
+              "x": 21.0,
+              "y": 19.0,
+              "z": 1.0
+            },
+            "Max": {
+              "x": 23.0,
+              "y": 19.0,
+              "z": 1.0
+            },
+            "Center": {
+              "x": 22.0,
+              "y": 19.0,
+              "z": 1.0
+            },
+            "Thickness": 1.0,
+            "Length": 3.0,
+            "Height": 2.0
+          },
+          {
+            "IsPath": false,
+            "IsRemoved": false,
+            "Orientation": {
+              "Name": "South",
+              "foreUnit": -1.0,
+              "rightUnit": -1.0,
+              "Forward": {
+                "x": 0.0,
+                "y": -1.0,
+                "z": 0.0
+              },
+              "Back": {
+                "x": 0.0,
+                "y": 1.0,
+                "z": 0.0
+              },
+              "Left": {
+                "x": 1.0,
+                "y": 0.0,
+                "z": 0.0
+              },
+              "Right": {
+                "x": -1.0,
+                "y": 0.0,
+                "z": 0.0
+              }
+            },
+            "Min": {
+              "x": 24.0,
+              "y": 19.0,
+              "z": 1.0
+            },
+            "Max": {
+              "x": 35.0,
+              "y": 19.0,
+              "z": 1.0
+            },
+            "Center": {
+              "x": 29.5,
+              "y": 19.0,
+              "z": 1.0
+            },
+            "Thickness": 1.0,
+            "Length": 12.0,
+            "Height": 2.0
+          }
+        ],
+        "Center": {
+          "x": 21.0,
+          "y": 19.5,
+          "z": 1.0
+        },
+        "Thickness": 1.0,
+        "length": 0.0,
+        "Height": 2.0
+      }
+    ],
+    "ConnectedAreas": [
+      4,
+      8
+    ],
+    "Orientation": {
+      "Name": "South",
+      "foreUnit": -1.0,
+      "rightUnit": -1.0,
+      "Forward": {
+        "x": 0.0,
+        "y": -1.0,
+        "z": 0.0
+      },
+      "Back": {
+        "x": 0.0,
+        "y": 1.0,
+        "z": 0.0
+      },
+      "Left": {
+        "x": 1.0,
+        "y": 0.0,
+        "z": 0.0
+      },
+      "Right": {
+        "x": -1.0,
+        "y": 0.0,
+        "z": 0.0
+      }
+    },
+    "RoomIndex": 7,
+    "Floor": {
+      "BottomLeft": {
+        "x": 34.0,
+        "y": 25.0,
+        "z": 1.0
+      },
+      "TopRight": {
+        "x": 22.0,
+        "y": 20.0,
+        "z": 1.0
+      },
+      "BottomRight": {
+        "x": 22.0,
+        "y": 25.0,
+        "z": 1.0
+      },
+      "TopLeft": {
+        "x": 34.0,
+        "y": 20.0,
+        "z": 1.0
+      },
+      "width": 13.0,
+      "height": 6.0,
+      "Center": {
+        "x": 28.0,
+        "y": 22.5,
+        "z": 1.0
+      },
+      "TrueSW": {
+        "x": 22.0,
+        "y": 20.0,
+        "z": 1.0
+      },
+      "TrueNE": {
+        "x": 34.0,
+        "y": 25.0,
+        "z": 1.0
+      },
+      "TrueWidth": 13.0,
+      "TrueHeight": 6.0
+    }
+  },
+  "8": {
+    "creationTime": "2020-01-06T01:54:10.9609139-06:00",
+    "Walls": [
+      {
+        "Orientation": {
+          "Name": "South",
+          "foreUnit": -1.0,
+          "rightUnit": -1.0,
+          "Forward": {
+            "x": 0.0,
+            "y": -1.0,
+            "z": 0.0
+          },
+          "Back": {
+            "x": 0.0,
+            "y": 1.0,
+            "z": 0.0
+          },
+          "Left": {
+            "x": 1.0,
+            "y": 0.0,
+            "z": 0.0
+          },
+          "Right": {
+            "x": -1.0,
+            "y": 0.0,
+            "z": 0.0
+          }
+        },
+        "Min": {
+          "x": 20.0,
+          "y": 7.0,
+          "z": 1.0
+        },
+        "Max": {
+          "x": 28.0,
+          "y": 7.0,
+          "z": 1.0
+        },
+        "Paths": [],
+        "Segments": [
+          {
+            "IsPath": false,
+            "IsRemoved": false,
+            "Orientation": {
+              "Name": "South",
+              "foreUnit": -1.0,
+              "rightUnit": -1.0,
+              "Forward": {
+                "x": 0.0,
+                "y": -1.0,
+                "z": 0.0
+              },
+              "Back": {
+                "x": 0.0,
+                "y": 1.0,
+                "z": 0.0
+              },
+              "Left": {
+                "x": 1.0,
+                "y": 0.0,
+                "z": 0.0
+              },
+              "Right": {
+                "x": -1.0,
+                "y": 0.0,
+                "z": 0.0
+              }
+            },
+            "Min": {
+              "x": 20.0,
+              "y": 7.0,
+              "z": 1.0
+            },
+            "Max": {
+              "x": 28.0,
+              "y": 7.0,
+              "z": 1.0
+            },
+            "Center": {
+              "x": 24.0,
+              "y": 7.0,
+              "z": 1.0
+            },
+            "Thickness": 1.0,
+            "Length": 9.0,
+            "Height": 2.0
+          }
+        ],
+        "Center": {
+          "x": 20.0,
+          "y": 7.5,
+          "z": 1.0
+        },
+        "Thickness": 1.0,
+        "length": 0.0,
+        "Height": 2.0
+      },
+      {
+        "Orientation": {
+          "Name": "East",
+          "foreUnit": 1.0,
+          "rightUnit": -1.0,
+          "Forward": {
+            "x": 1.0,
+            "y": 0.0,
+            "z": 0.0
+          },
+          "Back": {
+            "x": -1.0,
+            "y": 0.0,
+            "z": 0.0
+          },
+          "Left": {
+            "x": 0.0,
+            "y": 1.0,
+            "z": 0.0
+          },
+          "Right": {
+            "x": 0.0,
+            "y": -1.0,
+            "z": 0.0
+          }
+        },
+        "Min": {
+          "x": 28.0,
+          "y": 7.0,
+          "z": 1.0
+        },
+        "Max": {
+          "x": 28.0,
+          "y": 19.0,
+          "z": 1.0
+        },
+        "Paths": [],
+        "Segments": [
+          {
+            "IsPath": false,
+            "IsRemoved": false,
+            "Orientation": {
+              "Name": "East",
+              "foreUnit": 1.0,
+              "rightUnit": -1.0,
+              "Forward": {
+                "x": 1.0,
+                "y": 0.0,
+                "z": 0.0
+              },
+              "Back": {
+                "x": -1.0,
+                "y": 0.0,
+                "z": 0.0
+              },
+              "Left": {
+                "x": 0.0,
+                "y": 1.0,
+                "z": 0.0
+              },
+              "Right": {
+                "x": 0.0,
+                "y": -1.0,
+                "z": 0.0
+              }
+            },
+            "Min": {
+              "x": 28.0,
+              "y": 7.0,
+              "z": 1.0
+            },
+            "Max": {
+              "x": 28.0,
+              "y": 19.0,
+              "z": 1.0
+            },
+            "Center": {
+              "x": 28.0,
+              "y": 13.0,
+              "z": 1.0
+            },
+            "Thickness": 1.0,
+            "Length": 13.0,
+            "Height": 2.0
+          }
+        ],
+        "Center": {
+          "x": 27.5,
+          "y": 7.0,
+          "z": 1.0
+        },
+        "Thickness": 1.0,
+        "length": 0.0,
+        "Height": 2.0
+      },
+      {
+        "Orientation": {
+          "Name": "West",
+          "foreUnit": -1.0,
+          "rightUnit": 1.0,
+          "Forward": {
+            "x": -1.0,
+            "y": 0.0,
+            "z": 0.0
+          },
+          "Back": {
+            "x": 1.0,
+            "y": 0.0,
+            "z": 0.0
+          },
+          "Left": {
+            "x": 0.0,
+            "y": -1.0,
+            "z": 0.0
+          },
+          "Right": {
+            "x": 0.0,
+            "y": 1.0,
+            "z": 0.0
+          }
+        },
+        "Min": {
+          "x": 20.0,
+          "y": 7.0,
+          "z": 1.0
+        },
+        "Max": {
+          "x": 20.0,
+          "y": 19.0,
+          "z": 1.0
+        },
+        "Paths": [],
+        "Segments": [
+          {
+            "IsPath": false,
+            "IsRemoved": false,
+            "Orientation": {
+              "Name": "West",
+              "foreUnit": -1.0,
+              "rightUnit": 1.0,
+              "Forward": {
+                "x": -1.0,
+                "y": 0.0,
+                "z": 0.0
+              },
+              "Back": {
+                "x": 1.0,
+                "y": 0.0,
+                "z": 0.0
+              },
+              "Left": {
+                "x": 0.0,
+                "y": -1.0,
+                "z": 0.0
+              },
+              "Right": {
+                "x": 0.0,
+                "y": 1.0,
+                "z": 0.0
+              }
+            },
+            "Min": {
+              "x": 20.0,
+              "y": 7.0,
+              "z": 1.0
+            },
+            "Max": {
+              "x": 20.0,
+              "y": 19.0,
+              "z": 1.0
+            },
+            "Center": {
+              "x": 20.0,
+              "y": 13.0,
+              "z": 1.0
+            },
+            "Thickness": 1.0,
+            "Length": 13.0,
+            "Height": 2.0
+          }
+        ],
+        "Center": {
+          "x": 20.5,
+          "y": 7.0,
+          "z": 1.0
+        },
+        "Thickness": 1.0,
+        "length": 0.0,
+        "Height": 2.0
+      },
+      {
+        "Orientation": {
+          "Name": "North",
+          "foreUnit": 1.0,
+          "rightUnit": 1.0,
+          "Forward": {
+            "x": 0.0,
+            "y": 1.0,
+            "z": 0.0
+          },
+          "Back": {
+            "x": 0.0,
+            "y": -1.0,
+            "z": 0.0
+          },
+          "Left": {
+            "x": -1.0,
+            "y": 0.0,
+            "z": 0.0
+          },
+          "Right": {
+            "x": 1.0,
+            "y": 0.0,
+            "z": 0.0
+          }
+        },
+        "Min": {
+          "x": 20.0,
+          "y": 19.0,
+          "z": 1.0
+        },
+        "Max": {
+          "x": 28.0,
+          "y": 19.0,
+          "z": 1.0
+        },
+        "Paths": [
+          {
+            "IsPath": true,
+            "IsRemoved": true,
+            "Orientation": {
+              "Name": "North",
+              "foreUnit": 1.0,
+              "rightUnit": 1.0,
+              "Forward": {
+                "x": 0.0,
+                "y": 1.0,
+                "z": 0.0
+              },
+              "Back": {
+                "x": 0.0,
+                "y": -1.0,
+                "z": 0.0
+              },
+              "Left": {
+                "x": -1.0,
+                "y": 0.0,
+                "z": 0.0
+              },
+              "Right": {
+                "x": 1.0,
+                "y": 0.0,
+                "z": 0.0
+              }
+            },
+            "Min": {
+              "x": 22.0,
+              "y": 19.0,
+              "z": 1.0
+            },
+            "Max": {
+              "x": 27.0,
+              "y": 19.0,
+              "z": 1.0
+            },
+            "Center": {
+              "x": 24.5,
+              "y": 19.0,
+              "z": 1.0
+            },
+            "Thickness": 1.0,
+            "Length": 6.0,
+            "Height": 2.0
+          }
+        ],
+        "Segments": [
+          {
+            "IsPath": false,
+            "IsRemoved": false,
+            "Orientation": {
+              "Name": "North",
+              "foreUnit": 1.0,
+              "rightUnit": 1.0,
+              "Forward": {
+                "x": 0.0,
+                "y": 1.0,
+                "z": 0.0
+              },
+              "Back": {
+                "x": 0.0,
+                "y": -1.0,
+                "z": 0.0
+              },
+              "Left": {
+                "x": -1.0,
+                "y": 0.0,
+                "z": 0.0
+              },
+              "Right": {
+                "x": 1.0,
+                "y": 0.0,
+                "z": 0.0
+              }
+            },
+            "Min": {
+              "x": 20.0,
+              "y": 19.0,
+              "z": 1.0
+            },
+            "Max": {
+              "x": 22.0,
+              "y": 19.0,
+              "z": 1.0
+            },
+            "Center": {
+              "x": 21.0,
+              "y": 19.0,
+              "z": 1.0
+            },
+            "Thickness": 1.0,
+            "Length": 3.0,
+            "Height": 2.0
+          },
+          {
+            "IsPath": false,
+            "IsRemoved": false,
+            "Orientation": {
+              "Name": "North",
+              "foreUnit": 1.0,
+              "rightUnit": 1.0,
+              "Forward": {
+                "x": 0.0,
+                "y": 1.0,
+                "z": 0.0
+              },
+              "Back": {
+                "x": 0.0,
+                "y": -1.0,
+                "z": 0.0
+              },
+              "Left": {
+                "x": -1.0,
+                "y": 0.0,
+                "z": 0.0
+              },
+              "Right": {
+                "x": 1.0,
+                "y": 0.0,
+                "z": 0.0
+              }
+            },
+            "Min": {
+              "x": 27.0,
+              "y": 19.0,
+              "z": 1.0
+            },
+            "Max": {
+              "x": 28.0,
+              "y": 19.0,
+              "z": 1.0
+            },
+            "Center": {
+              "x": 27.5,
+              "y": 19.0,
+              "z": 1.0
+            },
+            "Thickness": 1.0,
+            "Length": 2.0,
+            "Height": 2.0
+          }
+        ],
+        "Center": {
+          "x": 20.0,
+          "y": 18.5,
+          "z": 1.0
+        },
+        "Thickness": 1.0,
+        "length": 0.0,
+        "Height": 2.0
+      }
+    ],
+    "ConnectedAreas": [
+      7
+    ],
+    "Orientation": {
+      "Name": "South",
+      "foreUnit": -1.0,
+      "rightUnit": -1.0,
+      "Forward": {
+        "x": 0.0,
+        "y": -1.0,
+        "z": 0.0
+      },
+      "Back": {
+        "x": 0.0,
+        "y": 1.0,
+        "z": 0.0
+      },
+      "Left": {
+        "x": 1.0,
+        "y": 0.0,
+        "z": 0.0
+      },
+      "Right": {
+        "x": -1.0,
+        "y": 0.0,
+        "z": 0.0
+      }
+    },
+    "RoomIndex": 8,
+    "Floor": {
+      "BottomLeft": {
+        "x": 27.0,
+        "y": 18.0,
+        "z": 1.0
+      },
+      "TopRight": {
+        "x": 21.0,
+        "y": 8.0,
+        "z": 1.0
+      },
+      "BottomRight": {
+        "x": 21.0,
+        "y": 18.0,
+        "z": 1.0
+      },
+      "TopLeft": {
+        "x": 27.0,
+        "y": 8.0,
+        "z": 1.0
+      },
+      "width": 7.0,
+      "height": 11.0,
+      "Center": {
+        "x": 24.0,
+        "y": 13.0,
+        "z": 1.0
+      },
+      "TrueSW": {
+        "x": 21.0,
+        "y": 8.0,
+        "z": 1.0
+      },
+      "TrueNE": {
+        "x": 27.0,
+        "y": 18.0,
+        "z": 1.0
+      },
+      "TrueWidth": 7.0,
+      "TrueHeight": 11.0
+    }
+  },
+  "9": {
+    "creationTime": "2020-01-06T01:54:10.9619111-06:00",
+    "Walls": [
+      {
+        "Orientation": {
+          "Name": "South",
+          "foreUnit": -1.0,
+          "rightUnit": -1.0,
+          "Forward": {
+            "x": 0.0,
+            "y": -1.0,
+            "z": 0.0
+          },
+          "Back": {
+            "x": 0.0,
+            "y": 1.0,
+            "z": 0.0
+          },
+          "Left": {
+            "x": 1.0,
+            "y": 0.0,
+            "z": 0.0
+          },
+          "Right": {
+            "x": -1.0,
+            "y": 0.0,
+            "z": 0.0
+          }
+        },
+        "Min": {
+          "x": 4.0,
+          "y": 1.0,
+          "z": 1.0
+        },
+        "Max": {
+          "x": 11.0,
+          "y": 1.0,
+          "z": 1.0
+        },
+        "Paths": [],
+        "Segments": [
+          {
+            "IsPath": false,
+            "IsRemoved": false,
+            "Orientation": {
+              "Name": "South",
+              "foreUnit": -1.0,
+              "rightUnit": -1.0,
+              "Forward": {
+                "x": 0.0,
+                "y": -1.0,
+                "z": 0.0
+              },
+              "Back": {
+                "x": 0.0,
+                "y": 1.0,
+                "z": 0.0
+              },
+              "Left": {
+                "x": 1.0,
+                "y": 0.0,
+                "z": 0.0
+              },
+              "Right": {
+                "x": -1.0,
+                "y": 0.0,
+                "z": 0.0
+              }
+            },
+            "Min": {
+              "x": 4.0,
+              "y": 1.0,
+              "z": 1.0
+            },
+            "Max": {
+              "x": 11.0,
+              "y": 1.0,
+              "z": 1.0
+            },
+            "Center": {
+              "x": 7.5,
+              "y": 1.0,
+              "z": 1.0
+            },
+            "Thickness": 1.0,
+            "Length": 8.0,
+            "Height": 2.0
+          }
+        ],
+        "Center": {
+          "x": 4.0,
+          "y": 1.5,
+          "z": 1.0
+        },
+        "Thickness": 1.0,
+        "length": 0.0,
+        "Height": 2.0
+      },
+      {
+        "Orientation": {
+          "Name": "East",
+          "foreUnit": 1.0,
+          "rightUnit": -1.0,
+          "Forward": {
+            "x": 1.0,
+            "y": 0.0,
+            "z": 0.0
+          },
+          "Back": {
+            "x": -1.0,
+            "y": 0.0,
+            "z": 0.0
+          },
+          "Left": {
+            "x": 0.0,
+            "y": 1.0,
+            "z": 0.0
+          },
+          "Right": {
+            "x": 0.0,
+            "y": -1.0,
+            "z": 0.0
+          }
+        },
+        "Min": {
+          "x": 11.0,
+          "y": 1.0,
+          "z": 1.0
+        },
+        "Max": {
+          "x": 11.0,
+          "y": 13.0,
+          "z": 1.0
+        },
+        "Paths": [],
+        "Segments": [
+          {
+            "IsPath": false,
+            "IsRemoved": false,
+            "Orientation": {
+              "Name": "East",
+              "foreUnit": 1.0,
+              "rightUnit": -1.0,
+              "Forward": {
+                "x": 1.0,
+                "y": 0.0,
+                "z": 0.0
+              },
+              "Back": {
+                "x": -1.0,
+                "y": 0.0,
+                "z": 0.0
+              },
+              "Left": {
+                "x": 0.0,
+                "y": 1.0,
+                "z": 0.0
+              },
+              "Right": {
+                "x": 0.0,
+                "y": -1.0,
+                "z": 0.0
+              }
+            },
+            "Min": {
+              "x": 11.0,
+              "y": 1.0,
+              "z": 1.0
+            },
+            "Max": {
+              "x": 11.0,
+              "y": 13.0,
+              "z": 1.0
+            },
+            "Center": {
+              "x": 11.0,
+              "y": 7.0,
+              "z": 1.0
+            },
+            "Thickness": 1.0,
+            "Length": 13.0,
+            "Height": 2.0
+          }
+        ],
+        "Center": {
+          "x": 10.5,
+          "y": 1.0,
+          "z": 1.0
+        },
+        "Thickness": 1.0,
+        "length": 0.0,
+        "Height": 2.0
+      },
+      {
+        "Orientation": {
+          "Name": "North",
+          "foreUnit": 1.0,
+          "rightUnit": 1.0,
+          "Forward": {
+            "x": 0.0,
+            "y": 1.0,
+            "z": 0.0
+          },
+          "Back": {
+            "x": 0.0,
+            "y": -1.0,
+            "z": 0.0
+          },
+          "Left": {
+            "x": -1.0,
+            "y": 0.0,
+            "z": 0.0
+          },
+          "Right": {
+            "x": 1.0,
+            "y": 0.0,
+            "z": 0.0
+          }
+        },
+        "Min": {
+          "x": 4.0,
+          "y": 13.0,
+          "z": 1.0
+        },
+        "Max": {
+          "x": 11.0,
+          "y": 13.0,
+          "z": 1.0
+        },
+        "Paths": [
+          {
+            "IsPath": true,
+            "IsRemoved": true,
+            "Orientation": {
+              "Name": "North",
+              "foreUnit": 1.0,
+              "rightUnit": 1.0,
+              "Forward": {
+                "x": 0.0,
+                "y": 1.0,
+                "z": 0.0
+              },
+              "Back": {
+                "x": 0.0,
+                "y": -1.0,
+                "z": 0.0
+              },
+              "Left": {
+                "x": -1.0,
+                "y": 0.0,
+                "z": 0.0
+              },
+              "Right": {
+                "x": 1.0,
+                "y": 0.0,
+                "z": 0.0
+              }
+            },
+            "Min": {
+              "x": 5.0,
+              "y": 13.0,
+              "z": 1.0
+            },
+            "Max": {
+              "x": 10.0,
+              "y": 13.0,
+              "z": 1.0
+            },
+            "Center": {
+              "x": 7.5,
+              "y": 13.0,
+              "z": 1.0
+            },
+            "Thickness": 1.0,
+            "Length": 6.0,
+            "Height": 2.0
+          }
+        ],
+        "Segments": [
+          {
+            "IsPath": false,
+            "IsRemoved": false,
+            "Orientation": {
+              "Name": "North",
+              "foreUnit": 1.0,
+              "rightUnit": 1.0,
+              "Forward": {
+                "x": 0.0,
+                "y": 1.0,
+                "z": 0.0
+              },
+              "Back": {
+                "x": 0.0,
+                "y": -1.0,
+                "z": 0.0
+              },
+              "Left": {
+                "x": -1.0,
+                "y": 0.0,
+                "z": 0.0
+              },
+              "Right": {
+                "x": 1.0,
+                "y": 0.0,
+                "z": 0.0
+              }
+            },
+            "Min": {
+              "x": 4.0,
+              "y": 13.0,
+              "z": 1.0
+            },
+            "Max": {
+              "x": 5.0,
+              "y": 13.0,
+              "z": 1.0
+            },
+            "Center": {
+              "x": 4.5,
+              "y": 13.0,
+              "z": 1.0
+            },
+            "Thickness": 1.0,
+            "Length": 2.0,
+            "Height": 2.0
+          },
+          {
+            "IsPath": false,
+            "IsRemoved": false,
+            "Orientation": {
+              "Name": "North",
+              "foreUnit": 1.0,
+              "rightUnit": 1.0,
+              "Forward": {
+                "x": 0.0,
+                "y": 1.0,
+                "z": 0.0
+              },
+              "Back": {
+                "x": 0.0,
+                "y": -1.0,
+                "z": 0.0
+              },
+              "Left": {
+                "x": -1.0,
+                "y": 0.0,
+                "z": 0.0
+              },
+              "Right": {
+                "x": 1.0,
+                "y": 0.0,
+                "z": 0.0
+              }
+            },
+            "Min": {
+              "x": 10.0,
+              "y": 13.0,
+              "z": 1.0
+            },
+            "Max": {
+              "x": 11.0,
+              "y": 13.0,
+              "z": 1.0
+            },
+            "Center": {
+              "x": 10.5,
+              "y": 13.0,
+              "z": 1.0
+            },
+            "Thickness": 1.0,
+            "Length": 2.0,
+            "Height": 2.0
+          }
+        ],
+        "Center": {
+          "x": 4.0,
+          "y": 12.5,
+          "z": 1.0
+        },
+        "Thickness": 1.0,
+        "length": 0.0,
+        "Height": 2.0
+      },
+      {
+        "Orientation": {
+          "Name": "West",
+          "foreUnit": -1.0,
+          "rightUnit": 1.0,
+          "Forward": {
+            "x": -1.0,
+            "y": 0.0,
+            "z": 0.0
+          },
+          "Back": {
+            "x": 1.0,
+            "y": 0.0,
+            "z": 0.0
+          },
+          "Left": {
+            "x": 0.0,
+            "y": -1.0,
+            "z": 0.0
+          },
+          "Right": {
+            "x": 0.0,
+            "y": 1.0,
+            "z": 0.0
+          }
+        },
+        "Min": {
+          "x": 4.0,
+          "y": 1.0,
+          "z": 1.0
+        },
+        "Max": {
+          "x": 4.0,
+          "y": 13.0,
+          "z": 1.0
+        },
+        "Paths": [],
+        "Segments": [
+          {
+            "IsPath": false,
+            "IsRemoved": false,
+            "Orientation": {
+              "Name": "West",
+              "foreUnit": -1.0,
+              "rightUnit": 1.0,
+              "Forward": {
+                "x": -1.0,
+                "y": 0.0,
+                "z": 0.0
+              },
+              "Back": {
+                "x": 1.0,
+                "y": 0.0,
+                "z": 0.0
+              },
+              "Left": {
+                "x": 0.0,
+                "y": -1.0,
+                "z": 0.0
+              },
+              "Right": {
+                "x": 0.0,
+                "y": 1.0,
+                "z": 0.0
+              }
+            },
+            "Min": {
+              "x": 4.0,
+              "y": 1.0,
+              "z": 1.0
+            },
+            "Max": {
+              "x": 4.0,
+              "y": 13.0,
+              "z": 1.0
+            },
+            "Center": {
+              "x": 4.0,
+              "y": 7.0,
+              "z": 1.0
+            },
+            "Thickness": 1.0,
+            "Length": 13.0,
+            "Height": 2.0
+          }
+        ],
+        "Center": {
+          "x": 4.5,
+          "y": 1.0,
+          "z": 1.0
+        },
+        "Thickness": 1.0,
+        "length": 0.0,
+        "Height": 2.0
+      }
+    ],
+    "ConnectedAreas": [
+      6
+    ],
+    "Orientation": {
+      "Name": "South",
+      "foreUnit": -1.0,
+      "rightUnit": -1.0,
+      "Forward": {
+        "x": 0.0,
+        "y": -1.0,
+        "z": 0.0
+      },
+      "Back": {
+        "x": 0.0,
+        "y": 1.0,
+        "z": 0.0
+      },
+      "Left": {
+        "x": 1.0,
+        "y": 0.0,
+        "z": 0.0
+      },
+      "Right": {
+        "x": -1.0,
+        "y": 0.0,
+        "z": 0.0
+      }
+    },
+    "RoomIndex": 9,
+    "Floor": {
+      "BottomLeft": {
+        "x": 10.0,
+        "y": 12.0,
+        "z": 1.0
+      },
+      "TopRight": {
+        "x": 5.0,
+        "y": 2.0,
+        "z": 1.0
+      },
+      "BottomRight": {
+        "x": 5.0,
+        "y": 12.0,
+        "z": 1.0
+      },
+      "TopLeft": {
+        "x": 10.0,
+        "y": 2.0,
+        "z": 1.0
+      },
+      "width": 6.0,
+      "height": 11.0,
+      "Center": {
+        "x": 7.5,
+        "y": 7.0,
+        "z": 1.0
+      },
+      "TrueSW": {
+        "x": 5.0,
+        "y": 2.0,
+        "z": 1.0
+      },
+      "TrueNE": {
+        "x": 10.0,
+        "y": 12.0,
+        "z": 1.0
+      },
+      "TrueWidth": 6.0,
+      "TrueHeight": 11.0
+    }
+  }
+}

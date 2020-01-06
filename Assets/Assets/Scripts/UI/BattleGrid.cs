@@ -83,7 +83,7 @@ namespace RedKite
                 if (destination != null)
                 {
                     if (tileMapper.tiles[destination.cell.x, destination.cell.y].IsWalkable == true & selectedHero.IsMoving == false)
-                        if (ManhattanDistance(new Vector2Int(selectedHero.tileX, selectedHero.tileY), new Vector2Int(destination.cell.x, destination.cell.y)) <= selectedHero.movement)
+                        if (Utility.ManhattanDistance(new Vector2Int(selectedHero.tileX, selectedHero.tileY), new Vector2Int(destination.cell.x, destination.cell.y)) <= selectedHero.movement)
                         {
                             if (IsReachable(destination, withinRange))
                                 GeneratePathTo((int)destination.cell.x, (int)destination.cell.y);
@@ -322,7 +322,7 @@ namespace RedKite
 
                 foreach (Node v in u.neighbours)
                 {
-                    if (ManhattanDistance(new Vector2Int(selectedHero.tileX, selectedHero.tileY), new Vector2Int(v.cell.x, v.cell.y)) <= selectedHero.movement)
+                    if (Utility.ManhattanDistance(new Vector2Int(selectedHero.tileX, selectedHero.tileY), new Vector2Int(v.cell.x, v.cell.y)) <= selectedHero.movement)
                     {
                         float alt = dist[u] + CostToEnterTile(v.cell.x, v.cell.y);
                         if (alt < dist[v] & alt < selectedHero.movement)
@@ -436,14 +436,6 @@ namespace RedKite
             isSelection = false;
         }
 
-        public int ManhattanDistance(Vector2Int a, Vector2Int b)
-        {
-            checked
-            {
-                return Mathf.Abs(a.x - b.x) + Mathf.Abs(a.y - b.y);
-            }
-        }
-
 
 
         void UnitRange()
@@ -483,7 +475,7 @@ namespace RedKite
                         {
                             cell = new Vector2Int((int)startingSpot.x + i, (int)startingSpot.y + j);
 
-                            if (ManhattanDistance(new Vector2Int(selectedHero.tileX, selectedHero.tileY), new Vector2Int(cell.x, cell.y)) <= selectedHero.movement)
+                            if (Utility.ManhattanDistance(new Vector2Int(selectedHero.tileX, selectedHero.tileY), new Vector2Int(cell.x, cell.y)) <= selectedHero.movement)
                             {
                                 Debug.Log("?");
 

@@ -30,6 +30,7 @@ namespace RedKite
         }
 
         public List<Unit> Units { get; private set; }
+        public List<Enemy> Enemies { get; private set; }
 
         void Awake()
         {
@@ -42,6 +43,8 @@ namespace RedKite
                 Destroy(gameObject);
             }
             Units = FindObjectsOfType<Unit>().ToList();
+
+            Enemies = FindObjectsOfType<Enemy>().ToList();
 
         }
 
