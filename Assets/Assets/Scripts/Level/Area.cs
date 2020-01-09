@@ -164,8 +164,7 @@ namespace RedKite
             public Orient Orientation;
             public Vector3 Min;
             public Vector3 Max;
-            public List<Vector3> Corners = new List<Vector3>();
-            public List<Segment> Paths = new List<Segment>();
+            public List<Segment> Overlaps = new List<Segment>();
             public List<Segment> Segments = new List<Segment>();
             public Vector3 Center;
             public float Thickness = 1;
@@ -311,132 +310,120 @@ namespace RedKite
 
             public void Split()
             {
-
-
+                //establish relative up and down. Will probably move to control flow below when less tired.
                 Vector3 up = Orientation == Orient.North | Orientation == Orient.South ? new Vector3(1, 0, 0) : new Vector3(0, 0, 1);
                 Vector3 down = up == new Vector3(0, 0, 1) ? new Vector3(0, 0, -1) : new Vector3(-1, 0, 0);
 
-
+                //every wall needs a minumum of one segment.
                 List<Segment> segments = new List<Segment>();
 
+                //this step is important for the look behind featured in the loop as order is important.
+                if (Orientation == Orient.North | Orientation == Orient.South)
+                    Overlaps.OrderBy(x => x.Min.x).ToList();
+                else
+                    Overlaps.OrderBy(x => x.Min.z).ToList();
 
-                if (Paths.Count == 0)
+                //note <= for look behind. This also means I no longer have to have a seperate structure for those with 0 paths.
+                for (int i = 0; i <= Overlaps.Count; i++)
                 {
-                    Vector3 segMax = Max;
-                    Vector3 segMin = Min;
-                    bool segMinComplete = false;
+                    //instantiate start and end of segment
+                    Vector3 segMax;
+                    Vector3 segMin;
+
+                    //if there are no paths then we start from the extremities of the walls minus the corners.
+                    if(Overlaps.Count == 0)
+                    {
+                        segMin = Min + up;
+                        segMax = Max + down;
+                    }
+                    //if this is our first iteration and the count is more than 0 as it was not triggered above, then
+                    //we start by using the min as our beginning abd the min of the current path as our max (minus one to not encroach)
+                    else if(i == 0)
+                    {
+                        segMin = Min + up;
+                        if (Vector3.Distance(Overlaps[i].Min , Min) < 2)
+                            continue;
+                        else
+                            segMax = Overlaps[i].Min + down;
+                    }
+                    //if we are at the end of the loop we cannot look to the current iteration. We use the last path in the list, which is
+                    //the previous iteration, and compare it to the max. We only accept a distance greater than 1 so that our minimum segment length is 1.
+                    else if (i == Overlaps.Count)
+                    {
+                        segMin = Overlaps[i - 1].Max + up;
+                        if (Vector3.Distance(Overlaps[i - 1].Max, Max) < 2)
+                            continue;
+                        else
+                            segMax = Max + down;
+                    }
+                    //finally we have our standard in between case. We ensure a minimum length of 1 then use the tile after the previous path max and 
+                    //compare it to the tile before the current path min.
+                    else
+                    {
+                        if (Vector3.Distance(Overlaps[i - 1].Max, Overlaps[i].Min) < 2)
+                            continue;
+                        else
+                        { 
+                            segMin = Overlaps[i - 1].Max + up;
+                            segMax = Overlaps[i].Min + down;
+                        }
+
+                    }
+
                     bool segMaxComplete = false;
+                    bool segMinComplete = false;
 
-
-                    for (int j = 0; j < Vector3.Distance(segMin, segMax); j++)
+                    //loop half the length of the distance between points plus half a unit to account for odd numbers
+                    for (int j = 0; j < Vector3.Distance(segMin, segMax)/2 + .51f; j++)
                     {
                         if (segMin == segMax)
                             break;
 
-
-                        if (WallGraph[(int)segMin.x, (int)segMin.z] > 0 & segMinComplete == false)
-                            segMin += up;
-                        else
+                        if (WallGraph[(int)segMin.x, (int)segMin.z] == 0 & segMinComplete == false)
                         {
                             WallGraph[(int)segMin.x, (int)segMin.z] += 1;
                             segMinComplete = true;
                         }
+                        else if (segMinComplete == false)
+                        {
+                             segMin += up;
+                        }
 
-
+                        //keep max and min from crossing.
                         if (segMin == segMax)
+                        {
+                            //check if valid
+                            if(WallGraph[(int)segMin.x,(int)segMin.y] == 0)
+                            {
+                                WallGraph[(int)segMin.x, (int)segMin.y] += 1;
+                                segMinComplete = true;
+                                segMaxComplete = true;
+                                    
+                            }
                             break;
+                        }
 
-
-                        if (WallGraph[(int)segMax.x, (int)segMax.z] > 0 & segMaxComplete == false)
-                            segMax += down;
-                        else
+                        if (WallGraph[(int)segMax.x, (int)segMax.z] == 0 & segMaxComplete == false)
                         {
                             WallGraph[(int)segMax.x, (int)segMax.z] += 1;
                             segMaxComplete = true;
                         }
+                        else if (segMaxComplete == false)
+                        {
+                            segMax += down;
+                        }
+
                     }
 
-
-                    Segments.Add(new Segment(Orientation, segMin, segMax, Height));
-                }
-                else if (Paths.Count > 0)
-                {
-                    if (Orientation == Orient.North | Orientation == Orient.South)
-                        Paths.OrderBy(x => x.Min.x).ToList();
+                    //if both sides have found a point then we add a segment. else we skip. else really only there for clarity.
+                    if (segMinComplete == true & segMaxComplete == true)
+                        segments.Add(new Segment(Orientation, segMin, segMax, Height));
                     else
-                        Paths.OrderBy(x => x.Min.z).ToList();
-
-
-                    for (int i = 0; i < Paths.Count; i++)
-                    {
-                        //each path creates two segments
-                        Vector3 seg1Max = Paths[i].Min;
-                        Vector3 seg2Min = Paths[i].Max;
-                        Vector3 seg2Max = Max;
-                        Vector3 seg1Min = Min;
-
-
-                        bool seg1MaxComplete = false;
-                        bool seg2MinComplete = false;
-                        bool seg2MaxComplete = false;
-                        bool seg1MinComplete = false;
-
-
-                        for (int j = 0; j < Vector3.Distance(seg1Min, seg1Max); j++)
-                        {
-                            if (WallGraph[(int)seg1Min.x, (int)seg1Min.z] > 0 & seg1MinComplete == false)
-                                seg1Min += up;
-                            else
-                            {
-                                WallGraph[(int)seg1Min.x, (int)seg1Min.z] += 1;
-                            }
-                            if (WallGraph[(int)seg1Max.x, (int)seg1Max.z] > 0 & seg1MaxComplete == false)
-                                seg1Max += down;
-                            else
-                            {
-                                WallGraph[(int)seg1Max.x, (int)seg1Max.z] += 1;
-                            }
-                        }
-
-                        for (int j = 0; j < Vector3.Distance(seg2Min, seg2Max); j++)
-                        {
-                            if (WallGraph[(int)seg2Min.x, (int)seg2Min.z] > 0 & seg2MinComplete == false)
-                                seg2Min += up;
-                            else
-                            {
-                                WallGraph[(int)seg2Min.x, (int)seg2Min.z] += 1;
-                            }
-                            if (WallGraph[(int)seg2Max.x, (int)seg2Max.z] > 0 & seg2MaxComplete == false)
-                                seg2Max += down;
-                            else
-                            {
-                                WallGraph[(int)seg2Max.x, (int)seg2Max.z] += 1;
-                            }
-                        }
-
-
-
-
-                        if (Paths.Count == 1)
-                        {
-                            segments.Add(new Segment(Orientation, seg1Min, seg1Max, Height));
-                            segments.Add(new Segment(Orientation, seg2Min, seg2Max, Height));
-                        }
-                        else if (i < Paths.Count - 1)
-                        {
-                            segments.Add(new Segment(Orientation, seg1Min, seg1Max, Height));
-                        }
-                        else
-                        {
-                            if (Vector3.Distance(seg2Min, seg2Max) > 0)
-                            {
-                                segments.Add(new Segment(Orientation, seg2Min, seg2Max, Height));
-                                break;
-                            }
-                        }
-                    }
-                    Segments = segments;
+                        continue;
                 }
+
+                Segments = segments;
+                
             }
         }
     }

@@ -6,6 +6,7 @@ TagManager:
   tags:
   - 2D Camera
   - RenderTarget
+  - Level
   layers:
   - Default
   - TransparentFX

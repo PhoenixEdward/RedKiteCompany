@@ -95,7 +95,7 @@ namespace RedKite
 
         public static void LevelToJSON(Dictionary<int, Area> areas)
         {
-            //var json = JsonConvert.SerializeObject(areas, Newtonsoft.Json.Formatting.Indented);
+            //var json = JsonConvert.SerializeObject(areas.Values, Newtonsoft.Json.Formatting.Indented);
 
             //File.WriteAllText(@"C:\Users\phoen\UnitySource\Red Kite Company\Assets\Data\LevelData.json", json);
         }

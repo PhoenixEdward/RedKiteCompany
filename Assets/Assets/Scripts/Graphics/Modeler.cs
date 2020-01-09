@@ -80,12 +80,12 @@ namespace RedKite
                         segInstance.Instantiate(seg);
 
                     }
-                    if (wall.Paths.Count != 0)
+                    if (wall.Overlaps.Count != 0)
                     {
-                        foreach (Segment path in wall.Paths)
+                        foreach (Segment path in wall.Overlaps)
                         {
-                            if(path.IsRemoved == false)
-                            { 
+                            if (path.IsPath == true)
+                            {
                                 GameObject segment = GameObject.CreatePrimitive(PrimitiveType.Cube);
 
                                 segment.transform.parent = level;
@@ -101,9 +101,11 @@ namespace RedKite
                                 //now for scaling to 3D based on wall orientation
 
                                 segment.transform.localScale = path.Scale;
-   
+
 
                             }
+                            else
+                                Debug.Log(area.RoomIndex + " " + path.Orientation.Name + " " + path.Min + " " + path.Max);
                         }
                     }
 

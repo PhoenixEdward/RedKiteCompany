@@ -11,6 +11,7 @@ namespace RedKite
     {
         public bool IsPath;
         public bool IsRemoved;
+        public bool IsCorner;
         public Orient Orientation;
         public Vector3 Min;
         public Vector3 Max;
@@ -20,8 +21,9 @@ namespace RedKite
 
         static int[,] space = new int[TileMapper.W,TileMapper.H];
 
-        public Segment(Orient _orientation, Vector3 _min, Vector3 _max, float _height, bool _isPath = false, bool _isRemoved = false)
+        public Segment(Orient _orientation, Vector3 _min, Vector3 _max, float _height, bool _isPath = false, bool _isRemoved = false, bool _isCorner = false)
         {
+            IsCorner = _isCorner;
             IsPath = _isPath;
             IsRemoved = _isRemoved;
             Orientation = _orientation;
