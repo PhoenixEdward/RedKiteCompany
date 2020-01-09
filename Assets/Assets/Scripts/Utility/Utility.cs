@@ -1,4 +1,5 @@
-﻿using System;
+﻿
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -30,8 +31,8 @@ namespace RedKite
 
         public static VectorExtrema GetVectorExtrema(Vector3[] vecArray)
         {
-            Vector3 tempMax = new Vector3(Vector3.negativeInfinity.x, Vector3.negativeInfinity.z,0);
-            Vector3 tempMin = new Vector3(Vector3.positiveInfinity.x,Vector3.positiveInfinity.z,0);
+            Vector3 tempMax = new Vector3(Vector3.negativeInfinity.x, 0, Vector3.negativeInfinity.z);
+            Vector3 tempMin = new Vector3(Vector3.positiveInfinity.x,0,Vector3.positiveInfinity.z);
 
             foreach (Vector3 vector in vecArray)
             {
@@ -78,13 +79,13 @@ namespace RedKite
             for (int i = 0; i < Vector3.Distance(first, second); i++)
             {
                 if (first.x < second.x)
-                    outVectors.Add(Vector3.Lerp(first + (new Vector3(1, 0, 0) * i), second, 1 / Vector3.Distance(first + (new Vector3(1, 0, 0) * i), second)));
+                    outVectors.Add(Vector3.Lerp(first + (Vector3.right * i), second, 1 / Vector3.Distance(first + (Vector3.right * i), second)));
                 else if (second.x < first.x)
-                    outVectors.Add(Vector3.Lerp(first + (new Vector3(-1, 0, 0) * i), second, 1 / Vector3.Distance(first + (new Vector3(-1, 0, 0) * i), second)));
+                    outVectors.Add(Vector3.Lerp(first + (Vector3.left * i), second, 1 / Vector3.Distance(first + (Vector3.left * i), second)));
                 else if (first.z < second.z)
-                    outVectors.Add(Vector3.Lerp(first + (new Vector3(0, 1, 0) * i), second, 1 / Vector3.Distance(first + (new Vector3(0, 1, 0) * i), second)));
+                    outVectors.Add(Vector3.Lerp(first + (Vector3.forward * i), second, 1 / Vector3.Distance(first + (Vector3.forward * i), second)));
                 else if (second.z < first.z)
-                    outVectors.Add(Vector3.Lerp(first + (new Vector3(0, -1, 0) * i), second, 1 / Vector3.Distance(first + (new Vector3(0, -1, 0) * i), second)));
+                    outVectors.Add(Vector3.Lerp(first + (Vector3.back * i), second, 1 / Vector3.Distance(first + (Vector3.back * i), second)));
 
             }
 
@@ -94,9 +95,9 @@ namespace RedKite
 
         public static void LevelToJSON(Dictionary<int, Area> areas)
         {
-            var json = JsonConvert.SerializeObject(areas, Newtonsoft.Json.Formatting.Indented);
+            //var json = JsonConvert.SerializeObject(areas, Newtonsoft.Json.Formatting.Indented);
 
-            File.WriteAllText(@"C:\Users\phoen\UnitySource\Red Kite Company\Assets\Data\LevelData.json", json);
+            //File.WriteAllText(@"C:\Users\phoen\UnitySource\Red Kite Company\Assets\Data\LevelData.json", json);
         }
 
         /*public static void LevelToCSV(char[,] map)
@@ -174,77 +175,18 @@ namespace RedKite
             return range.ElementAt(index);
         }
 
-        public static int ManhattanDistance(Vector2Int a, Vector2Int b)
-        {
-            checked
-            {
-                return Mathf.Abs(a.x - b.x) + Mathf.Abs(a.y - b.y);
-            }
-
-        }
-
         public static int ManhattanDistance(Vector3Int a, Vector3Int b)
         {
             checked
             {
-                return Mathf.Abs(a.x - b.x) + Mathf.Abs(a.z - b.z) + Mathf.Abs(a.y - b.y);
-            }
-        }
-
-        public static Vector3Int RandomCoords(Vector3Int first, Vector3Int second)
-        {
-            Vector3Int outVector = Vector3Int.zero;
-
-            if (first.x > second.x)
-                outVector.x = rand.Next((int)first.x, (int)second.x);
-            else if (second.x > first.x)
-                outVector.x = rand.Next((int)second.x, (int)first.x);
-
-            if (first.z > second.z)
-                outVector.z = rand.Next((int)first.z, (int)second.z);
-            else if (second.z > first.z)
-                outVector.z = rand.Next((int)second.z, (int)first.z);
-
-            if (first.y > second.y)
-                outVector.y = rand.Next((int)first.y, (int)second.y);
-            else if (second.y > first.y)
-                outVector.y = rand.Next((int)second.y, (int)first.y);
-
-            return outVector;
-
-        }
-
-        public static Vector3Int[] CoordRange(Vector3Int first, Vector3Int second)
-        {
-            List<Vector3Int> outVectors = new List<Vector3Int>();
-
-            if (first.x < second.x | first.z < second.z)
-                outVectors.Add(first);
-            if (first.x > second.x | first.z > second.z)
-                outVectors.Add(second);
-
-
-            for (int i = 0; i < Vector3.Distance(first, second); i++)
-            {
-                if (first.x < second.x)
-                    outVectors.Add(Vector3Int.RoundToInt(Vector3.Lerp(first + Vector3.right * i, second, 1 / Vector3.Distance(first + Vector3.right * i, second))));
-                else if (second.x < first.x)
-                    outVectors.Add(Vector3Int.RoundToInt(Vector3.Lerp(first + Vector3.left * i, second, 1 / Vector3.Distance(first + Vector3.left * i, second))));
-                else if (first.z < second.z)
-                    outVectors.Add(Vector3Int.RoundToInt(Vector3.Lerp(first + Vector3.forward * i, second, 1 / Vector3.Distance(first + Vector3.forward * i, second))));
-                else if (second.z < first.z)
-                    outVectors.Add(Vector3Int.RoundToInt(Vector3.Lerp(first + Vector3.back * i, second, 1 / Vector3.Distance(first + Vector3.back * i, second))));
-
+                return Mathf.Abs(a.x - b.x) + Mathf.Abs(a.y - b.y) + Mathf.Abs(a.z - b.z);
             }
 
-            return outVectors.ToArray();
         }
 
-        public static Vector3 ToVector3(Vector3Int inVector)
+        public static Vector3Int CartToIso(Vector3 cartesian)
         {
-            Vector3 outVector = new Vector3((float)inVector.x, (float)inVector.z, (float)inVector.y);
-
-            return outVector;
+            return Vector3Int.RoundToInt(new Vector3(cartesian.x - cartesian.y, (cartesian.x + cartesian.y) / 2, cartesian.z));
         }
 
 

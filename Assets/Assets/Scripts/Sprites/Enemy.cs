@@ -65,8 +65,6 @@ namespace RedKite
 
                     spawnCenterTile.color = Colors.NeonPink;
 
-                    map.tilemap.SetTile(new Vector3Int(spawnCenter.x, spawnCenter.y, 0), spawnCenterTile);
-
                     spawnTiles.RemoveAt(0);
 
                     Debug.Log("max enemies: " + TileMapper.RoomTiles[spawnRoom].Count / 6);

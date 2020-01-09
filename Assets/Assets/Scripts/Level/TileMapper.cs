@@ -62,10 +62,9 @@ namespace RedKite
         static System.Random rndState = new System.Random();
         static int rnd(int x) => rndState.Next() % x;
 
-        public Cell[,] tiles;
+        public static Cell[,] tiles;
 
         Tile[] tileSprites;
-        public Tilemap tilemap;
         public Vector3Int spawnPoint;
         public static int index = 0;
         //to delete below
@@ -74,6 +73,8 @@ namespace RedKite
 
         void Awake()
         {
+
+
             H = rndState.Next(40, 50);
             W = rndState.Next(40, 50);
 
@@ -84,10 +85,6 @@ namespace RedKite
 
 
             tiles = new Cell[W, H];
-
-            tilemap = GetComponent<Tilemap>();
-
-            tilemap.size = new Vector3Int(W, H, 1);
 
             //check if this even does anything anymore? Probably not necessary now.
 
@@ -132,40 +129,15 @@ namespace RedKite
                 if (j == 4999)
                     Debug.Log("Bullshit!");
             }
-            Utility.LevelToJSON(areas);
+            //Utility.LevelToJSON(areas);
 
-            //SplitAllWalls();
-
-          
-
-            // show the result
-            for (int y = H - 1; y > -1; y--)
-            {
-                string line = "|";
-                for (int x = 0; x < W; x++)
-                {
-                    char c = map[x, y];
-                    if (x != 0)
-                        line += '|';
-                    if (c == TILE_WALL | c == TILE_WALL_CORNER)
-                    {
-                        line += c;
-                    }
-                    else
-                        line += c;
-                    if (x == W - 1)
-                    {
-                        line += "|";
-                        Debug.Log(line);
-                    }
-                }
-            }
+            SplitAllWalls();
 
             foreach (Area area in areas.Values)
             {
                 foreach(Area.Wall wall in area.Walls)
                 {
-                    foreach (Area.Wall.Segment segment in wall.Paths.Where(x => x.IsRemoved == false))
+                    foreach (Segment segment in wall.Paths.Where(x => x.IsRemoved == false))
                     {
                         Vector3[] tiles = Utility.CoordRange(segment.Min, segment.Max);
                             foreach(Vector3 tile in tiles)
@@ -181,7 +153,7 @@ namespace RedKite
             {
                 foreach (Area.Wall wall in area.Walls)
                 {
-                    foreach (Area.Wall.Segment segment in wall.Segments)
+                    foreach (Segment segment in wall.Segments)
                     {
                         Vector3[] tiles = Utility.CoordRange(segment.Min, segment.Max);
                         foreach (Vector3 tile in tiles)
@@ -204,31 +176,24 @@ namespace RedKite
                     if (c != TILE_VOID & c != TILE_WALL & c != TILE_WALL_CORNER)
                     {
                         tiles[x, y] = tileTypes[1];
-                        Tile colorTile = ScriptableObject.CreateInstance<Tile>();
-                        colorTile.sprite = tileSprites[1].sprite;
                         if(c==TILE_SPAWN)
                         { 
-                            colorTile.color = colors[0];
                             RoomTiles[0].Add(new Vector3Int(x, y, 1));
-                            spawnPoint = Vector3Int.RoundToInt(tilemap.CellToWorld(new Vector3Int(x, y, 0)));
+                            spawnPoint = Vector3Int.RoundToInt(new Vector3(x,2,y));
                         }
                         if ((int)c >= 48 & (int)c <= 57)
                         { 
-                            colorTile.color = colors[(int)c - 48];
                             RoomTiles[(int)c-48].Add(new Vector3Int(x, y,1));
                         }
-                        tilemap.SetTile(new Vector3Int(x, y, 0), colorTile);
                     }
                     else if (c == TILE_WALL | c == TILE_WALL_CORNER)
                     {
                         tiles[x, y] = tileTypes[2];
-                        tilemap.SetTile(new Vector3Int(x, y, 0), tileSprites[2]);
 
                     }
                     else if (c == TILE_VOID)
                     {
                         tiles[x, y] = tileTypes[0];
-                        tilemap.SetTile(new Vector3Int(x, y, 0), tileSprites[0]);
                     }
                 }
             }
@@ -344,11 +309,15 @@ namespace RedKite
         {
             //reshuffle areas so we don't necessarily build door off the one we came from.
 
+
             int foundPaths = 0;
+
 
             List<int> allIndices = Enumerable.Range(0, areas.Count).ToList();
 
+
             Utility.Shuffle(allIndices);
+
 
             //need to break this off in to a function; Input is just areas again like the room dimensions.
             foreach (int area in allIndices)
@@ -370,49 +339,65 @@ namespace RedKite
                             {
                                 //https://stackoverflow.com/questions/325933/determine-whether-two-date-ranges-overlap
 
-                                Vector3 up = newWall.Orientation == Orient.North | newWall.Orientation == Orient.South ? Vector3.right : Vector3.forward;
-                                Vector3 down = up == Vector3.forward ? Vector3.back : Vector3.left;
-                                Vector3 right = up == Vector3.forward ? Vector3.right : Vector3.forward;
+
+                                Vector3 up = newWall.Orientation == Orient.North | newWall.Orientation == Orient.South ? new Vector3(1, 0, 0) : new Vector3(0, 0, 1);
+                                Vector3 down = up == new Vector3(0, 0, 1) ? new Vector3(0, 0, -1) : new Vector3(-1, 0, 0);
+
+
 
 
                                 float diff0 = Utility.DirectedDist(newWall.Min, oldWall.Max);
                                 float diff1 = Utility.DirectedDist(newWall.Max, oldWall.Min);
 
+
                                 if (diff0 <= 0 & diff1 >= 0)
                                 {
                                     float diff2 = Utility.DirectedDist(newWall.Min, oldWall.Min);
-                                    Vector3 startCorner = diff2 <= 0 ? oldWall.Min:
+                                    Vector3 startCorner = diff2 <= 0 ? oldWall.Min :
                                         newWall.Min;
+
 
                                     Vector3 startCoord = startCorner + up;
 
 
+
+
                                     float diff3 = Utility.DirectedDist(newWall.Max, oldWall.Max);
-                                    Vector3 endCorner = diff3 >= 0 ? oldWall.Max:
+                                    Vector3 endCorner = diff3 >= 0 ? oldWall.Max :
                                         newWall.Max;
 
-                                    Vector3 endCoord = endCorner + down; 
+
+                                    Vector3 endCoord = endCorner + down;
+
 
                                     if (Vector3.Distance(startCoord, endCoord) < 5)
                                     {
-                                        oldWall.Corners.Add(startCorner);
-                                        oldWall.Corners.Add(endCorner);
-                                        newWall.Paths.Add(new Area.Wall.Segment(newWall.Orientation, startCoord, endCoord, newWall.Height, true, true));
+                                        newWall.Paths.Add(new Segment(newWall.Orientation, startCorner, endCorner, 1, true, true));
                                         break;
                                     }
                                     Vector3[] doorRange = Utility.CoordRange(startCoord, endCoord);
 
 
+
+
                                     double randoP;
+
+
 
 
                                     randoP = rndState.Next(2);
 
 
+
+
                                     int width = 2;
 
 
+
+
                                     Vector3 doorCoord = Vector3.zero;
+
+
 
 
                                     if (randoP == 1)
@@ -420,19 +405,34 @@ namespace RedKite
                                         int[] randoIndexes = Enumerable.Range(0, doorRange.Length).ToArray();
 
 
+
+
                                         Utility.Shuffle<int>(randoIndexes);
+
+
 
 
                                         //don't spawn doors at corners
                                         foreach (int index in randoIndexes)
                                         {
-                                            Vector3 checkAhead = doorRange[index] + up;
-                                            if (map[(int)doorRange[index].x, (int)doorRange[index].z] != TILE_WALL_CORNER &
-                                                map[(int)checkAhead.x, (int)checkAhead.z] != TILE_WALL_CORNER)
-                                            {
-                                                doorCoord = doorRange[index];
-                                                width = 2;
-                                                break;
+                                            Vector3 coord = doorRange[index];
+                                            Vector3 checkAhead = coord + up;
+                                            Vector3 checkAhead2 = coord + up + up;
+                                            Vector3 checkBehind = coord + down;
+                                            Vector3 checkBehind2 = coord + down + down;
+
+                                            if(Utility.WithinBounds(checkAhead2,W,H) & Utility.WithinBounds(checkBehind2, W, H))
+                                            { 
+                                                if (map[(int)coord.x, (int)coord.z] != TILE_WALL_CORNER &
+                                                    map[(int)checkAhead.x, (int)checkAhead.z] != TILE_WALL_CORNER &
+                                                    map[(int)checkBehind.x, (int)checkBehind.z] != TILE_WALL_CORNER &
+                                                    map[(int)checkAhead2.x, (int)checkAhead2.z] != TILE_WALL_CORNER &
+                                                    map[(int)checkBehind2.x, (int)checkBehind2.z] != TILE_WALL_CORNER)
+                                                {
+                                                    doorCoord = coord;
+                                                    width = 2;
+                                                    break;
+                                                }
                                             }
                                         }
                                     }
@@ -443,29 +443,28 @@ namespace RedKite
                                     }
 
 
+
+
                                     if (doorCoord == Vector3.zero)
                                     {
-                                        Debug.Log("Failure");
-                                        break;
-                                       
-                                    }
-                                        
 
-                                    Debug.Log("Min: " + doorCoord);
-                                    Debug.Log("Max: " + (doorCoord + (width * up)));
+
+                                        break;
+
+
+                                    }
 
 
                                     workingArea.ConnectedAreas.Add(areas[area].RoomIndex);
                                     areas[area].ConnectedAreas.Add(workingArea.RoomIndex);
 
 
-                                    oldWall.Corners.Add(startCorner);
-                                    oldWall.Corners.Add(endCorner);
+                                    oldWall.Paths.Add(new Segment(oldWall.Orientation, doorCoord, doorCoord + (width * up), 1, true));
+                                    newWall.Paths.Add(new Segment(newWall.Orientation, startCorner, endCorner, 1, true, true));
 
-                                    oldWall.Paths.Add(new Area.Wall.Segment(oldWall.Orientation, startCoord, endCoord, oldWall.Height, true));
-                                    newWall.Paths.Add(new Area.Wall.Segment(newWall.Orientation, startCoord, endCoord, newWall.Height, true, true));
 
                                     foundPaths++;
+
 
                                 }
                             }

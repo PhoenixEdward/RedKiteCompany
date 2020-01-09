@@ -21,7 +21,7 @@ namespace RedKite
 
             map = FindObjectOfType<Tilemap>();
 
-            //transform.position = new Vector3(hero.transform.position.x, hero.transform.position.y, -10);
+            //transform.position = new Vector3(hero.transform.position.x, 15, transform.position.z);
 
             xBounds = new Vector2(map.cellBounds.xMin, map.cellBounds.xMax);
             yBounds = new Vector2(map.cellBounds.yMin, map.cellBounds.yMax);
@@ -50,25 +50,27 @@ namespace RedKite
             }
             */
 
+            Vector2 movement = Vector2.zero;
+
             if (Input.GetKey(KeyCode.W))
             {
-                pos.y += pix * Time.deltaTime;
+                movement.y += pix * Time.deltaTime;
             }
             if (Input.GetKey(KeyCode.S))
             {
-                pos.y -= pix * Time.deltaTime;
+                movement.y -= pix * Time.deltaTime;
             }
             if (Input.GetKey(KeyCode.D))
             {
-                pos.x += pix * Time.deltaTime;
+                movement.x += pix * Time.deltaTime;
             }
             if (Input.GetKey(KeyCode.A))
             {
-                pos.x -= pix * Time.deltaTime;
+                movement.x -= pix * Time.deltaTime;
             }
 
 
-            transform.position = pos;
+            transform.position += new Vector3(movement.x, movement.y);
 
         }
     }

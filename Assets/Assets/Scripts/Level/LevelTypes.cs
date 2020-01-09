@@ -110,42 +110,42 @@ namespace RedKite
 
         Orient(Side _side)
         {
-            Forward = new Vector3(0, 0, 1);
-            Back = new Vector3(0, 0, -1);
-            Right = new Vector3(1, 0, 0);
-            Left = new Vector3(-1, 0, 0);
+            Forward = Vector3.forward;
+            Back = Vector3.back;
+            Right = Vector3.right;
+            Left = Vector3.left;
 
             if (_side == Side.North)
             {
                 Name = "North";
-                Forward = new Vector3(0, 0, 1);
-                Back = new Vector3(0, 0, -1);
-                Right = new Vector3(1, 0, 0);
-                Left = new Vector3(-1, 0, 0);
+                Forward = Vector3.forward;
+                Back = Vector3.back;
+                Right = Vector3.right;
+                Left = Vector3.left;
             }
             else if (_side == Side.South)
             {
                 Name = "South";
-                Forward = new Vector3(0, 0, -1);
-                Back = new Vector3(0, 0, 1);
-                Right = new Vector3(-1, 0, 0);
-                Left = new Vector3(1, 0, 0);
+                Forward = Vector3.back;
+                Back = Vector3.forward;
+                Right = Vector3.left;
+                Left = Vector3.right;
             }
             else if (_side == Side.West)
             {
                 Name = "West";
-                Forward = new Vector3(-1, 0, 0);
-                Back = new Vector3(1, 0, 0);
-                Right = new Vector3(0, 0, 1);
-                Left = new Vector3(0, 0, -1);
+                Forward = Vector3.left;
+                Back = Vector3.right;
+                Right = Vector3.forward;
+                Left = Vector3.back;
             }
             else
             {
                 Name = "East";
-                Forward = new Vector3(1, 0, 0);
-                Back = new Vector3(-1, 0, 0);
-                Right = new Vector3(0, 0, -1);
-                Left = new Vector3(0, 0, 1);
+                Forward = Vector3.right;
+                Back = Vector3.left;
+                Right = Vector3.back;
+                Left = Vector3.forward;
             }
 
             foreUnit = Forward.x == 0 ? Forward.z : Forward.x;

@@ -60,6 +60,9 @@ namespace RedKite
                 {
                     sprites[j, i] = spritesLoad[loop];
                     loop++;
+
+                    if (i == 0 & j == 3)
+                        break;
                 }
             }
 

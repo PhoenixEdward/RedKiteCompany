@@ -5,16 +5,21 @@ using UnityEngine.Tilemaps;
 
 namespace RedKite
 { 
+    [System.Serializable]
     public class Unit : GameSprite
     {
 
+        Vector3 offset = new Vector3(0.35f, 0, 0.35f);
+
         //Should destination be here?
         public TileMapper map;
+        static Grid grid;
 
-        public int tileX;
-        public int tileY;
+        PathFinder pathFinder = new PathFinder();
 
-        public List<Node> currentPath = null;
+        public Vector3Int Coordinate;
+
+        protected List<Node> currentPath = null;
 
         int speed = 2;
         public int movement = 4;
@@ -23,76 +28,90 @@ namespace RedKite
         public int VerticalRow { get; set; }
         public int HorizontalRow { get; set; }
 
-        public Vector2 Destination { get; set; } = Vector2.zero;
-        public bool IsMoving { get; protected set; }
+        public Vector3 Destination { get; set; } = Vector3.zero;
+        public bool IsMoving;
         public bool IsAnimated { get; set; }
         public bool IsReverseAnimated { get; set; }
 
         protected float timeSinceLastFrame = 0;
         protected readonly float charSecondsPerFrame = .125f;
         protected int Frame;
-        protected Vector2 velocity = Vector2.zero;
+        protected Vector3 velocity = Vector3.zero;
 
         public override void Start()
         {
             //possibly shortcut in TileMapper code
+            grid = FindObjectOfType<Grid>();
 
             map = FindObjectOfType<TileMapper>();
+
+            currentPath = null;
 
             base.Start();
         }
 
         public virtual void Update()
         {
+  
 
             if (currentPath != null)
             {
                 IsMoving = true;
 
-                Vector3 currentPos = transform.position;
+                Vector3 cellPos = grid.CellToWorld(currentPath[0].cell);
 
-                if (currentPos != new Vector3(currentPath[1].cell.x, currentPath[1].cell.y, currentPos.z))
+                cellPos.y = transform.position.y;
+
+                Debug.Log(cellPos);
+
+                Vector3 currentPos = transform.position - offset;
+
+                if (currentPos != cellPos)
                 {
 
-                    if (currentPos.x < currentPath[1].cell.x)
+                    if (currentPos.x < cellPos.x)
                     {
-                        currentPos.x += Mathf.Min(speed * Time.deltaTime, Mathf.Abs(currentPos.x - currentPath[1].cell.x));
+                        currentPos.x += Mathf.Min(speed * Time.deltaTime, Mathf.Abs(currentPos.x - cellPos.x));
 
                         velocity.x = 1;
+                        Debug.Log("Is moving up");
 
                     }
-                    else if (currentPos.x > currentPath[1].cell.x)
+                    else if (currentPos.x > cellPos.x)
                     {
-                        currentPos.x -= Mathf.Min(speed * Time.deltaTime, Mathf.Abs(currentPos.x - currentPath[1].cell.x));
+                        currentPos.x -= Mathf.Min(speed * Time.deltaTime, Mathf.Abs(currentPos.x - cellPos.x));
                         velocity.x = -1;
+                        Debug.Log("Is moving down");
 
                     }
                     else
                         velocity.x = 0;
-
-                    if (currentPos.y < currentPath[1].cell.y)
+                    
+                    if (currentPos.z < cellPos.z)
                     {
-                        currentPos.y += Mathf.Min(speed * Time.deltaTime, Mathf.Abs(currentPos.y - currentPath[1].cell.y));
+                        currentPos.z += Mathf.Min(speed * Time.deltaTime, Mathf.Abs(currentPos.z - cellPos.z));
 
-                        velocity.y = 1;
+                        velocity.z = 1;
+                        Debug.Log("Is moving right");
+
                     }
-                    else if (currentPos.y > currentPath[1].cell.y)
+                    else if (currentPos.z > cellPos.z)
                     {
-                        currentPos.y -= Mathf.Min(speed * Time.deltaTime, Mathf.Abs(currentPos.y - currentPath[1].cell.y));
+                        currentPos.z -= Mathf.Min(speed * Time.deltaTime, Mathf.Abs(currentPos.z - cellPos.z));
 
-                        velocity.y = -1;
+                        Debug.Log("Is moving left");
+
+                        velocity.z = -1;
                     }
 
                     else
-                        velocity.y = 0;
+                        velocity.z = 0;
 
-                    transform.position = currentPos;
+                    transform.position = currentPos + offset;
                 }
                 else
+                { 
                     MoveNextTile();
-                if (currentPath.Count == 1)
-                {
-                    currentPath = null;
                 }
             }
 
@@ -105,20 +124,20 @@ namespace RedKite
                     if (velocity.x > 0)
                     {
                         if (verticalFrames > 1)
-                            VerticalRow = 1;
+                            VerticalRow = 3;
                     }
                     else if (velocity.x < 0)
                     {
                         if (verticalFrames > 2)
-                            VerticalRow = 3;
+                            VerticalRow = 1;
                     }
 
-                    else if (velocity.y > 0)
+                    else if (velocity.z > 0)
                     {
                         if (verticalFrames > 3)
                             VerticalRow = 2;
                     }
-                    else if (velocity.y < 0)
+                    else if (velocity.z < 0)
                     {
                         if (verticalFrames > 4)
                             VerticalRow = 4;
@@ -129,24 +148,26 @@ namespace RedKite
 
                 else
                 {
-                    if (VerticalRow == 1 & 0 < horizontalFrames)
+                    if (VerticalRow == 1 & 1 <= horizontalFrames)
                         HorizontalRow = 0;
-                    else if (VerticalRow == 2 & 1 < horizontalFrames)
+                    else if (VerticalRow == 2 & 2 <= horizontalFrames)
                         HorizontalRow = 1;
-                    else if (VerticalRow == 3 & 1 < horizontalFrames)
+                    else if (VerticalRow == 3 & 3 <= horizontalFrames)
                         HorizontalRow = 2;
-                    else if (VerticalRow == 4)
+                    else if (VerticalRow == 4 & 4 <= horizontalFrames)
                         HorizontalRow = 3;
 
                     VerticalRow = 0;
                 }
 
                 //could move this code under "is moving" and it would probably eliminate the need of the code above.
-
-                if (HorizontalRow < horizontalFrames - 1)
-                    HorizontalRow += 1;
-                else
-                    HorizontalRow = 0;
+                if(velocity != Vector3.zero)
+                { 
+                    if (HorizontalRow < horizontalFrames - 1)
+                        HorizontalRow += 1;
+                    else
+                        HorizontalRow = 0;
+                }
 
                 if (IsAnimated && Frame < 3)
                 {
@@ -169,7 +190,7 @@ namespace RedKite
 
             if (currentPath == null)
             {
-                velocity = Vector2.zero;
+                velocity = Vector3.zero;
                 IsMoving = false;
             }
 
@@ -188,10 +209,12 @@ namespace RedKite
             if (currentPath == null)
                 return;
 
-            tileX = currentPath[1].cell.x;
-            tileY = currentPath[1].cell.y;
-
             //remove the old current/first node from the path
+
+            Debug.Log(currentPath.Count);
+
+            Coordinate.x = currentPath[0].cell.x;
+            Coordinate.y = currentPath[0].cell.y;
 
             // Grab the new first node and move to that position
 
@@ -200,9 +223,19 @@ namespace RedKite
                 currentPath.RemoveAt(0);
 
             }
-            // We only have one tile left in the path that MUST be our destination. So now we set current path to null
 
 
+            if (currentPath.Count == 1)
+            {
+                Debug.Log("Arrived");
+                currentPath = null;
+            }
+
+        }
+
+        public void Move(int x, int y)
+        {
+            currentPath = pathFinder.GeneratePathTo(this, x, y);
         }
 
     }

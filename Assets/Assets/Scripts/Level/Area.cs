@@ -15,6 +15,8 @@ namespace RedKite
         public List<Wall> Walls;
         public List<int> ConnectedAreas = new List<int>();
 
+        static int[,] WallGraph = new int[TileMapper.W, TileMapper.H];
+
         //to keep directions for the dropping and adding of floor dimensions.
         public Orient Orientation;
 
@@ -127,10 +129,9 @@ namespace RedKite
             public float width;
             public float height;
             public Vector3 Center;
-            public Vector3 TrueSW;
+            public Vector3 TrueScale;
             public Vector3 TrueNE;
-            public float TrueWidth;
-            public float TrueHeight;
+            public Vector3 TrueSW;
 
             public Stage(Vector3 _startPoint, float _width, float _height, Orient _orientation)
             {
@@ -149,10 +150,10 @@ namespace RedKite
                 TrueNE = _orientation == Orient.North ? TopRight : _orientation == Orient.East ? TopLeft :
                     _orientation == Orient.South ? BottomLeft : BottomRight;
 
-                TrueWidth = TrueNE.x - TrueSW.x + 1;
-                TrueHeight = TrueNE.z - TrueSW.z + 1;
 
-                Center = new Vector3((TrueSW.x + (TrueWidth - 1) / 2), 1, (TrueSW.z + (TrueHeight - 1) / 2));
+                TrueScale = new Vector3(TrueNE.x - TrueSW.x + 1, 1, TrueNE.z - TrueSW.z + 1);
+
+                Center = new Vector3((TrueSW.x + (TrueScale.x - 1) / 2), 1, (TrueSW.z + (TrueScale.z - 1) / 2));
             }
         }
 
@@ -170,6 +171,7 @@ namespace RedKite
             public float Thickness = 1;
             public float length;
             public float Height = 2;
+            public Vector3 Scale;
 
             public Wall(Orient _roomOrientation, Orient _orientation, Stage _floor)
             {
@@ -294,90 +296,148 @@ namespace RedKite
                     }
                 }
 
-                Center = Min + (Vector3.Scale((Max - Min) / 2, Orientation.Forward)) + ((Thickness/2) * Orientation.Back);
+                Center = Min + (Vector3.Scale((Max - Min) / 2, Orientation.Forward)) + ((Thickness / 2) * Orientation.Back);
 
-                Segments = new List<Segment> { new Segment(Orientation,Min,Max, Height) };
+                Segments = new List<Segment> { new Segment(Orientation, Min, Max, Height) };
+
+
 
                 if (_orientation == Orient.North | _orientation == Orient.South)
-                    length = Mathf.Abs((Max - Min).z);
+                    Scale = new Vector3(Max.z - Min.z, Height, 1);
                 else
-                    length = Mathf.Abs((Max - Min).x);
+                    Scale = new Vector3(Max.x - Min.x, Height, 1);
 
             }
 
             public void Split()
             {
 
-                Vector3 up = Orientation == Orient.North | Orientation == Orient.South ? Vector3.right : Vector3.forward;
-                Vector3 down = up == Vector3.forward ? Vector3.back : Vector3.left;
 
-                if (Paths.Count > 0)
-                {
-                    if(Orientation == Orient.North | Orientation == Orient.East)
-                        Paths.OrderBy(x => x.Min.x).ToList();
-                    else
-                        Paths.OrderBy(x => x.Min.y).ToList();
+                Vector3 up = Orientation == Orient.North | Orientation == Orient.South ? new Vector3(1, 0, 0) : new Vector3(0, 0, 1);
+                Vector3 down = up == new Vector3(0, 0, 1) ? new Vector3(0, 0, -1) : new Vector3(-1, 0, 0);
+
 
                 List<Segment> segments = new List<Segment>();
-       
 
-                for (int i = 0; i <= Paths.Count; i++)
+
+                if (Paths.Count == 0)
                 {
-                    if (Paths.Count == 1)
+                    Vector3 segMax = Max;
+                    Vector3 segMin = Min;
+                    bool segMinComplete = false;
+                    bool segMaxComplete = false;
+
+
+                    for (int j = 0; j < Vector3.Distance(segMin, segMax); j++)
                     {
-                        segments.Add(new Segment(Orientation, Min + up, Paths[i].Min + down, Height));
-                        segments.Add(new Segment(Orientation, Paths[i].Max + up, Max + down, Height));
-                        break;
+                        if (segMin == segMax)
+                            break;
+
+
+                        if (WallGraph[(int)segMin.x, (int)segMin.z] > 0 & segMinComplete == false)
+                            segMin += up;
+                        else
+                        {
+                            WallGraph[(int)segMin.x, (int)segMin.z] += 1;
+                            segMinComplete = true;
+                        }
+
+
+                        if (segMin == segMax)
+                            break;
+
+
+                        if (WallGraph[(int)segMax.x, (int)segMax.z] > 0 & segMaxComplete == false)
+                            segMax += down;
+                        else
+                        {
+                            WallGraph[(int)segMax.x, (int)segMax.z] += 1;
+                            segMaxComplete = true;
+                        }
                     }
-                    else if (i == 0)
-                    {
-                        segments.Add(new Segment(Orientation, Min + up, Paths[i].Min + down, Height));
-                    }
-                    else if (Paths.Count < Paths.Count - 1)
-                    {
-                        segments.Add(new Segment(Orientation, Paths[i - 1].Max + up, Paths[i].Min + down, Height));
-                    }
-                    else
-                    {
-                        segments.Add(new Segment(Orientation, Paths[i].Max + up, Max + down, Height));
-                    }
+
+
+                    Segments.Add(new Segment(Orientation, segMin, segMax, Height));
                 }
+                else if (Paths.Count > 0)
+                {
+                    if (Orientation == Orient.North | Orientation == Orient.South)
+                        Paths.OrderBy(x => x.Min.x).ToList();
+                    else
+                        Paths.OrderBy(x => x.Min.z).ToList();
+
+
+                    for (int i = 0; i < Paths.Count; i++)
+                    {
+                        //each path creates two segments
+                        Vector3 seg1Max = Paths[i].Min;
+                        Vector3 seg2Min = Paths[i].Max;
+                        Vector3 seg2Max = Max;
+                        Vector3 seg1Min = Min;
+
+
+                        bool seg1MaxComplete = false;
+                        bool seg2MinComplete = false;
+                        bool seg2MaxComplete = false;
+                        bool seg1MinComplete = false;
+
+
+                        for (int j = 0; j < Vector3.Distance(seg1Min, seg1Max); j++)
+                        {
+                            if (WallGraph[(int)seg1Min.x, (int)seg1Min.z] > 0 & seg1MinComplete == false)
+                                seg1Min += up;
+                            else
+                            {
+                                WallGraph[(int)seg1Min.x, (int)seg1Min.z] += 1;
+                            }
+                            if (WallGraph[(int)seg1Max.x, (int)seg1Max.z] > 0 & seg1MaxComplete == false)
+                                seg1Max += down;
+                            else
+                            {
+                                WallGraph[(int)seg1Max.x, (int)seg1Max.z] += 1;
+                            }
+                        }
+
+                        for (int j = 0; j < Vector3.Distance(seg2Min, seg2Max); j++)
+                        {
+                            if (WallGraph[(int)seg2Min.x, (int)seg2Min.z] > 0 & seg2MinComplete == false)
+                                seg2Min += up;
+                            else
+                            {
+                                WallGraph[(int)seg2Min.x, (int)seg2Min.z] += 1;
+                            }
+                            if (WallGraph[(int)seg2Max.x, (int)seg2Max.z] > 0 & seg2MaxComplete == false)
+                                seg2Max += down;
+                            else
+                            {
+                                WallGraph[(int)seg2Max.x, (int)seg2Max.z] += 1;
+                            }
+                        }
+
+
+
+
+                        if (Paths.Count == 1)
+                        {
+                            segments.Add(new Segment(Orientation, seg1Min, seg1Max, Height));
+                            segments.Add(new Segment(Orientation, seg2Min, seg2Max, Height));
+                        }
+                        else if (i < Paths.Count - 1)
+                        {
+                            segments.Add(new Segment(Orientation, seg1Min, seg1Max, Height));
+                        }
+                        else
+                        {
+                            if (Vector3.Distance(seg2Min, seg2Max) > 0)
+                            {
+                                segments.Add(new Segment(Orientation, seg2Min, seg2Max, Height));
+                                break;
+                            }
+                        }
+                    }
                     Segments = segments;
                 }
             }
-
-            public struct Segment
-            {
-                public bool IsPath;
-                public bool IsRemoved;
-                public Orient Orientation;
-                public Vector3 Min;
-                public Vector3 Max;
-                public Vector3 Center;
-                public float Thickness;
-                public float Length;
-                public float Height;
-
-                public Segment(Orient _orientation, Vector3 _min, Vector3 _max, float _height,bool _isPath = false , bool _isRemoved  = false)
-                {
-                    IsPath = _isPath;
-                    IsRemoved = _isRemoved;
-                    Orientation = _orientation;
-
-                    Min = _min;
-                    Max = _max;
-
-
-                    Thickness = Max.z - Min.z + 1;
-                    Length = Max.x - Min.x + 1;
-                    Center = Min + Vector3.Scale(((Max - Min) / 2), Vector3.right);
-
-                    Height = _height;
-
-                }
-            }
-
         }
-
     }
 }

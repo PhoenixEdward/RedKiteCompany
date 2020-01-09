@@ -10,16 +10,16 @@ namespace RedKite
         bool failedSpawn;
         static List<Vector2> activeSpawns = new List<Vector2>();
 
-        public static Vector2[] spawnOffset = {
-            Vector2.zero,
-            new Vector2(0,2),
-            new Vector2(0,-2),
-            new Vector2(2,0),
-            new Vector2(2,2),
-            new Vector2(2,-2),
-            new Vector2(-2, 0),
-            new Vector2(-2, 2),
-            new Vector2(2,-2)
+        public static Vector3[] spawnOffset = {
+            Vector3.zero,
+            new Vector3(0,0,2),
+            new Vector3(0,0,-2),
+            new Vector3(2,0,0),
+            new Vector3(2,0,2),
+            new Vector3(2,0,-2),
+            new Vector3(-2,0, 0),
+            new Vector3(-2,0, 2),
+            new Vector3(2,0,-2)
 
         };
 
@@ -30,16 +30,17 @@ namespace RedKite
 
             for (int i = 0; i < spawnOffset.Length; i++)
             {
-                if (map.tiles[(int)(map.spawnPoint.x + spawnOffset[i].x), (int)(map.spawnPoint.y + spawnOffset[i].y)].IsWalkable)
-                {
-                    //check if spawn is occupied. Will need to change later to account for non hero units and other objects spawning
-                    if (!activeSpawns.Contains(spawnOffset[i]))
+                if(Utility.WithinBounds(map.spawnPoint + spawnOffset[i], TileMapper.W,TileMapper.H))
+                    if (TileMapper.tiles[(int)(map.spawnPoint.x + spawnOffset[i].x), (int)(map.spawnPoint.z + spawnOffset[i].z)].IsWalkable)
                     {
-                        transform.position = new Vector3(map.spawnPoint.x + spawnOffset[i].x, map.spawnPoint.y + spawnOffset[i].y, -1);
-                        activeSpawns.Add(spawnOffset[i]);
-                        break;
+                        //check if spawn is occupied. Will need to change later to account for non hero units and other objects spawning
+                        if (!activeSpawns.Contains(spawnOffset[i]))
+                        {
+                            transform.position = new Vector3(map.spawnPoint.x + spawnOffset[i].x, 2 ,map.spawnPoint.z + spawnOffset[i].z);
+                            activeSpawns.Add(spawnOffset[i]);
+                            break;
+                        }
                     }
-                }
 
                 if (i == spawnOffset.Length - 1)
                     failedSpawn = true;
@@ -50,8 +51,8 @@ namespace RedKite
                 this.gameObject.SetActive(false);
             }
 
-            tileX = (int)transform.position.x;
-            tileY = (int)transform.position.y;
+            Coordinate.x = (int)transform.position.x;
+            Coordinate.y = (int)transform.position.z;
 
         }
 
