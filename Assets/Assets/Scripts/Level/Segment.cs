@@ -87,8 +87,33 @@ namespace RedKite
                 }
             }
         }
+        public static bool operator ==(Segment a, Segment b)
+        {
+            bool matchMin = a.Min == b.Min;
 
-        
+            bool matchMax = a.Max == b.Max;
+
+            return matchMin & matchMax;
+        }
+
+        public override bool Equals(object other)
+        {
+            return base.Equals(other);
+        }
+
+        public override int GetHashCode()
+        {
+            return base.GetHashCode();
+        }
+
+        public static bool operator !=(Segment a, Segment b)
+        {
+            bool matchMin = a.Min != b.Min;
+
+            bool matchMax = a.Max != b.Max;
+
+            return matchMin & matchMax;
+        }
 
         public void Instantiate(Segment segment)
         {

@@ -130,6 +130,8 @@ namespace RedKite
                     Debug.Log("Bullshit!");
             }
 
+            FindAllOverlaps();
+
             SplitAllWalls();
 
             Utility.LevelToJSON(areas);
@@ -305,6 +307,15 @@ namespace RedKite
                 }
         }
 
+        static void FindAllOverlaps()
+        {
+            foreach (Area area in areas.Values)
+                foreach (Area.Wall wall in area.Walls)
+                {
+                    wall.FindOverlaps();
+                }
+        }
+
         //SHOULD BE VOID
         static int FindPaths(Area workingArea)
         {
@@ -345,6 +356,8 @@ namespace RedKite
 
                                 if (diff0 <= 0 & diff1 >= 0)
                                 {
+                                    //These walls are now deemed connected. If the room finds a door it will be passed on to all connected walls in it's list.
+                                    newWall.ConnectedWalls.Add(oldWall);
 
                                     //find maxiest min
                                     float diff2 = Utility.DirectedDist(newWall.Min, oldWall.Min);
@@ -368,27 +381,16 @@ namespace RedKite
                                     //new wall min corner which is at start corner. Old wall path includes one corner at the end.
                                     if (Vector3.Distance(startCoord, endCoord) < 4)
                                     {
-                                        newWall.Overlaps.Add(new Segment(newWall.Orientation, startCoord, endCoord, 1, _isRemoved:true));
-
-                                        if (Utility.DirectedDist(newWall.Max, oldWall.Max) <= 0)
-                                        {
-                                            oldWall.Overlaps.Add(new Segment(oldWall.Orientation, endCorner, endCorner, 1, _isCorner: true));
-                                            newWall.Overlaps.Add(new Segment(newWall.Orientation, startCorner, startCorner, 1, _isCorner: true));
-                                        }
-                                        else
-                                        {
-                                            oldWall.Overlaps.Add(new Segment(oldWall.Orientation, startCorner, startCorner, 1, _isCorner: true));
-                                            newWall.Overlaps.Add(new Segment(newWall.Orientation, endCorner, endCorner, 1, _isCorner: true));
-                                        }
                                         break;
                                     }
 
-                                    Vector3[] doorRange = Utility.CoordRange(startCoord, endCoord);
+                                    //since the door has a minimum upward movement of one we need to make sure not to move past the endcoord
+                                    //in the event it was the chosen doorCoord
+                                    Vector3[] doorRange = Utility.CoordRange(startCoord, endCoord + down);
 
                                     //50 pct chance of door rather than blown out wall
                                     double randoP;
                                     randoP = rndState.Next(2);
-
                                     //instantiate start of path default value and it's width. Not sure if I like assigning a variable that has
                                     //a 50 percent chance of getting blown away.
                                     int width;
@@ -440,26 +442,12 @@ namespace RedKite
                                     {
                                         //wall is blown out.
                                         doorCoord = startCoord;
-                                        width = doorRange.Length;
+                                        //due to subtracted endcoord from doorRange
+                                        width = doorRange.Length + 1;
                                     }
 
-                                    //just for reference while developing. Will delete.
-                                    workingArea.ConnectedAreas.Add(areas[area].RoomIndex);
-                                    areas[area].ConnectedAreas.Add(workingArea.RoomIndex);
-
-                                    //add paths for both. One is declared "removed" to prevent overlapping of tiles
-                                    //width is minus one because it includes door coord.
-                                    //overlapping corner of oldwall is also removed.
-                                    oldWall.Overlaps.Add(new Segment(oldWall.Orientation, doorCoord, doorCoord + ((width-1) * up), 1, _isPath: true));
-                                    newWall.Overlaps.Add(new Segment(newWall.Orientation, startCoord, endCoord, 1, _isRemoved: true));
-                                    if (Utility.DirectedDist(newWall.Max, oldWall.Max) <= 0)
-                                    {
-                                        oldWall.Overlaps.Add(new Segment(oldWall.Orientation, endCorner, endCorner, 1, _isCorner: true));
-                                    }
-                                    else
-                                    {
-                                        oldWall.Overlaps.Add(new Segment(oldWall.Orientation, startCorner, startCorner, 1, _isCorner: true));
-                                    }
+                                    //width is minus one because it includes the startCoord.
+                                    newWall.Doors.Add(areas[area].RoomIndex, new Area.Door(doorCoord, doorCoord + ((width - 1) * up),false));
 
                                     foundPaths++;
 
@@ -504,18 +492,20 @@ namespace RedKite
 
                     Vector3 roomDims = new Vector3(w - 2, 1, h - 2);
 
+                    Vector3 up = wall.Orientation == Orient.North | wall.Orientation == Orient.South ? new Vector3(1, 0, 0) : new Vector3(0, 0, 1);
+                    Vector3 down = up == new Vector3(0, 0, 1) ? new Vector3(0, 0, -1) : new Vector3(-1, 0, 0);
+
                     //pick random spot on "old wall"
 
-                    int oldIndex = rndState.Next((int)Vector3.Distance(wall.Max, wall.Min) - 2);
-                    Vector3[] oldRange = Utility.CoordRange(wall.Min + wall.Orientation.Right, wall.Max + wall.Orientation.Left);
+                    int oldIndex = rndState.Next((int)Vector3.Distance(wall.Max + (down * 2), wall.Min + (up*2)));
+                    Vector3[] oldRange = Utility.CoordRange(wall.Min + (up * 2), wall.Max + (down * 2));
                     Vector3 oldCoord = oldRange[oldIndex];
 
                     // randomly decide if start point is at the old coord or subtract the width of the floor from the old coord
                     int rando = rndState.Next(1);
-                    Vector3 newCoord = rando == 1 ? oldCoord : oldCoord - (roomDims.x * wall.Orientation.Right);
 
                     //move it out one space from the wall and select as corner of new floor.
-                    Vector3 startPoint = newCoord + wall.Orientation.Forward;
+                    Vector3 startPoint = oldCoord + wall.Orientation.Forward;
 
                     allRuns++;
                     roomFailures[roomIndex]++;

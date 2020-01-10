@@ -63,10 +63,10 @@ namespace RedKite
 
             Walls = new List<Wall>()
                 {
-                    new Wall(Orientation, Orient.North,Floor),
-                    new Wall(Orientation, Orient.South,Floor),
-                    new Wall(Orientation, Orient.West,Floor),
-                    new Wall(Orientation, Orient.East,Floor),
+                    new Wall(RoomIndex, Orientation, Orient.North,Floor),
+                    new Wall(RoomIndex, Orientation, Orient.South,Floor),
+                    new Wall(RoomIndex, Orientation, Orient.West,Floor),
+                    new Wall(RoomIndex, Orientation, Orient.East,Floor),
 
                 };
 
@@ -132,6 +132,8 @@ namespace RedKite
             public Vector3 TrueScale;
             public Vector3 TrueNE;
             public Vector3 TrueSW;
+            public Vector3 TrueNW;
+            public Vector3 TrueSE;
 
             public Stage(Vector3 _startPoint, float _width, float _height, Orient _orientation)
             {
@@ -150,6 +152,11 @@ namespace RedKite
                 TrueNE = _orientation == Orient.North ? TopRight : _orientation == Orient.East ? TopLeft :
                     _orientation == Orient.South ? BottomLeft : BottomRight;
 
+                TrueNW = _orientation == Orient.North ? TopLeft : _orientation == Orient.East ? BottomLeft :
+                    _orientation == Orient.South ? BottomRight : TopRight;
+
+                TrueSE = _orientation == Orient.North ? BottomRight : _orientation == Orient.East ? TopRight :
+                    _orientation == Orient.South ? TopLeft : BottomLeft;
 
                 TrueScale = new Vector3(TrueNE.x - TrueSW.x + 1, 1, TrueNE.z - TrueSW.z + 1);
 
@@ -157,13 +164,27 @@ namespace RedKite
             }
         }
 
+        public struct Door
+        {
+            public Vector3 Min;
+            public Vector3 Max;
+            bool IsRemoved;
 
+            public Door(Vector3 _min, Vector3 _max, bool _isRemoved)
+            {
+                Min = _min;
+                Max = _max;
+                IsRemoved = _isRemoved;
+            }
+        }
 
         public class Wall
         {
+            public int RoomIndex;
             public Orient Orientation;
             public Vector3 Min;
             public Vector3 Max;
+            public List<Wall> ConnectedWalls = new List<Wall>();
             public List<Segment> Overlaps = new List<Segment>();
             public List<Segment> Segments = new List<Segment>();
             public Vector3 Center;
@@ -171,141 +192,105 @@ namespace RedKite
             public float length;
             public float Height = 2;
             public Vector3 Scale;
+            public Dictionary<int, Door> Doors = new Dictionary<int, Door>();
 
-            public Wall(Orient _roomOrientation, Orient _orientation, Stage _floor)
+            public Wall(int _roomIndex,Orient _roomOrientation, Orient _orientation, Stage _floor)
             {
+                RoomIndex = _roomIndex;
+
                 Orientation = _orientation;
 
-                Vector3 cornerTopLeft = _floor.TopLeft + _roomOrientation.Left + _roomOrientation.Forward;
-                Vector3 cornerBottomRight = _floor.BottomRight + _roomOrientation.Back + _roomOrientation.Right;
+                Vector3 cornerTopLeft = _floor.TrueNW + Vector3.forward + Vector3.left;
+                Vector3 cornerBottomRight = _floor.TrueSE + Vector3.back + Vector3.right;
 
 
-                Vector3 cornerBottomLeft = _floor.BottomLeft + _roomOrientation.Back + _roomOrientation.Left;
-                Vector3 cornerTopRight = _floor.TopRight + _roomOrientation.Forward + _roomOrientation.Right;
+                Vector3 cornerBottomLeft = _floor.TrueSW + Vector3.back + Vector3.left;
+                Vector3 cornerTopRight = _floor.TrueNE + Vector3.forward + Vector3.right;
 
-                if (_roomOrientation == Orient.North)
+                if(Orientation == Orient.North)
                 {
-                    if (_orientation == Orient.North)
-                    {
-
-                        Min = cornerTopLeft;
-                        Max = cornerTopRight;
-                    }
-                    else if (_orientation == Orient.South)
-                    {
-
-                        Min = cornerBottomLeft;
-                        Max = cornerBottomRight;
-                    }
-                    else if (_orientation == Orient.West)
-                    {
-
-                        Min = cornerBottomLeft;
-                        Max = cornerTopLeft;
-                    }
-                    else if (_orientation == Orient.East)
-                    {
-
-                        Min = cornerBottomRight;
-                        Max = cornerTopRight;
-                    }
+                    Max = cornerTopRight;
+                    Min = cornerTopLeft;
+                }
+                else if(Orientation == Orient.South)
+                {
+                    Max = cornerBottomRight;
+                    Min = cornerBottomLeft;
+                }
+                else if(Orientation == Orient.East)
+                {
+                    Max = cornerTopRight;
+                    Min = cornerBottomRight;
+                }
+                else
+                {
+                    Max = cornerTopLeft;
+                    Min = cornerBottomLeft;
                 }
 
-                if (_roomOrientation == Orient.South)
-                {
-                    if (_orientation == Orient.North)
-                    {
-
-                        Min = cornerBottomRight;
-                        Max = cornerBottomLeft;
-                    }
-                    else if (_orientation == Orient.South)
-                    {
-
-                        Min = cornerTopRight;
-                        Max = cornerTopLeft;
-                    }
-                    else if (_orientation == Orient.West)
-                    {
-
-                        Min = cornerTopRight;
-                        Max = cornerBottomRight;
-                    }
-                    else if (_orientation == Orient.East)
-                    {
-
-                        Min = cornerTopLeft;
-                        Max = cornerBottomLeft;
-                    }
-                }
-
-                if (_roomOrientation == Orient.East)
-                {
-                    if (_orientation == Orient.North)
-                    {
-
-                        Min = cornerBottomLeft;
-                        Max = cornerTopLeft;
-                    }
-                    else if (_orientation == Orient.South)
-                    {
-
-                        Min = cornerBottomRight;
-                        Max = cornerTopRight;
-                    }
-                    else if (_orientation == Orient.West)
-                    {
-
-                        Min = cornerBottomRight;
-                        Max = cornerBottomLeft;
-                    }
-                    else if (_orientation == Orient.East)
-                    {
-
-                        Min = cornerTopRight;
-                        Max = cornerTopLeft;
-                    }
-                }
-
-                if (_roomOrientation == Orient.West)
-                {
-                    if (_orientation == Orient.North)
-                    {
-
-                        Min = cornerTopRight;
-                        Max = cornerBottomRight;
-                    }
-                    else if (_orientation == Orient.South)
-                    {
-
-                        Min = cornerTopLeft;
-                        Max = cornerBottomLeft;
-                    }
-                    else if (_orientation == Orient.West)
-                    {
-
-                        Min = cornerTopLeft;
-                        Max = cornerTopRight;
-                    }
-                    else if (_orientation == Orient.East)
-                    {
-
-                        Min = cornerBottomLeft;
-                        Max = cornerBottomRight;
-                    }
-                }
 
                 Center = Min + (Vector3.Scale((Max - Min) / 2, Orientation.Forward)) + ((Thickness / 2) * Orientation.Back);
-
-                Segments = new List<Segment> { new Segment(Orientation, Min, Max, Height) };
-
-
 
                 if (_orientation == Orient.North | _orientation == Orient.South)
                     Scale = new Vector3(Max.z - Min.z, Height, 1);
                 else
                     Scale = new Vector3(Max.x - Min.x, Height, 1);
 
+            }
+
+            public void FindOverlaps()
+            {
+                Wall newWall = this;
+
+                Vector3 up = newWall.Orientation == Orient.North | newWall.Orientation == Orient.South ? new Vector3(1, 0, 0) : new Vector3(0, 0, 1);
+                Vector3 down = up == new Vector3(0, 0, 1) ? new Vector3(0, 0, -1) : new Vector3(-1, 0, 0);
+
+                //remove corners on connected walls
+                foreach (Wall oldWall in ConnectedWalls)
+                {
+                    if (Utility.DirectedDist(newWall.Min, oldWall.Min) <= 0 & Utility.DirectedDist(newWall.Max, oldWall.Min) >= 0)
+                    {
+                        newWall.Overlaps.Add(new Segment(newWall.Orientation, oldWall.Min, oldWall.Min, 2, _isRemoved: true , _isCorner: true));
+                    }
+                    if (Utility.DirectedDist(oldWall.Min, newWall.Min) <= 0 & Utility.DirectedDist(oldWall.Max, newWall.Min) >= 0)
+                    {
+                        oldWall.Overlaps.Add(new Segment(oldWall.Orientation, newWall.Min, newWall.Min, 2, _isRemoved: true, _isCorner: true));
+                    }
+                    if (Utility.DirectedDist(newWall.Max, oldWall.Max) >= 0 & (Utility.DirectedDist(newWall.Min, oldWall.Max) <= 0))
+                    {
+                        newWall.Overlaps.Add(new Segment(newWall.Orientation, oldWall.Max, oldWall.Max, 2, _isRemoved: true, _isCorner: true));
+                    }
+                    if (Utility.DirectedDist(oldWall.Max, newWall.Max) >= 0 & (Utility.DirectedDist(oldWall.Min, newWall.Max)<= 0))
+                    {
+                        oldWall.Overlaps.Add(new Segment(oldWall.Orientation, newWall.Max, newWall.Max, 2, _isRemoved: true, _isCorner: true));
+                    }
+
+
+                    //find maxiest min
+                    float diff2 = Utility.DirectedDist(newWall.Min, oldWall.Min);
+                    Vector3 startCorner = diff2 <= 0 ? oldWall.Min :
+                        newWall.Min;
+
+                    Vector3 startCoord = startCorner + up;
+
+
+                    //find minniest max
+                    float diff3 = Utility.DirectedDist(newWall.Max, oldWall.Max);
+                    Vector3 endCorner = diff3 >= 0 ? oldWall.Max :
+                        newWall.Max;
+
+                    Vector3 endCoord = endCorner + down;
+
+                    //add paths for both. One is declared "removed" to prevent overlapping of tiles
+
+                    oldWall.Overlaps.Add(new Segment(oldWall.Orientation, startCoord, endCoord, 1, _isRemoved: true));
+
+                    if (Doors.Keys.Contains(oldWall.RoomIndex))
+                    {
+                       Door door = Doors[oldWall.RoomIndex];
+                       newWall.Overlaps.Add(new Segment(newWall.Orientation,door.Min,door.Max, 1, _isPath: true));
+                    }
+                }
             }
 
             public void Split()
@@ -317,110 +302,118 @@ namespace RedKite
                 //every wall needs a minumum of one segment.
                 List<Segment> segments = new List<Segment>();
 
+                Overlaps.Add(new Segment(Orientation, Min, Min, Height, _isCorner: true));
+                Overlaps.Add(new Segment(Orientation, Max, Max, Height, _isCorner: true));
+
                 //this step is important for the look behind featured in the loop as order is important.
                 if (Orientation == Orient.North | Orientation == Orient.South)
                     Overlaps.OrderBy(x => x.Min.x).ToList();
                 else
                     Overlaps.OrderBy(x => x.Min.z).ToList();
 
-                //note <= for look behind. This also means I no longer have to have a seperate structure for those with 0 paths.
-                for (int i = 0; i <= Overlaps.Count; i++)
-                {
-                    //instantiate start and end of segment
-                    Vector3 segMax;
-                    Vector3 segMin;
+                Overlaps = Overlaps.DistinctBy(x => new { x.Min, x.Max }).ToList();
 
+                    //note <= for look behind. This also means I no longer have to have a seperate structure for those with 0 paths.
+                    for (int i = 0; i < Overlaps.Count - 1; i++)
+                    {
+                        //instantiate start and end of segment
+                        Vector3 segMax;
+                        Vector3 segMin;
+
+                        bool makeSeg = false;
                     //if there are no paths then we start from the extremities of the walls minus the corners.
-                    if(Overlaps.Count == 0)
-                    {
-                        segMin = Min + up;
-                        segMax = Max + down;
-                    }
                     //if this is our first iteration and the count is more than 0 as it was not triggered above, then
-                    //we start by using the min as our beginning abd the min of the current path as our max (minus one to not encroach)
-                    else if(i == 0)
-                    {
-                        segMin = Min + up;
-                        if (Vector3.Distance(Overlaps[i].Min , Min) < 2)
+                    //we start by using the min as our beginning and the min of the current path as our max (minus one to not encroach)
+                    /*if(i == 0)
+                    { 
+
+                        if (Utility.DirectedDist(Min + up, Overlaps[i].Min + down) < 0)
                             continue;
                         else
+                        {
                             segMax = Overlaps[i].Min + down;
+                            segMin = Min + up;
+                            makeSeg = true;
+                        }
                     }
                     //if we are at the end of the loop we cannot look to the current iteration. We use the last path in the list, which is
                     //the previous iteration, and compare it to the max. We only accept a distance greater than 1 so that our minimum segment length is 1.
-                    else if (i == Overlaps.Count)
+                    else if(i == Overlaps.Count - 1)
                     {
-                        segMin = Overlaps[i - 1].Max + up;
-                        if (Vector3.Distance(Overlaps[i - 1].Max, Max) < 2)
-                            continue;
-                        else
-                            segMax = Max + down;
-                    }
-                    //finally we have our standard in between case. We ensure a minimum length of 1 then use the tile after the previous path max and 
-                    //compare it to the tile before the current path min.
-                    else
-                    {
-                        if (Vector3.Distance(Overlaps[i - 1].Max, Overlaps[i].Min) < 2)
+                        if (Utility.DirectedDist(Overlaps[i].Max + up, Max + down) < 0)
                             continue;
                         else
                         { 
-                            segMin = Overlaps[i - 1].Max + up;
-                            segMax = Overlaps[i].Min + down;
+                            segMin = Overlaps[i].Max + up;
+                            segMax = Max + down;
+                            makeSeg = true;
                         }
+                    }*/
+                    //finally we have our standard in between case. We ensure a minimum length of 1 then use the tile after the previous path max and 
+                    //compare it to the tile before the current path min.
 
-                    }
+                    Console.WriteLine("Room:" + RoomIndex + "Wall" + Orientation.Name + " " + Overlaps[i].Max + up + " " + Overlaps[i + 1].Max + down);
 
-                    bool segMaxComplete = false;
-                    bool segMinComplete = false;
-
-                    //loop half the length of the distance between points plus half a unit to account for odd numbers
-                    for (int j = 0; j < Vector3.Distance(segMin, segMax)/2 + .51f; j++)
-                    {
-                        if (segMin == segMax)
-                            break;
-
-                        if (WallGraph[(int)segMin.x, (int)segMin.z] == 0 & segMinComplete == false)
+                        if (Utility.DirectedDist(Overlaps[i].Max + up, Overlaps[i + 1].Min + down) > 0)
+                            continue;
+                        else
                         {
-                            WallGraph[(int)segMin.x, (int)segMin.z] += 1;
-                            segMinComplete = true;
+                            segMin = Overlaps[i].Max + up;
+                            segMax = Overlaps[i + 1].Max + down;
+                            makeSeg = true;
                         }
-                        else if (segMinComplete == false)
-                        {
-                             segMin += up;
-                        }
+                        /*bool segMaxComplete = false;
+                        bool segMinComplete = false;
 
-                        //keep max and min from crossing.
-                        if (segMin == segMax)
+                        //loop half the length of the distance between points plus half a unit to account for odd numbers
+                        for (int j = 0; j < Vector3.Distance(segMin, segMax)/2 + .51f; j++)
                         {
-                            //check if valid
-                            if(WallGraph[(int)segMin.x,(int)segMin.y] == 0)
+                            if (segMin == segMax)
+                                break;
+
+                            if (WallGraph[(int)segMin.x, (int)segMin.z] == 0 & segMinComplete == false)
                             {
-                                WallGraph[(int)segMin.x, (int)segMin.y] += 1;
+                                WallGraph[(int)segMin.x, (int)segMin.z] += 1;
                                 segMinComplete = true;
-                                segMaxComplete = true;
-                                    
                             }
-                            break;
-                        }
+                            else if (segMinComplete == false)
+                            {
+                                 segMin += up;
+                            }
 
-                        if (WallGraph[(int)segMax.x, (int)segMax.z] == 0 & segMaxComplete == false)
-                        {
-                            WallGraph[(int)segMax.x, (int)segMax.z] += 1;
-                            segMaxComplete = true;
-                        }
-                        else if (segMaxComplete == false)
-                        {
-                            segMax += down;
-                        }
+                            //keep max and min from crossing.
+                            if (segMin == segMax)
+                            {
+                                //check if valid
+                                if(WallGraph[(int)segMin.x,(int)segMin.y] == 0)
+                                {
+                                    WallGraph[(int)segMin.x, (int)segMin.y] += 1;
+                                    segMinComplete = true;
+                                    segMaxComplete = true;
+                                    
+                                }
+                                break;
+                            }
 
+                            if (WallGraph[(int)segMax.x, (int)segMax.z] == 0 & segMaxComplete == false)
+                            {
+                                WallGraph[(int)segMax.x, (int)segMax.z] += 1;
+                                segMaxComplete = true;
+                            }
+                            else if (segMaxComplete == false)
+                            {
+                                segMax += down;
+                            }
+
+                        }*/
+
+                        //if both sides have found a point then we add a segment. else we skip. else really only there for clarity.
+                        //if (segMinComplete == true & segMaxComplete == true)
+                        if(makeSeg == true)
+                        { 
+                            segments.Add(new Segment(Orientation, segMin, segMax, Height));
+                        }
                     }
-
-                    //if both sides have found a point then we add a segment. else we skip. else really only there for clarity.
-                    if (segMinComplete == true & segMaxComplete == true)
-                        segments.Add(new Segment(Orientation, segMin, segMax, Height));
-                    else
-                        continue;
-                }
 
                 Segments = segments;
                 

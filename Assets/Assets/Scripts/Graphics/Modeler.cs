@@ -84,7 +84,7 @@ namespace RedKite
                     {
                         foreach (Segment path in wall.Overlaps)
                         {
-                            if (path.IsPath == true)
+                            if (path.IsRemoved == true)
                             {
                                 GameObject segment = GameObject.CreatePrimitive(PrimitiveType.Cube);
 
