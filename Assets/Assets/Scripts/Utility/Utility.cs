@@ -41,7 +41,11 @@ namespace RedKite
             }
         }
 
-    
+
+        public static Vector3 Invert(this Vector3 vec)
+        {
+            return new Vector3(1 / vec.x, 1 / vec.y, 1 / vec.z);
+        }
 
         public static VectorExtrema GetVectorExtrema(Vector3[] vecArray)
         {

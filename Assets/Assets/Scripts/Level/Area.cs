@@ -72,54 +72,7 @@ namespace RedKite
 
         }
 
-        /*public void Resize(OCipher force)
-        {
-            Vector3 forceLeft = Orientation == Orient.North ? force.E * Orientation.Right : Orientation == Orient.East ? force.E * Orientation.Back
-                : Orientation == Orient.South ? force.E * Orientation.Left : force.E * Orientation.Forward;
-            Vector3 forceDown = Orientation == Orient.North ? force.N * Orientation.Back : Orientation == Orient.East ? force.N * Orientation.Right
-                : Orientation == Orient.South ? force.N * Orientation.Forward : force.N * Orientation.Left;
-            Vector3 forceRight = Orientation == Orient.North ? force.W * Orientation.Right : Orientation == Orient.East ? force.W * Orientation.Forward
-                : Orientation == Orient.South ? force.W * Orientation.Left : force.W * Orientation.Back;
-            Vector3 forceUp = Orientation == Orient.North ? force.S * Orientation.Forward : Orientation == Orient.East ? force.S * Orientation.Left
-                : Orientation == Orient.South ? force.S * Orientation.Back : force.S * Orientation.Right;
-
-            //first drop or add tiles
-            Floor.BottomLeft -= forceRight + forceUp;
-            Floor.BottomRight -= forceLeft + forceUp;
-            Floor.TopRight -= forceLeft + forceDown;
-            Floor.TopLeft -= forceRight + forceDown;
-
-
-            Floor.width = Math.Abs(Floor.BottomRight.X - Floor.BottomLeft.X + 1);
-            Floor.height = Math.Abs(Floor.TopLeft.Y - Floor.BottomLeft.Y + 1);
-
-            //adjust walls
-
-            for (int i = 0; i < Walls.Count; i++)
-                if (Walls[i].Orientation == Orient.North)
-                {
-                    Walls[i].Min -= new Vector3(force.E, force.S, 0);
-                    Walls[i].Max -= new Vector3(force.W, force.S,0);
-                }
-                else if (Walls[i].Orientation == Orient.East)
-                {
-                    Walls[i].Min -= new Vector3(force.S, force.W, 0);
-                    Walls[i].Max -= new Vector3(force.N, force.W, 0);
-                }
-                else if (Walls[i].Orientation == Orient.South)
-                {
-                    Walls[i].Min -= new Vector3(force.E, force.N, 0);
-                    Walls[i].Max -= new Vector3(force.W, force.N, 0);
-                }
-                else if (Walls[i].Orientation == Orient.West)
-                {
-                    Walls[i].Min -= new Vector3(force.S, force.E, 0);
-                    Walls[i].Max -= new Vector3(force.N, force.E, 0);
-                }
-                */
-
-
-
+ 
         public class Stage
         {
             public Vector3 BottomLeft;
@@ -190,7 +143,7 @@ namespace RedKite
             public Vector3 Center;
             public float Thickness = 1;
             public float length;
-            public float Height = 2;
+            public float Height = 3;
             public Vector3 Scale;
             public Dictionary<int, Door> Doors = new Dictionary<int, Door>();
 
@@ -307,9 +260,9 @@ namespace RedKite
 
                 //this step is important for the look behind featured in the loop as order is important.
                 if (Orientation == Orient.North | Orientation == Orient.South)
-                    Overlaps.OrderBy(x => x.Min.x).ToList();
+                    Overlaps = Overlaps.OrderBy(x => x.Min.x).ToList();
                 else
-                    Overlaps.OrderBy(x => x.Min.z).ToList();
+                    Overlaps = Overlaps.OrderBy(x => x.Min.z).ToList();
 
                 Overlaps = Overlaps.DistinctBy(x => new { x.Min, x.Max }).ToList();
 
@@ -320,39 +273,11 @@ namespace RedKite
                         Vector3 segMax;
                         Vector3 segMin;
 
-                        bool makeSeg = false;
-                    //if there are no paths then we start from the extremities of the walls minus the corners.
-                    //if this is our first iteration and the count is more than 0 as it was not triggered above, then
-                    //we start by using the min as our beginning and the min of the current path as our max (minus one to not encroach)
-                    /*if(i == 0)
-                    { 
-
-                        if (Utility.DirectedDist(Min + up, Overlaps[i].Min + down) < 0)
-                            continue;
-                        else
-                        {
-                            segMax = Overlaps[i].Min + down;
-                            segMin = Min + up;
-                            makeSeg = true;
-                        }
-                    }
-                    //if we are at the end of the loop we cannot look to the current iteration. We use the last path in the list, which is
-                    //the previous iteration, and compare it to the max. We only accept a distance greater than 1 so that our minimum segment length is 1.
-                    else if(i == Overlaps.Count - 1)
-                    {
-                        if (Utility.DirectedDist(Overlaps[i].Max + up, Max + down) < 0)
-                            continue;
-                        else
-                        { 
-                            segMin = Overlaps[i].Max + up;
-                            segMax = Max + down;
-                            makeSeg = true;
-                        }
-                    }*/
+ 
                     //finally we have our standard in between case. We ensure a minimum length of 1 then use the tile after the previous path max and 
                     //compare it to the tile before the current path min.
 
-                    Console.WriteLine("Room:" + RoomIndex + "Wall" + Orientation.Name + " " + Overlaps[i].Max + up + " " + Overlaps[i + 1].Max + down);
+                    //Debug.Log("Room:" + RoomIndex + "Wall" + Orientation.Name + " " + Overlaps[i].Max + up + " " + Overlaps[i + 1].Max + down);
 
                         if (Utility.DirectedDist(Overlaps[i].Max + up, Overlaps[i + 1].Min + down) > 0)
                             continue;
@@ -360,59 +285,9 @@ namespace RedKite
                         {
                             segMin = Overlaps[i].Max + up;
                             segMax = Overlaps[i + 1].Max + down;
-                            makeSeg = true;
                         }
-                        /*bool segMaxComplete = false;
-                        bool segMinComplete = false;
 
-                        //loop half the length of the distance between points plus half a unit to account for odd numbers
-                        for (int j = 0; j < Vector3.Distance(segMin, segMax)/2 + .51f; j++)
-                        {
-                            if (segMin == segMax)
-                                break;
-
-                            if (WallGraph[(int)segMin.x, (int)segMin.z] == 0 & segMinComplete == false)
-                            {
-                                WallGraph[(int)segMin.x, (int)segMin.z] += 1;
-                                segMinComplete = true;
-                            }
-                            else if (segMinComplete == false)
-                            {
-                                 segMin += up;
-                            }
-
-                            //keep max and min from crossing.
-                            if (segMin == segMax)
-                            {
-                                //check if valid
-                                if(WallGraph[(int)segMin.x,(int)segMin.y] == 0)
-                                {
-                                    WallGraph[(int)segMin.x, (int)segMin.y] += 1;
-                                    segMinComplete = true;
-                                    segMaxComplete = true;
-                                    
-                                }
-                                break;
-                            }
-
-                            if (WallGraph[(int)segMax.x, (int)segMax.z] == 0 & segMaxComplete == false)
-                            {
-                                WallGraph[(int)segMax.x, (int)segMax.z] += 1;
-                                segMaxComplete = true;
-                            }
-                            else if (segMaxComplete == false)
-                            {
-                                segMax += down;
-                            }
-
-                        }*/
-
-                        //if both sides have found a point then we add a segment. else we skip. else really only there for clarity.
-                        //if (segMinComplete == true & segMaxComplete == true)
-                        if(makeSeg == true)
-                        { 
-                            segments.Add(new Segment(Orientation, segMin, segMax, Height));
-                        }
+                     segments.Add(new Segment(Orientation, segMin, segMax, Height));
                     }
 
                 Segments = segments;

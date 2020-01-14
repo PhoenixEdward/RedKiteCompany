@@ -46,47 +46,6 @@ namespace RedKite
 
         }
 
-        void OnCollisionEnter(Collision collision)
-        {
-
-            Debug.Log("Ran");
-
-            foreach (ContactPoint contact in collision.contacts)
-            {
-                if (transform.localScale.z > transform.localScale.x)
-                {
-                    if (transform.position.x > contact.otherCollider.transform.position.x)
-                    {
-
-                        transform.localScale -= Vector3.right;
-                        transform.position -= new Vector3(.5f, 0, 0);
-                    }
-                    else
-                    {
-
-                        transform.localScale -= Vector3.left;
-                        transform.position += new Vector3(.5f, 0, 0);
-                        
-                    }
-
-                }
-                if (transform.localScale.z < transform.localScale.x)
-                {
-                    if (transform.position.z > contact.otherCollider.transform.position.z)
-                    {
-
-                        transform.localScale -= Vector3.forward;
-                        transform.position -= new Vector3(.5f, 0, 0);
-                        
-                    }
-                    else
-                    {
-                        transform.localScale -= Vector3.back;
-                        transform.position += new Vector3(.5f, 0, 0);
-                    }
-                }
-            }
-        }
         public static bool operator ==(Segment a, Segment b)
         {
             bool matchMin = a.Min == b.Min;

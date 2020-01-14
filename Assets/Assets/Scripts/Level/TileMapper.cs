@@ -17,28 +17,12 @@ namespace RedKite
             new Cell(Cell.Type.Wall)
         };
 
-        Color[] colors = new Color[10]
-        {
-            Colors.AmericanBlue,
-            Colors.AmericanGreen,
-            Colors.AmericanViolet,
-            Colors.AmericanRed,
-            Colors.AmericanOrange,
-            Colors.AmericanYellow,
-            Colors.AmericanBrown,
-            Colors.AmericanPink,
-            Colors.AmericanSilver,
-            Colors.AmericanPurple,
-
-        };
-
         public static int H;
         public static int W;
         public static char[,] map;
 
         static int areaCount;
         public static Dictionary<int, Area> areas;
-        static int notOutOfBounds;
         static int roomIndex = 0;
         static int allRuns;
 
@@ -64,7 +48,6 @@ namespace RedKite
 
         public static Cell[,] tiles;
 
-        Tile[] tileSprites;
         public Vector3Int spawnPoint;
         public static int index = 0;
         //to delete below
@@ -94,17 +77,6 @@ namespace RedKite
             {
                 RoomTiles[i] = new List<Vector3Int>();
             }
-
-            tileSprites = new Tile[3];
-
-            tileSprites[0] = ScriptableObject.CreateInstance<Tile>();
-            tileSprites[0].sprite = Resources.Load<Sprite>("Tiles/DungeonEmpty");
-
-            tileSprites[1] = ScriptableObject.CreateInstance<Tile>();
-            tileSprites[1].sprite = Resources.Load<Sprite>("Tiles/DungeonFloor");
-
-            tileSprites[2] = ScriptableObject.CreateInstance<Tile>();
-            tileSprites[2].sprite = Resources.Load<Sprite>("Tiles/DungeonWall");
 
 
             //instantiate void cells
@@ -468,7 +440,6 @@ namespace RedKite
 
             foreach (int area in allIndices)
             {
-                int iter = 0;
                 foreach (Area.Wall wall in areas[area].Walls.OrderBy(x => rndState.Next()))
                 {
 
@@ -501,37 +472,33 @@ namespace RedKite
                     Vector3[] oldRange = Utility.CoordRange(wall.Min + (up * 2), wall.Max + (down * 2));
                     Vector3 oldCoord = oldRange[oldIndex];
 
-                    // randomly decide if start point is at the old coord or subtract the width of the floor from the old coord
-                    int rando = rndState.Next(1);
+                    int justify;
+
+                    //pick random spot in new wall
+                    if (wall.Orientation == Orient.North | wall.Orientation == Orient.South)
+                        justify = rndState.Next(1,(int)roomDims.x - 1);
+                    else
+                        justify = rndState.Next(1,(int)roomDims.z - 1);
 
                     //move it out one space from the wall and select as corner of new floor.
-                    Vector3 startPoint = oldCoord + wall.Orientation.Forward;
+                    Vector3 startPoint = oldCoord + wall.Orientation.Forward + (wall.Orientation.Right * justify);
 
                     allRuns++;
                     roomFailures[roomIndex]++;
-                    iter++;
-
-                    //Console.WriteLine(iter + " " + area.RoomIndex + " " + wall.Orientation.Name);
 
                     Area testArea = new Area(wall.Orientation, roomIndex, startPoint, w - 2, h - 2);
 
                     //if the top right and bottom left are in bounds then the rest should be
                     if (!Utility.WithinBounds(testArea.Floor.BottomLeft + wall.Orientation.Left + wall.Orientation.Back, W, H))
                     {
-                        //Console.WriteLine("Top Right: " + testArea.Floor.TopRight + " Bottom Left " + testArea.Floor.BottomLeft + " Continue");
                         continue;
                     }
 
                     if (!Utility.WithinBounds(testArea.Floor.TopRight + wall.Orientation.Right + wall.Orientation.Forward, W, H))
                     {
-                        //Console.WriteLine("Top Right: " + testArea.Floor.TopRight + " Bottom Left " + testArea.Floor.BottomLeft + " Continue");
                         continue;
                     }
-                    else
-                        //Console.WriteLine("Top Right: " + testArea.Floor.TopRight + " Bottom Left " + testArea.Floor.BottomLeft);
 
-
-                    notOutOfBounds++;
 
                     int totalTiles = 0;
 
@@ -546,9 +513,6 @@ namespace RedKite
                     //make sure no floor tiles come in contact with any existing floor OR door tiles.
                     foreach (Vector3 tileCoord in allCoords)
                     {
-                        if (float.IsNaN(tileCoord.x) | float.IsNaN(tileCoord.z))
-                            Console.WriteLine("NaN Value");
-                        //Console.WriteLine("Old Room: " + area.RoomIndex + " Room: " + roomIndex + " Orient: " + area.Orientation.Name + " Coord: " + tileCoord);
                         if (((int)map[(int)tileCoord.x, (int)tileCoord.z] >= 40 |
                             map[(int)tileCoord.x, (int)tileCoord.z] == TILE_CORNER | map[(int)tileCoord.x, (int)tileCoord.z] == TILE_WALL_CORNER))
                         {
@@ -558,13 +522,6 @@ namespace RedKite
                             timeOut++;
                         else
                         {
-                            //maybe make a function for this? add so it takes a list for things like finding doors?
-                            //Console.WriteLine("Room: " + roomIndex);
-                            //Console.WriteLine("Old Room: "+ area.RoomIndex +" Wall Orientation: " + wall.Orientation.Name + " Start: " + startPoint + " width: " + roomDims.x + " height: " + roomDims.z);
-                            //Console.WriteLine("RangeLength: " + allCoords.Length);
-                            //Console.WriteLine("TotalTiles: " + totalTiles);
-                            //Console.WriteLine("NOOB: " + notOutOfBounds);
-                            //Console.WriteLine("AR: " + allRuns);
                             return testArea;
                         }
                     }
