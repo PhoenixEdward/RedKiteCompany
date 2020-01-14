@@ -15,7 +15,7 @@ namespace RedKite
             topWallTex = Resources.Load<Texture2D>("Tiles/BambooFloor");
             wallTex = Resources.Load<Texture2D>("Tiles/GreenBamboo");
             MeshMaker meshMaker = gameObject.AddComponent<MeshMaker>();
-            meshMaker.CreateInstance(new Vector3(1,1,1));
+            meshMaker.MakeMesh(new Vector3(5,5,5));
             textures = new Texture2D[6] { topWallTex, wallTex, wallTex, wallTex, wallTex, wallTex };
             meshMaker.SetTextures(textures);
         }
