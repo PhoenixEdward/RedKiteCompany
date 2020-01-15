@@ -60,9 +60,11 @@ namespace RedKite
 
                         MeshMaker segMesh = segment.AddComponent<MeshMaker>();
 
-                        segMesh.MakeMesh(seg.Scale);
+                        segMesh.MakeMesh(seg.Scale, seg.Center);
 
-                        segMesh.SetTextures(texture2Ds);
+                        Renderer segRenderer = GetComponent<Renderer>();
+
+                        segMesh.SetTextures(segRenderer, texture2Ds);
 
                         segment.name = "Room " + area.RoomIndex + " " + wall.Orientation.Name + "Wall " + seg.Max;
 
@@ -92,9 +94,11 @@ namespace RedKite
 
                                 MeshMaker segMesh = segment.AddComponent<MeshMaker>();
 
-                                segMesh.MakeMesh(path.Scale);
+                                segMesh.MakeMesh(path.Scale, path.Center);
 
-                                segMesh.SetTextures(texture2Ds);
+                                Renderer cornerRenderer = GetComponent<Renderer>();
+
+                                segMesh.SetTextures(cornerRenderer, texture2Ds);
 
                                 segment.transform.parent = level;
 
