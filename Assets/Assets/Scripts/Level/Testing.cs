@@ -23,13 +23,13 @@ namespace RedKite
             topWallTex = Resources.Load<Texture2D>("Tiles/BambooFloor");
             wallTex = Resources.Load<Texture2D>("Tiles/GreenBamboo");
             MeshMaker meshMaker = new MeshMaker();
-            meshMaker.NewMakeMesh(new Vector3(1,1,1), new Vector3(0,0,0));
+            meshMaker.NewMakeMesh(new Vector3(5,10,2), new Vector3(0,0,0));
             MeshMaker meshMaker2 = new MeshMaker();
-            meshMaker2.NewMakeMesh(new Vector3(1, 1, 1), new Vector3(1f, 0, 0));
+            meshMaker2.NewMakeMesh(new Vector3(1, 1, 1), new Vector3(5f, 0, 0));
 
             GameObject go = GameObject.CreatePrimitive(PrimitiveType.Cube);
 
-            go.transform.localScale = new Vector3(5, 5, 5);
+            //go.transform.localScale = new Vector3(5, 5, 5);
 
             Mesh copy = go.GetComponent<MeshFilter>().mesh;
 
@@ -38,7 +38,7 @@ namespace RedKite
             copyUVs = copy.uv;
 
 
-            MeshMaker output = MeshMaker.CombinePlanes(new List<MeshMaker> { meshMaker, meshMaker2});
+            MeshMaker output = MeshMaker.CombinePlanes(new List<MeshMaker> { meshMaker});
 
             MeshFilter meshFilter = gameObject.AddComponent<MeshFilter>();
 
@@ -48,8 +48,8 @@ namespace RedKite
 
             output.MergeSides();
 
-            tris = output.mesh.triangles;
-            verts = output.mesh.vertices;
+            tris = meshMaker.subMeshes[5].triangles;
+            verts = meshMaker.subMeshes[5].vertices;
             uvs = output.mesh.uv;
 
             meshFilter.mesh = output.mesh;

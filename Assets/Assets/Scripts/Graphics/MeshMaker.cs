@@ -48,9 +48,9 @@ namespace RedKite
             int topTriCount = ((int)_scale.z * (int)_scale.x) * 6;
             int sideTricount = ((int)_scale.y * (int)_scale.z) * 6;
 
-            int frontVertCount = ((int)_scale.x + 1) * (((int)_scale.y + 1) * 2);
-            int sideVertCount = ((int)_scale.z + 1) * (((int)_scale.y + 1) * 2);
-            int topVertCount = ((int)_scale.x + 1) * (((int)_scale.z + 1) * 2);
+            int frontVertCount = ((int)_scale.x * 2) * ((int)_scale.y * 2);
+            int sideVertCount = ((int)_scale.z * 2) * ((int)_scale.y * 2); ;
+            int topVertCount = ((int)_scale.x  * 2) * ((int)_scale.z * 2);
 
             Vector3[] frontVertices = new Vector3[frontVertCount];
             Vector3[] topVertices = new Vector3[topVertCount];
@@ -69,170 +69,189 @@ namespace RedKite
             Vector3 coordOffset = new Vector3(-scale.x / 2, -scale.y / 2, -scale.z / 2);
 
             //establish 4D cube for tracking indices.
-            graph = new int[((int)_scale.x + 1), ((int)_scale.y + 1) * 2, ((int)_scale.z + 1) * 2, 6];
+            graph = new int[((int)_scale.x + 1) * 2, ((int)_scale.y + 1) * 2, ((int)_scale.z + 1) * 2, 6];
 
             int index = 0;
             int heightIndex = 0;
             int widthIndex = 0;
 
+
+
             //get vertices on all axis.
             //back vertices
-            for (int y = 0; y < ((int)_scale.y + 1); y++)
+            for (int y = 0; y < ((int)_scale.y); y++)
             {
-                for (int x = 0; x < ((int)_scale.x + 1); x++)
+                widthIndex = 0;
+                for (int x = 0; x < ((int)_scale.x); x++)
                 {
-                    graph[widthIndex, y, (int)_scale.z, 2] = index;
-                    backVertices[index] = new Vector3(x, y, (int)_scale.z) + coordOffset;
+                    Debug.Log("Executed");
+                    graph[widthIndex + 1, heightIndex, (int)_scale.z, 0] = index;
+                    backVertices[index] = new Vector3(x + 1, y, (int)_scale.z);
 
-                    graph[widthIndex, y, (int)_scale.z, 2] = index;
-                    backVertices[index] = new Vector3(x, y, (int)_scale.z) + coordOffset;
+                    graph[widthIndex, heightIndex, (int)_scale.z, 0] = index + 1;
+                    backVertices[index + 1] = new Vector3(x, y, (int)_scale.z);
 
-                    graph[widthIndex, y, (int)_scale.z, 2] = index;
-                    backVertices[index] = new Vector3(x, y, (int)_scale.z) + coordOffset;
+                    graph[widthIndex + 1, heightIndex + 1, (int)_scale.z, 0] = index + 2;
+                    backVertices[index + 2] = new Vector3(x + 1, y + 1, (int)_scale.z);
 
-                    graph[widthIndex, y, (int)_scale.z, 2] = index;
-                    backVertices[index] = new Vector3(x, y, (int)_scale.z) + coordOffset;
+                    graph[widthIndex, heightIndex + 1, (int)_scale.z, 0] = index + 3;
+                    backVertices[index + 3] = new Vector3(x, y + 1, (int)_scale.z);
 
+                    widthIndex += 2;
                     index += 4;
                 }
+                heightIndex += 2;
             }
+
+            Debug.Log(backVertices[2]);
+            Debug.Log(backVertices[1]);
 
 
             index = 0;
             heightIndex = 0;
-            widthIndex = 0;
             //front vertices.
-            for (int y = 0; y < ((int)_scale.y + 1); y++)
+            for (int y = 0; y < ((int)_scale.y); y++)
             {
-                for (int x = 0; x < ((int)_scale.x + 1); x++)
+                widthIndex = 0;
+                for (int x = 0; x < ((int)_scale.x); x++)
                 {
-                    graph[widthIndex, y, 0, 0] = index;
-                    frontVertices[index] = new Vector3(x, y, 0) + coordOffset;
+                    graph[widthIndex + 1, heightIndex + 1, 0, 1] = index;
+                    frontVertices[index] = new Vector3(x + 1, y + 1, 0);
 
-                    graph[widthIndex, y, 0, 0] = index;
-                    frontVertices[index] = new Vector3(x, y, 0) + coordOffset;
+                    graph[widthIndex, heightIndex + 1, 0, 1] = index + 1;
+                    frontVertices[index + 1] = new Vector3(x, y + 1, 0);
 
-                    graph[x, y, 0, 0] = index;
-                    frontVertices[index] = new Vector3(x, y, 0) + coordOffset;
+                    graph[widthIndex + 1, heightIndex, 0, 1] = index + 2;
+                    frontVertices[index + 2] = new Vector3(x + 1, y, 0);
 
-                    graph[x, y, 0, 0] = index;
-                    frontVertices[index] = new Vector3(x, y, 0) + coordOffset;
+                    graph[widthIndex, heightIndex, 0, 1] = index + 3;
+                    frontVertices[index + 3] = new Vector3(x, y, 0);
 
+                    widthIndex += 2;
                     index += 4;
                 }
+                heightIndex += 2;
             }
 
             index = 0;
             heightIndex = 0;
-            widthIndex = 0;
             //top Vertices
-            for (int z = 0; z < ((int)_scale.z + 1); z++)
+            for (int z = 0; z < ((int)_scale.z); z++)
             {
-                for (int x = 0; x < ((int)_scale.x + 1); x++)
+                widthIndex = 0;
+                for (int x = 0; x < ((int)_scale.x); x++)
                 {
-                    graph[x, (int)_scale.y, z, 1] = index;
-                    topVertices[index] = new Vector3(x, (int)_scale.y, z) + coordOffset;
+                    graph[widthIndex + 1, (int)_scale.y, heightIndex + 1, 2] = index;
+                    topVertices[index] = new Vector3(x + 1, (int)_scale.y, z + 1);
 
-                    graph[x, (int)_scale.y, z, 1] = index;
-                    topVertices[index] = new Vector3(x, (int)_scale.y, z) + coordOffset;
+                    graph[widthIndex, (int)_scale.y, heightIndex + 1, 2] = index + 1;
+                    topVertices[index + 1] = new Vector3(x, (int)_scale.y, z + 1);
 
-                    graph[x, (int)_scale.y, z, 1] = index;
-                    topVertices[index] = new Vector3(x, (int)_scale.y, z) + coordOffset;
+                    graph[widthIndex + 1, (int)_scale.y, heightIndex, 2] = index + 2;
+                    topVertices[index + 2] = new Vector3(x + 1, (int)_scale.y, z);
 
-                    graph[x, (int)_scale.y, z, 1] = index;
-                    topVertices[index] = new Vector3(x, (int)_scale.y, z) + coordOffset;
+                    graph[widthIndex, (int)_scale.y, heightIndex, 2] = index + 3;
+                    topVertices[index + 3] = new Vector3(x, (int)_scale.y, z);
 
+                    widthIndex += 2;
                     index += 4;
                 }
+                heightIndex += 2;
             }
 
             index = 0;
             heightIndex = 0;
-            widthIndex = 0;
             //bottom vertices
-            for (int z = 0; z < ((int)_scale.z + 1); z++)
+            for (int z = 0; z < ((int)_scale.z); z++)
             {
-                for (int x = 0; x < ((int)_scale.x + 1); x++)
+                widthIndex = 0;
+                for (int x = 0; x < ((int)_scale.x); x++)
                 {
-                    graph[x, 0, z, 3] = index;
-                    bottomVertices[index] = new Vector3(x, 0, z) + coordOffset;
+                    graph[widthIndex + 1, 0, heightIndex, 3] = index;
+                    bottomVertices[index] = new Vector3(x + 1, 0, z);
 
-                    graph[x, 0, z, 3] = index;
-                    bottomVertices[index] = new Vector3(x, 0, z) + coordOffset;
+                    graph[widthIndex + 1, 0, heightIndex + 1, 3] = index + 1;
+                    bottomVertices[index + 1] = new Vector3(x + 1, 0, z + 1);
 
-                    graph[x, 0, z, 3] = index;
-                    bottomVertices[index] = new Vector3(x, 0, z) + coordOffset;
+                    graph[widthIndex, 0, heightIndex + 1, 3] = index + 2;
+                    bottomVertices[index + 2] = new Vector3(x, 0, z + 1);
 
-                    graph[x, 0, z, 3] = index;
-                    bottomVertices[index] = new Vector3(x, 0, z) + coordOffset;
+                    graph[widthIndex, 0, heightIndex, 3] = index + 3;
+                    bottomVertices[index + 3] = new Vector3(x, 0, z);
 
+                    widthIndex += 2;
                     index += 4;
                 }
+                heightIndex += 2;
             }
 
             index = 0;
             heightIndex = 0;
-            widthIndex = 0;
             //left vertices
-            for (int y = 0; y < ((int)_scale.y + 1); y++)
+            for (int y = 0; y < ((int)_scale.y); y++)
             {
-                for (int z = 0; z < ((int)_scale.z + 1); z++)
+                widthIndex = 0;
+                for (int z = 0; z < ((int)_scale.z); z++)
                 {
-                    graph[0, y, z, 4] = index;
-                    leftVertices[index] = new Vector3(0, y, z) + coordOffset;
+                    graph[0, heightIndex, widthIndex + 1, 4] = index;
+                    leftVertices[index] = new Vector3(0, y, z + 1);
 
-                    graph[0, y, z, 4] = index;
-                    leftVertices[index] = new Vector3(0, y, z) + coordOffset;
+                    graph[0, heightIndex + 1, widthIndex + 1, 4] = index + 1;
+                    leftVertices[index + 1] = new Vector3(0, y + 1, z + 1);
 
-                    graph[0, y, z, 4] = index;
-                    leftVertices[index] = new Vector3(0, y, z) + coordOffset;
+                    graph[0, heightIndex + 1, widthIndex, 4] = index + 2;
+                    leftVertices[index + 2] = new Vector3(0, y + 1, z);
 
-                    graph[0, y, z, 4] = index;
-                    leftVertices[index] = new Vector3(0, y, z) + coordOffset;
+                    graph[0, heightIndex, widthIndex, 4] = index + 3;
+                    leftVertices[index + 3] = new Vector3(0, y, z);
 
+                    widthIndex += 2;
                     index += 4;
                 }
+                heightIndex += 2;
             }
 
             index = 0;
             heightIndex = 0;
-            widthIndex = 0;
             //right vertices
-            for (int y = 0; y < ((int)_scale.y + 1); y++)
+            for (int y = 0; y < ((int)_scale.y); y++)
             {
-                for (int z = 0; z < ((int)_scale.z + 1); z++)
+                widthIndex = 0;
+                for (int z = 0; z < ((int)_scale.z); z++)
                 {
-                    graph[(int)_scale.x, y, z, 5] = index;
-                    rightVertices[index] = new Vector3((int)_scale.x, y, z) + coordOffset;
+                    graph[(int)_scale.x, heightIndex, widthIndex, 5] = index;
+                    rightVertices[index] = new Vector3((int)_scale.x, y, z);
 
-                    graph[(int)_scale.x, y, z, 5] = index;
-                    rightVertices[index] = new Vector3((int)_scale.x, y, z) + coordOffset;
+                    graph[(int)_scale.x, heightIndex + 1, widthIndex, 5] = index + 1;
+                    rightVertices[index + 1] = new Vector3((int)_scale.x, y + 1, z);
 
-                    graph[(int)_scale.x, y, z, 5] = index;
-                    rightVertices[index] = new Vector3((int)_scale.x, y, z) + coordOffset;
+                    graph[(int)_scale.x, heightIndex + 1, widthIndex + 1, 5] = index + 2;
+                    rightVertices[index + 2] = new Vector3((int)_scale.x, y + 1, z + 1);
 
-                    graph[(int)_scale.x, y, z, 5] = index;
-                    rightVertices[index] = new Vector3((int)_scale.x, y, z) + coordOffset;
+                    graph[(int)_scale.x, heightIndex, widthIndex + 1, 5] = index + 3;
+                    rightVertices[index + 3] = new Vector3((int)_scale.x, y, z + 1);
 
+                    widthIndex += 2;
                     index+=4;
                 }
+                heightIndex += 2;
             }
 
 
             int triIndex = 0;
             //loop through 3D graph on all surfaces.
             //back triangles.
-            for (int y = 0; y < (int)_scale.y * 2; y++)
+            for (int y = 0; y < (int)_scale.y * 2; y+=2)
             {
-                for (int x = 0; x < (int)_scale.x * 2; x++)
+                for (int x = 0; x < (int)_scale.x * 2; x+=2)
                 {
-                    backTriangles[triIndex] = graph[x + 1, y, (int)_scale.z, 2];
-                    backTriangles[triIndex + 1] = graph[x + 1, y + 1, (int)_scale.z, 2];
-                    backTriangles[triIndex + 2] = graph[x, y, (int)_scale.z, 2];
+                    backTriangles[triIndex] = graph[x + 1, y, (int)_scale.z, 0];
+                    backTriangles[triIndex + 1] = graph[x + 1, y + 1, (int)_scale.z, 0];
+                    backTriangles[triIndex + 2] = graph[x, y + 1, (int)_scale.z, 0];
 
-                    backTriangles[triIndex + 3] = graph[x, y, (int)_scale.z, 2];
-                    backTriangles[triIndex + 4] = graph[x + 1, y + 1, (int)_scale.z, 2];
-                    backTriangles[triIndex + 5] = graph[x, y + 1, (int)_scale.z, 2];
+                    backTriangles[triIndex + 3] = graph[x + 1, y, (int)_scale.z, 0];
+                    backTriangles[triIndex + 4] = graph[x, y + 1, (int)_scale.z, 0];
+                    backTriangles[triIndex + 5] = graph[x, y, (int)_scale.z, 0];
 
 
                     triIndex += 6;
@@ -241,17 +260,17 @@ namespace RedKite
 
             triIndex = 0;
             //front triangles.
-            for (int y = 0; y < (int)_scale.y*2; y++)
+            for (int y = 0; y < (int)_scale.y*2; y+=2)
             {
-                for (int x = 0; x < (int)_scale.x*2; x++)
+                for (int x = 0; x < (int)_scale.x*2; x+=2)
                 {
-                    frontTriangles[triIndex] = graph[x + 1, y, 0, 0];
-                    frontTriangles[triIndex + 1] = graph[x, y, 0, 0];
-                    frontTriangles[triIndex + 2] = graph[x + 1, y + 1, 0, 0];
+                    frontTriangles[triIndex] = graph[x + 1, y + 1, 0, 1];
+                    frontTriangles[triIndex + 1] = graph[x + 1, y, 0, 1];
+                    frontTriangles[triIndex + 2] = graph[x, y, 0, 1];
 
-                    frontTriangles[triIndex + 3] = graph[x + 1, y + 1, 0, 0];
-                    frontTriangles[triIndex + 4] = graph[x, y, 0, 0];
-                    frontTriangles[triIndex + 5] = graph[x, y + 1, 0, 0];
+                    frontTriangles[triIndex + 3] = graph[x + 1, y + 1, 0, 1];
+                    frontTriangles[triIndex + 4] = graph[x, y, 0, 1];
+                    frontTriangles[triIndex + 5] = graph[x, y + 1, 0, 1];
 
                     triIndex += 6;
                 }
@@ -259,18 +278,18 @@ namespace RedKite
 
             triIndex = 0;
             //top triangles.
-            for (int z = 0; z < (int)_scale.z*2; z++)
+            for (int z = 0; z < (int)_scale.z*2; z += 2)
             {
-                for (int x = 0; x < (int)_scale.x*2; x++)
+                for (int x = 0; x < (int)_scale.x*2; x += 2)
                 {
 
-                    topTriangles[triIndex] = graph[x, (int)_scale.y, z + 1, 1];
-                    topTriangles[triIndex + 1] = graph[x + 1, (int)_scale.y, z + 1, 1];
-                    topTriangles[triIndex + 2] = graph[x, (int)_scale.y, z, 1];
+                    topTriangles[triIndex] = graph[x + 1, (int)_scale.y, z + 1, 2];
+                    topTriangles[triIndex + 1] = graph[x + 1, (int)_scale.y, z, 2];
+                    topTriangles[triIndex + 2] = graph[x, (int)_scale.y, z, 2];
 
-                    topTriangles[triIndex + 3] = graph[x, (int)_scale.y, z, 1];
-                    topTriangles[triIndex + 4] = graph[x + 1, (int)_scale.y, z + 1, 1];
-                    topTriangles[triIndex + 5] = graph[x + 1, (int)_scale.y, z, 1];
+                    topTriangles[triIndex + 3] = graph[x + 1, (int)_scale.y, z + 1, 2];
+                    topTriangles[triIndex + 4] = graph[x, (int)_scale.y, z, 2];
+                    topTriangles[triIndex + 5] = graph[x, (int)_scale.y, z + 1, 2];
 
                     triIndex += 6;
                 }
@@ -278,34 +297,34 @@ namespace RedKite
 
             triIndex = 0;
             //bottom bottomTriangles.
-            for (int z = 0; z < (int)_scale.z*2; z++)
+            for (int z = 0; z < (int)_scale.z*2; z += 2)
             {
-                for (int x = 0; x < (int)_scale.x*2; x++)
+                for (int x = 0; x < (int)_scale.x*2; x += 2)
                 {
-                    bottomTriangles[triIndex] = graph[x, 0, z + 1, 3];
-                    bottomTriangles[triIndex + 1] = graph[x, 0, z, 3];
-                    bottomTriangles[triIndex + 2] = graph[x + 1, 0, z + 1, 3];
+                    bottomTriangles[triIndex] = graph[x + 1, 0, z, 3];
+                    bottomTriangles[triIndex + 1] = graph[x + 1, 0, z + 1, 3];
+                    bottomTriangles[triIndex + 2] = graph[x, 0, z + 1, 3];
 
-                    bottomTriangles[triIndex + 3] = graph[x + 1, 0, z + 1, 3];
-                    bottomTriangles[triIndex + 4] = graph[x, 0, z, 3];
-                    bottomTriangles[triIndex + 5] = graph[x + 1, 0, z, 3];
+                    bottomTriangles[triIndex + 3] = graph[x + 1, 0, z, 3];
+                    bottomTriangles[triIndex + 4] = graph[x, 0, z + 1, 3];
+                    bottomTriangles[triIndex + 5] = graph[x, 0, z, 3];
                     triIndex += 6;
                 }
             }
 
             triIndex = 0;
             //left triangles
-            for (int y = 0; y < (int)_scale.y*2; y++)
+            for (int y = 0; y < (int)_scale.y*2; y += 2)
             {
-                for (int z = 0; z < (int)_scale.z*2; z++)
+                for (int z = 0; z < (int)_scale.z*2; z += 2)
                 {
-                    leftTriangles[triIndex] = graph[0, y, z, 4];
-                    leftTriangles[triIndex + 1] = graph[0, y, z + 1, 4];
+                    leftTriangles[triIndex] = graph[0, y, z + 1, 4];
+                    leftTriangles[triIndex + 1] = graph[0, y + 1, z + 1, 4];
                     leftTriangles[triIndex + 2] = graph[0, y + 1, z, 4];
 
-                    leftTriangles[triIndex + 3] = graph[0, y + 1, z, 4];
-                    leftTriangles[triIndex + 4] = graph[0, y, z + 1, 4];
-                    leftTriangles[triIndex + 5] = graph[0, y + 1, z + 1, 4];
+                    leftTriangles[triIndex + 3] = graph[0, y, z + 1, 4];
+                    leftTriangles[triIndex + 4] = graph[0, y + 1, z, 4];
+                    leftTriangles[triIndex + 5] = graph[0, y, z, 4];
 
                     triIndex += 6;
                 }
@@ -313,44 +332,44 @@ namespace RedKite
 
             triIndex = 0;
             //right rightTriangles
-            for (int y = 0; y < (int)_scale.y*2; y++)
+            for (int y = 0; y < (int)_scale.y*2; y += 2)
             {
-                for (int z = 0; z < (int)_scale.z*2; z++)
+                for (int z = 0; z < (int)_scale.z*2; z += 2)
                 {
-                    rightTriangles[triIndex] = graph[(int)_scale.x, y, z + 1, 5];
-                    rightTriangles[triIndex + 1] = graph[(int)_scale.x, y, z, 5];
+                    rightTriangles[triIndex] = graph[(int)_scale.x, y, z, 5];
+                    rightTriangles[triIndex + 1] = graph[(int)_scale.x, y + 1, z, 5];
                     rightTriangles[triIndex + 2] = graph[(int)_scale.x, y + 1, z + 1, 5];
 
-                    rightTriangles[triIndex + 3] = graph[(int)_scale.x, y + 1, z + 1, 5];
-                    rightTriangles[triIndex + 4] = graph[(int)_scale.x, y, z, 5];
-                    rightTriangles[triIndex + 5] = graph[(int)_scale.x, y + 1, z, 5];
+                    rightTriangles[triIndex + 3] = graph[(int)_scale.x, y, z, 5];
+                    rightTriangles[triIndex + 4] = graph[(int)_scale.x, y + 1, z + 1, 5];
+                    rightTriangles[triIndex + 5] = graph[(int)_scale.x, y, z + 1, 5];
 
                     triIndex += 6;
                 }
             }
 
-            //create front submesh
+            //create back submesh
 
             subMeshes[0] = new Mesh();
             subMeshes[0].Clear();
-            subMeshes[0].vertices = frontVertices;
-            subMeshes[0].triangles = frontTriangles;
+            subMeshes[0].vertices = backVertices;
+            subMeshes[0].triangles = backTriangles;
             //subMeshes[0].Optimize();
             //subMeshes[0].RecalculateNormals();
 
-            //create top submesh
+            //create front submesh
             subMeshes[1] = new Mesh();
             subMeshes[1].Clear();
-            subMeshes[1].vertices = topVertices;
-            subMeshes[1].triangles = topTriangles;
+            subMeshes[1].vertices = frontVertices;
+            subMeshes[1].triangles = frontTriangles;
             //subMeshes[1].Optimize();
             //subMeshes[1].RecalculateNormals();
 
-            //create back submesh
+            //create top submesh
             subMeshes[2] = new Mesh();
             subMeshes[2].Clear();
-            subMeshes[2].vertices = backVertices;
-            subMeshes[2].triangles = backTriangles;
+            subMeshes[2].vertices = topVertices;
+            subMeshes[2].triangles = topTriangles;
             //subMeshes[2].Optimize();
             //subMeshes[2].RecalculateNormals();
 
@@ -396,23 +415,147 @@ namespace RedKite
             /// Textures should be organized as follows in the array: 
             /// top, front, back, left, right, bottom.
             /// </summary>
-            Vector2[] frontUVs = new Vector2[subMeshes[0].vertexCount];
-            Vector2[] topUVs = new Vector2[subMeshes[1].vertexCount];
-            Vector2[] backUVs = new Vector2[subMeshes[2].vertexCount];
-            Vector2[] bottomUVs = new Vector2[subMeshes[3].vertexCount];
-            Vector2[] leftUVs = new Vector2[subMeshes[4].vertexCount];
-            Vector2[] rightUVs = new Vector2[subMeshes[5].vertexCount];
 
-            subMeshes[0].uv = FindUVs3D(subMeshes[0], subMeshBounds[0], 0);
-            subMeshes[1].uv = FindUVs3D(subMeshes[1], subMeshBounds[1], 1);
-            subMeshes[2].uv = FindUVs3D(subMeshes[2], subMeshBounds[2], 2);
-            subMeshes[3].uv = FindUVs3D(subMeshes[3], subMeshBounds[3], 3);
-            subMeshes[4].uv = FindUVs3D(subMeshes[4], subMeshBounds[4], 4);
-            subMeshes[5].uv = FindUVs3D(subMeshes[5], subMeshBounds[5], 5);
+            subMeshes[0].uv = FindSingleUVs(subMeshes[0], subMeshBounds[0], 0);
+            subMeshes[1].uv = FindSingleUVs(subMeshes[1], subMeshBounds[1], 1);
+            subMeshes[2].uv = FindSingleUVs(subMeshes[2], subMeshBounds[2], 2);
+            subMeshes[3].uv = FindSingleUVs(subMeshes[3], subMeshBounds[3], 3);
+            subMeshes[4].uv = FindSingleUVs(subMeshes[4], subMeshBounds[4], 4);
+            subMeshes[5].uv = FindSingleUVs(subMeshes[5], subMeshBounds[5], 5);
 
 
         }
 
+        public Vector2[] FindSingleUVs(Mesh mesh,List<Bounds> boundsList ,int side)
+        {
+
+            Vector2[] uvs = new Vector2[mesh.vertexCount];
+
+            int index = 0;
+
+            if(side == 0)
+            {
+                //backUVs
+                for (float y = mesh.bounds.min.y; y < (mesh.bounds.max.y); y++)
+                {
+                    for (float x = mesh.bounds.min.x; x < (mesh.bounds.max.x); x++)
+                    {
+                        uvs[index] = new Vector2(0, 0);
+
+                        uvs[index + 1] = new Vector2(1, 0);
+
+                        uvs[index + 2] = new Vector2(0, 1);
+
+                        uvs[index + 3] = new Vector2(1, 1);
+
+                        index += 4;
+                    }
+                }
+            }
+            
+            else if(side == 1)
+            { 
+                //front uvs
+                for (float y = mesh.bounds.min.y; y < (mesh.bounds.max.y); y++)
+                {
+                    for (float x = mesh.bounds.min.x; x < (mesh.bounds.max.x); x++)
+                    {
+                        uvs[index] = new Vector3(1,1);
+
+                        uvs[index + 1] = new Vector3(0, 1);
+
+                        uvs[index + 2] = new Vector3(1, 0, 0);
+
+                        uvs[index + 3] = new Vector3(0, 0, 0);
+
+                        index += 4;
+                    }
+                }
+            }
+            
+            else if(side == 2)
+            { 
+                //top Vertices
+                for (float z = mesh.bounds.min.z; z < (mesh.bounds.max.z); z++)
+                {
+                    for (float x = mesh.bounds.min.x; x < (mesh.bounds.max.x); x++)
+                    {
+                        uvs[index] = new Vector3(1, 1);
+
+                        uvs[index + 1] = new Vector3(0, 1);
+
+                        uvs[index + 2] = new Vector3(1, 0);
+
+                        uvs[index + 3] = new Vector3(0, 0);
+
+                        index += 4;
+                    }
+                }
+            }
+
+            else if(side == 3)
+            { 
+                //bottom vertices
+                for (float z = mesh.bounds.min.z; z < (mesh.bounds.max.z); z++)
+                {
+                    for (float x = mesh.bounds.min.x; x < (mesh.bounds.max.x); x++)
+                    {
+                        uvs[index] = new Vector3(1, 0);
+
+                        uvs[index + 1] = new Vector3(1, 1);
+
+                        uvs[index + 2] = new Vector3(0, 1);
+
+                        uvs[index + 3] = new Vector3(0, 0);
+
+                        index += 4;
+                    }
+                }
+            }
+
+            else if(side == 4)
+            { 
+                //left vertices
+                for (float y = mesh.bounds.min.y; y < (mesh.bounds.max.y); y++)
+                {
+                    for (float z = mesh.bounds.min.z; z < (mesh.bounds.max.z); z++)
+                    {
+                        uvs[index] = new Vector3(0, 1);
+
+                        uvs[index + 1] = new Vector3(0, 0);
+
+                        uvs[index + 2] = new Vector3(1, 0);
+
+                        uvs[index + 3] = new Vector3(1, 1);
+
+                        index += 4;
+                    }
+                }
+            }
+
+            else
+            { 
+                //right vertices
+                for (float y = mesh.bounds.min.y; y < (mesh.bounds.max.y); y++)
+                {
+                    for (float z = mesh.bounds.min.z; z < (mesh.bounds.max.z); z++)
+                    {
+                        uvs[index] = new Vector3(0, 0);
+
+                        uvs[index + 1] = new Vector3(0, 1);
+
+                        uvs[index + 2] = new Vector3(1, 1);
+
+                        uvs[index + 3] = new Vector3(1, 0);
+
+                        index += 4;
+                    }
+                }
+            }
+
+            return uvs;
+
+        }
 
         Vector2[] FindUVs3D(Mesh mesh, List<Bounds> boundsList, int side)
         {
@@ -424,7 +567,7 @@ namespace RedKite
             float pix = 1f;
             int overshoot = 0;
 
-            if (side == 0 | side == 2)
+            if (side == 0 | side == 1)
             {
                 for (float z = mesh.bounds.min.z - down; z <= mesh.bounds.max.z + up; z += pix)
                 {
@@ -473,7 +616,7 @@ namespace RedKite
                     }
                 }
             }
-            else if (side == 1 | side == 3)
+            else if (side == 2 | side == 3)
             {
                 // top topUVs
                 for (float y = mesh.bounds.min.y - down; y <= mesh.bounds.max.y + up; y += pix)
@@ -640,10 +783,10 @@ namespace RedKite
                 for (int x = 0; x < ((int)_scale.x + 1); x++)
                 {
                     graph[x, heightIndex, 0, 0] = index;
-                    frontVertices[index] = new Vector3(x, y, 0) + coordOffset;
+                    frontVertices[index] = new Vector3(x, y, 0);
 
                     graph[x, heightIndex + 1, 0, 0] = index + 1;
-                    frontVertices[index + 1] = new Vector3(x, y + 1, 0) + coordOffset;
+                    frontVertices[index + 1] = new Vector3(x, y + 1, 0);
 
                     index +=2;
                 }
@@ -658,10 +801,10 @@ namespace RedKite
                 for (int x = 0; x < ((int)_scale.x + 1); x++)
                 {
                     graph[x,(int)_scale.y,heightIndex, 1] = index;
-                    topVertices[index] = new Vector3(x, (int)_scale.y, z) + coordOffset;
+                    topVertices[index] = new Vector3(x, (int)_scale.y, z);
 
                     graph[x, (int)_scale.y, heightIndex + 1, 1] = index + 1;
-                    topVertices[index + 1] = new Vector3(x, (int)_scale.y, z + 1) + coordOffset;
+                    topVertices[index + 1] = new Vector3(x, (int)_scale.y, z + 1);
 
                     index += 2;
                 }
@@ -676,10 +819,10 @@ namespace RedKite
                 for (int x = 0; x < ((int)_scale.x + 1); x++)
                 {
                     graph[x, heightIndex, (int)_scale.z, 2] = index;
-                    backVertices[index] = new Vector3(x, y, (int)_scale.z) + coordOffset;
+                    backVertices[index] = new Vector3(x, y, (int)_scale.z);
 
                     graph[x, heightIndex + 1, (int)_scale.z, 2] = index + 1;
-                    backVertices[index + 1] = new Vector3(x, y + 1, (int)_scale.z) + coordOffset;
+                    backVertices[index + 1] = new Vector3(x, y + 1, (int)_scale.z);
 
                     index += 2;
                 }
@@ -694,10 +837,10 @@ namespace RedKite
                 for (int x = 0; x < ((int)_scale.x + 1); x++)
                 {
                     graph[x, 0, heightIndex, 3] = index;
-                    bottomVertices[index] = new Vector3(x, 0, z) + coordOffset;
+                    bottomVertices[index] = new Vector3(x, 0, z);
 
                     graph[x, 0, heightIndex + 1, 3] = index + 1;
-                    bottomVertices[index + 1] = new Vector3(x, 0, z + 1) + coordOffset;
+                    bottomVertices[index + 1] = new Vector3(x, 0, z + 1);
 
                     index += 2;
                 }
@@ -712,10 +855,10 @@ namespace RedKite
                 for (int z = 0; z < ((int)_scale.z + 1); z++)
                 {
                     graph[0, heightIndex, z, 4] = index;
-                    leftVertices[index] = new Vector3(0, y, z) + coordOffset;
+                    leftVertices[index] = new Vector3(0, y, z);
 
                     graph[0, heightIndex + 1, z, 4] = index + 1;
-                    leftVertices[index + 1] = new Vector3(0, y + 1, z) + coordOffset;
+                    leftVertices[index + 1] = new Vector3(0, y + 1, z);
 
                     index += 2;
                 }
@@ -730,10 +873,10 @@ namespace RedKite
                 for (int z = 0; z < ((int)_scale.z + 1); z++)
                 {
                     graph[(int)_scale.x, heightIndex, z, 5] = index;
-                    rightVertices[index] = new Vector3((int)_scale.x, y, z) + coordOffset;
+                    rightVertices[index] = new Vector3((int)_scale.x, y, z);
 
                     graph[(int)_scale.x, heightIndex + 1, z, 5] = index + 1;
-                    rightVertices[index + 1] = new Vector3((int)_scale.x, y + 1, z) + coordOffset;
+                    rightVertices[index + 1] = new Vector3((int)_scale.x, y + 1, z);
 
                     index += 2;
                 }
@@ -916,14 +1059,8 @@ namespace RedKite
         {
             /// <summary>
             /// Textures should be organized as follows in the array: 
-            /// top, front, back, left, right, bottom.
+            /// back, front, top, left, right, bottom.
             /// </summary>
-            Vector2[] frontUVs = new Vector2[subMeshes[0].vertexCount];
-            Vector2[] topUVs = new Vector2[subMeshes[1].vertexCount];
-            Vector2[] backUVs = new Vector2[subMeshes[2].vertexCount];
-            Vector2[] bottomUVs = new Vector2[subMeshes[3].vertexCount];
-            Vector2[] leftUVs = new Vector2[subMeshes[4].vertexCount];
-            Vector2[] rightUVs = new Vector2[subMeshes[5].vertexCount];
 
             subMeshes[0].uv = OldFindUVs(subMeshes[0], subMeshBounds[0], 0);
             subMeshes[1].uv = OldFindUVs(subMeshes[1], subMeshBounds[1], 1);
@@ -1087,7 +1224,7 @@ namespace RedKite
 
                 outMesh.subMeshes[plane] = new Mesh();
                 outMesh.subMeshes[plane].CombineMeshes(combine, true, true);
-                outMesh.subMeshes[plane].Optimize();
+                //outMesh.subMeshes[plane].Optimize();
             }
 
             return outMesh;
@@ -1108,7 +1245,7 @@ namespace RedKite
 
             mesh = new Mesh();
             mesh.CombineMeshes(combine, true, true);
-            mesh.Optimize();
+            //mesh.Optimize();
             mesh.RecalculateNormals();
 
         }
