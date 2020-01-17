@@ -35,12 +35,12 @@ namespace RedKite
             if (_orientation == Orient.North | _orientation == Orient.South)
             {
                 Scale = new Vector3(Max.x - Min.x + 1, _height, 1);
-                Center = Min + Vector3.Scale(((Max - Min) / 2), Vector3.right);
+                Center = Min + ((Max - Min) / 2);
             }
             else
             {
                 Scale = new Vector3(1, _height, Max.z - Min.z + 1);
-                Center = Min + Vector3.Scale(((Max - Min) / 2), Vector3.forward);
+                Center = Min + ((Max - Min) / 2);
             }
             Height = _height;
 
@@ -96,11 +96,11 @@ namespace RedKite
             }
             Height = segment.Height;
 
-            transform.localPosition = segment.Center;
+            //transform.localPosition = segment.Center;
 
             //now for scaling to 3D based on wall orientation
 
-            transform.localScale = segment.Scale;
+            //transform.localScale = segment.Scale;
 
 
 

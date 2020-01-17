@@ -7,6 +7,7 @@ TagManager:
   - 2D Camera
   - RenderTarget
   - Level
+  - SpriteSelect
   layers:
   - Default
   - TransparentFX
