@@ -492,14 +492,14 @@ namespace RedKite
                 //backUVs
                 while (index < mesh.vertexCount)
                 {
-                    //bottom left
-                    uvs[index] = new Vector2(0.33f, 0);
-                    //top left
-                    uvs[index + 1] = new Vector2(0.33f, 0.25f);
                     //bottom right
-                    uvs[index + 2] = new Vector2(0.65f, 0);
+                    uvs[index] = new Vector2(0.65f, 0);
+                    //bottom left
+                    uvs[index + 1] = new Vector2(0.33f, 0);
                     //top right
-                    uvs[index + 3] = new Vector2(0.66f, 0.24f);
+                    uvs[index + 2] = new Vector2(0.66f, 0.24f);
+                    //top left
+                    uvs[index + 3] = new Vector2(0.33f, 0.25f);
 
                     index += 4;
 
@@ -527,7 +527,7 @@ namespace RedKite
             
             else if(side == 2)
             {
-                //top Vertices
+                //top uvs
                 while (index < mesh.vertexCount)
                 {
                     //top right
@@ -546,7 +546,7 @@ namespace RedKite
 
             else if(side == 3)
             {
-                //bottom vertices
+                //bottom uvs
                 while (index < mesh.vertexCount)
                 {
                     //bottom right
@@ -564,17 +564,17 @@ namespace RedKite
 
             else if(side == 4)
             {
-                //left vertices
+                //left uvs
                 while (index < mesh.vertexCount)
                 {
                     //top left
-                    uvs[index] = new Vector3(0, 0.74f);
+                    uvs[index +  1] = new Vector3(0, 0.74f);
                     //bottom left
-                    uvs[index + 1] = new Vector3(0, 0.5f);
+                    uvs[index] = new Vector3(0, 0.5f);
                     //bottom right
-                    uvs[index + 2] = new Vector3(0.32f, 0.5f);
+                    uvs[index + 3] = new Vector3(0.32f, 0.5f);
                     //top right
-                    uvs[index + 3] = new Vector3(032f, 0.75f);
+                    uvs[index + 2] = new Vector3(0.32f, 0.74f);
 
                     index += 4;
                 }

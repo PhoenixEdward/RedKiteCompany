@@ -39,23 +39,24 @@ namespace RedKite
         public virtual void Start()
         {
             //find a way for only the first unit spawned will do this. You did it for spawn just do it again.
+            if(isFirstSpawn)
+            { 
+                level = FindObjectOfType<Level>();
+                isFirstSpawn = false;
+            }
 
-            level = FindObjectOfType<Level>();
-            isFirstSpawn = false;
-
-            Debug.Log(spriteName);
 
             if (spriteType == SpriteType.Character)
                 spriteLoad = Resources.Load<Texture2D>("Characters/" + spriteName);
             else if (spriteType == SpriteType.Tile)
                 spriteLoad = Resources.Load<Texture2D>("Tiles/" + spriteName);
 
+            Debug.Log(spriteLoad.width);
+            
             verticalFrames = spriteLoad.height / 100;
             horizontalFrames = spriteLoad.width / 100;
 
             sprites = new Sprite[horizontalFrames, verticalFrames];
-
-            //FrameDimensions = spritesLoad[0].rect.size/32;
 
             for (int y = 0; y < verticalFrames; y++)
             {
@@ -78,14 +79,10 @@ namespace RedKite
         {
             spriteLoad = texture;
 
-            sr = GetComponent<SpriteRenderer>();
-
             verticalFrames = spriteLoad.height / 100;
             horizontalFrames = spriteLoad.width / 100;
 
             sprites = new Sprite[horizontalFrames, verticalFrames];
-
-            //FrameDimensions = spritesLoad[0].rect.size/32;
 
             for (int y = 0; y < verticalFrames; y++)
             {

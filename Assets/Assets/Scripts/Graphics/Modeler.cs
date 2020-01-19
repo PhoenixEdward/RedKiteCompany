@@ -28,7 +28,7 @@ namespace RedKite
         MeshMaker floorMesh;
 
         // Start is called before the first frame update
-        public void Generate()
+        public void Start()
         {
             floorTex = Resources.Load<Texture2D>("Tiles/WoodFloor");
             topWallTex = Resources.Load<Texture2D>("Tiles/BambooFloor");

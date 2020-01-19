@@ -32,6 +32,8 @@ namespace RedKite
 
         Tilemap tilemap;
 
+        SpriteSelection menu;
+
         
 
         // Start is called before the first frame update
@@ -51,25 +53,30 @@ namespace RedKite
             units = GameSpriteManager.Instance.Units;
 
             grid = FindObjectOfType<Grid>();
+
+            menu = FindObjectOfType<SpriteSelection>();
         }
 
         // Update is called once per frame
         void Update()
         {
-            TileTracker();
-            if (selectedHero != null)
-            {
-                if (destination != null)
+            if(!menu.isActive)
+            { 
+                TileTracker();
+                if (selectedHero != null)
                 {
-                    if (TileMapper.tiles[destination.cell.x, destination.cell.y].IsWalkable == true & selectedHero.IsMoving == false)
-                        if (Utility.ManhattanDistance(new Vector3Int((int)selectedHero.Coordinate.x, (int)selectedHero.Coordinate.y,2), new Vector3Int(destination.cell.x, destination.cell.y,2)) <= selectedHero.movement)
-                        {
-                            if (pathFinder.IsReachable(selectedHero, destination, BattleGrid.withinRange.ToArray()))
-                            { 
-                                selectedHero.Move(destination.cell.x, destination.cell.y);
-                                destination = null;
+                    if (destination != null)
+                    {
+                        if (TileMapper.tiles[destination.cell.x, destination.cell.y].IsWalkable == true & selectedHero.IsMoving == false)
+                            if (Utility.ManhattanDistance(new Vector3Int((int)selectedHero.Coordinate.x, (int)selectedHero.Coordinate.y,2), new Vector3Int(destination.cell.x, destination.cell.y,2)) <= selectedHero.movement)
+                            {
+                                if (pathFinder.IsReachable(selectedHero, destination, BattleGrid.withinRange.ToArray()))
+                                { 
+                                    selectedHero.Move(destination.cell.x, destination.cell.y);
+                                    destination = null;
+                                }
                             }
-                        }
+                    }
                 }
             }
         }

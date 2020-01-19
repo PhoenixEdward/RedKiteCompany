@@ -14,7 +14,7 @@ namespace RedKite
         public RectTransform panel;
         public Dropdown[] dropdowns;
         Dropdown topWallTex;
-        bool isActive = false;
+        public bool isActive = false;
         float menuCoolDown = .10f;
         float timesSinceCoolDown = 0;
         Modeler modeler;

@@ -30,7 +30,6 @@ namespace RedKite
             { 
                 StartCoroutine(spriteSelector.GetTextures(dropdown.options[dropdown.value].text, Convert.ToInt32(gameObject.name)));
                 Debug.Log(Convert.ToInt32(gameObject.name));
-                Debug.Log(dropdown.options[dropdown.value].text);
                 firstClick = true;
             }
             else
