@@ -21,7 +21,7 @@ namespace RedKite
 
             map = FindObjectOfType<Tilemap>();
 
-            //transform.position = new Vector3(hero.transform.position.x, 15, transform.position.z);
+            transform.position = new Vector3(hero.transform.position.x, 15, hero.transform.position.z);
 
             xBounds = new Vector2(map.cellBounds.xMin, map.cellBounds.xMax);
             yBounds = new Vector2(map.cellBounds.yMin, map.cellBounds.yMax);

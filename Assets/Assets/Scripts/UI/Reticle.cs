@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Tilemaps;
+using System.Linq;
 
 namespace RedKite
 { 
@@ -61,9 +62,9 @@ namespace RedKite
                 if (destination != null)
                 {
                     if (TileMapper.tiles[destination.cell.x, destination.cell.y].IsWalkable == true & selectedHero.IsMoving == false)
-                        if (Utility.ManhattanDistance(new Vector3Int(selectedHero.Coordinate.x, selectedHero.Coordinate.y,2), new Vector3Int(destination.cell.x, destination.cell.y,2)) <= selectedHero.movement)
+                        if (Utility.ManhattanDistance(new Vector3Int((int)selectedHero.Coordinate.x, (int)selectedHero.Coordinate.y,2), new Vector3Int(destination.cell.x, destination.cell.y,2)) <= selectedHero.movement)
                         {
-                            if (pathFinder.IsReachable(selectedHero, destination, BattleGrid.withinRange))
+                            if (pathFinder.IsReachable(selectedHero, destination, BattleGrid.withinRange.ToArray()))
                             { 
                                 selectedHero.Move(destination.cell.x, destination.cell.y);
                                 destination = null;
@@ -71,7 +72,6 @@ namespace RedKite
                         }
                 }
             }
-
         }
 
         public void TileTracker()
@@ -96,7 +96,7 @@ namespace RedKite
             }
             foreach (Unit unit in units)
             {
-                if (new Vector2(unit.transform.position.x, unit.transform.position.z) == new Vector2(highlight.x, highlight.y) & selectedHero == null)
+                if (new Vector2(unit.Coordinate.x, unit.Coordinate.y) == new Vector2(highlight.x, highlight.y) & selectedHero == null)
                 {
                     if (Input.GetMouseButtonDown(0))
                     {
@@ -140,15 +140,13 @@ namespace RedKite
 
                         foreach (Node node in BattleGrid.canMoveTo)
                         {
-                            if (node != null)
+
+                            if (highlight.x == node.cell.x & highlight.y == node.cell.y)
                             {
-                                if (highlight.x == node.cell.x & highlight.y == node.cell.y)
-                                {
 
-                                    tilemap.SetTile(highlight, rangeHighlightTile);
+                                tilemap.SetTile(highlight, rangeHighlightTile);
 
-                                    break;
-                                }
+                                break;
                             }
                         }
                     }

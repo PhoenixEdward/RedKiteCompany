@@ -23,7 +23,7 @@ namespace RedKite
         private bool failedSpawn = false;
 
 
-        public override void  Start()
+        public override void Start()
         {
             base.Start();
 
@@ -105,7 +105,7 @@ namespace RedKite
             }
 
             if (failedSpawn)
-                this.gameObject.SetActive(false);
+                gameObject.SetActive(false);
             else
             {
                 transform.position = new Vector3(spawnPoint.x, spawnPoint.y, -1);

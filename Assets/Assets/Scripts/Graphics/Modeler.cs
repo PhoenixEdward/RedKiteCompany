@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
+using UnityEngine.Networking;
+
 namespace RedKite
 { 
     public class Modeler : MonoBehaviour
@@ -9,40 +11,46 @@ namespace RedKite
         static Transform level;
         Texture2D wallTex;
         Texture2D topWallTex;
-        GameObject roomFloors;
+        Texture2D floorTex;
         Texture2D[] texture2Ds;
         List<MeshMaker> wallMeshes = new List<MeshMaker>();
-        MeshFilter meshFilter;
-        MeshRenderer meshRender;
+        List<MeshMaker> floorMeshes = new List<MeshMaker>();
+        GameObject walls;
+        GameObject floor;
 
-        Color[] colors = new Color[10]
-        {
-            Colors.AmericanBlue,
-            Colors.AmericanGreen,
-            Colors.AmericanViolet,
-            Colors.AmericanRed,
-            Colors.AmericanOrange,
-            Colors.AmericanYellow,
-            Colors.AmericanBrown,
-            Colors.AmericanPink,
-            Colors.AmericanSilver,
-            Colors.AmericanPurple,
+        MeshFilter wallFilter;
+        MeshFilter floorFilter;
 
-        };
+        MeshRenderer wallRenderer;
+        MeshRenderer floorRenderer;
 
+        MeshMaker wallMesh;
+        MeshMaker floorMesh;
 
         // Start is called before the first frame update
-        void Start()
+        public void Generate()
         {
+            floorTex = Resources.Load<Texture2D>("Tiles/WoodFloor");
             topWallTex = Resources.Load<Texture2D>("Tiles/BambooFloor");
             wallTex = Resources.Load<Texture2D>("Tiles/jFlower");
             texture2Ds = new Texture2D[6] { wallTex, wallTex, topWallTex, wallTex, wallTex, wallTex };
 
-            meshFilter = GetComponent<MeshFilter>();
+            walls = new GameObject();
+            walls.transform.position = new Vector3(.35f, 0, .35f);
 
-            meshRender = GetComponent<MeshRenderer>();
+            floor = new GameObject();
+            floor.transform.position = new Vector3(.35f, 0, .35f);
 
-            RenderLevel();
+            wallFilter = walls.AddComponent<MeshFilter>();
+            wallRenderer = walls.AddComponent<MeshRenderer>();
+
+            floorFilter = floor.AddComponent<MeshFilter>();
+            floorRenderer = floor.AddComponent<MeshRenderer>();
+
+            RenderWalls(wallFilter,wallRenderer);
+            RenderFloor(floorFilter, floorRenderer);
+
+            floor.AddComponent<MeshCollider>();
         }
 
         // Update is called once per frame
@@ -51,7 +59,7 @@ namespace RedKite
 
         }
 
-        void RenderLevel()
+        void RenderWalls(MeshFilter meshFilter, MeshRenderer meshRenderer)
         {
             foreach(KeyValuePair<int,Area> entry in TileMapper.areas)
             {
@@ -88,20 +96,93 @@ namespace RedKite
 
                                 wallMeshes.Add(cornerMesh);
                             }
-                            else
-                                Debug.Log(area.RoomIndex + " " + path.Orientation.Name + " " + path.Min + " " + path.Max);
                         }
                     }
                 }
             }
 
-            MeshMaker walls = MeshMaker.CombinePlanes(wallMeshes);
+            wallMesh = MeshMaker.CombinePlanes(wallMeshes);
 
-            walls.SetTextures(meshRender, texture2Ds, new bool[] { false, false, false, false, false, false });
+            wallMesh.SetTextures(meshRenderer, texture2Ds, new bool[] { false, false, false, false, false, false });
 
-            walls.MergeSides();
+            wallMesh.MergeSides();
 
-            meshFilter.mesh = walls.mesh;
+            meshFilter.mesh = wallMesh.mesh;
+        }
+
+
+        void RenderFloor(MeshFilter meshFilter, MeshRenderer meshRenderer)
+        {
+            foreach (KeyValuePair<int, Area> entry in TileMapper.areas)
+            {
+                Area area = entry.Value;
+
+                MeshMaker floorMesh = new MeshMaker();
+
+                floorMesh.NewMakeMesh(area.Floor.TrueScale, area.Floor.Center);
+
+                floorMeshes.Add(floorMesh);
+
+                //should consider storing pathways somewhere else. In walls seems a little bizarre.
+                foreach (Area.Wall wall in area.Walls)
+                {
+                    if (wall.Overlaps.Count != 0)
+                    {
+                        foreach (Segment path in wall.Overlaps.Where(x => x.IsCorner == false).ToList())
+                        {
+                            if (path.IsRemoved == false)
+                            {
+                                MeshMaker pathMesh = new MeshMaker();
+
+                                pathMesh.NewMakeMesh(path.Scale, path.Center);
+
+                                floorMeshes.Add(pathMesh);
+                            }
+                        }
+                    }
+                }
+            }
+
+            floorMesh = MeshMaker.CombinePlanes(floorMeshes);
+
+            floorMesh.SetTextures(meshRenderer, new Texture2D[] { floorTex, floorTex, floorTex, floorTex, floorTex, floorTex }, new bool[] { false, false, false, false, false, false });
+
+            floorMesh.MergeSides();
+
+            meshFilter.mesh = floorMesh.mesh;
+        }
+
+        public void SetTopWallTexture(Texture2D myTexture)
+        {
+                wallFilter.mesh.Clear();
+
+                wallMesh.UpdateOneTexture(wallRenderer, myTexture, 2, false);
+
+                wallMesh.MergeSides();
+
+                wallFilter.mesh = wallMesh.mesh;
+        }
+
+        public void SetSideWallTextures(Texture2D myTexture)
+        {
+                wallFilter.mesh.Clear();
+
+                wallMesh.UpdateSideTextures(wallRenderer, myTexture);
+
+                wallMesh.MergeSides();
+
+                wallFilter.mesh = wallMesh.mesh;
+        }
+        public void SetFloorTexture(Texture2D myTexture)
+        {
+            floorFilter.mesh.Clear();
+
+            floorMesh.SetTextures(floorRenderer, new Texture2D[] { myTexture, myTexture, myTexture, myTexture, myTexture, myTexture },
+                new bool[] { false, false, false, false, false, false });
+
+            floorMesh.MergeSides();
+
+            floorFilter.mesh = floorMesh.mesh;
         }
     }
 }

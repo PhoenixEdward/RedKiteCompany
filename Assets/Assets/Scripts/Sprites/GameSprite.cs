@@ -20,74 +20,82 @@ namespace RedKite
             GrabNGo
         }
 
+        protected static Level level;
+        static bool isFirstSpawn = true;
         public SpriteType spriteType;
         public string spriteName;
-        public Setting setting;
-        public bool simpleCollision;
-        public float spriteDepth;
-        public List<Rect> relativeCollisionBoxes;
-        public List<Rect> CollisionBoxes { get; protected set; } = new List<Rect>();
 
-        public bool CanTalk;
+        protected int verticalFrames;
+        protected int horizontalFrames;
 
-        public int verticalFrames;
-        public int horizontalFrames;
-
-        protected Sprite[] spritesLoad;
-        protected Sprite[,] sprites;
+        protected Texture2D spriteLoad;
+        public Sprite[,] sprites;
         protected SpriteRenderer sr;
         protected Vector2 FrameDimensions;
 
         // Start is called before the first frame update
+
+
         public virtual void Start()
         {
-            if(spriteType == SpriteType.Character)
-                spritesLoad = Resources.LoadAll<Sprite>("Characters/" + spriteName);
-            else if(spriteType == SpriteType.Tile)
-                spritesLoad = Resources.LoadAll<Sprite>("Tiles/"+ setting  + "/" + spriteName);
+            //find a way for only the first unit spawned will do this. You did it for spawn just do it again.
 
-            sr = GetComponent<SpriteRenderer>();
+            level = FindObjectOfType<Level>();
+            isFirstSpawn = false;
 
-            sprites = new Sprite[horizontalFrames,verticalFrames];
+            Debug.Log(spriteName);
 
-            int loop = 0;
+            if (spriteType == SpriteType.Character)
+                spriteLoad = Resources.Load<Texture2D>("Characters/" + spriteName);
+            else if (spriteType == SpriteType.Tile)
+                spriteLoad = Resources.Load<Texture2D>("Tiles/" + spriteName);
+
+            verticalFrames = spriteLoad.height / 100;
+            horizontalFrames = spriteLoad.width / 100;
+
+            sprites = new Sprite[horizontalFrames, verticalFrames];
 
             //FrameDimensions = spritesLoad[0].rect.size/32;
 
-            for (int i = 0; i < verticalFrames; i++)
+            for (int y = 0; y < verticalFrames; y++)
             {
-                for (int j = 0; j < horizontalFrames; j++)
+                for (int x = 0; x < horizontalFrames; x++)
                 {
-                    sprites[j, i] = spritesLoad[loop];
-                    loop++;
-
-                    if (i == 0 & j == 3)
-                        break;
+                    Sprite sprite = Sprite.Create(spriteLoad, new Rect(new Vector2(x * 100, y * 100), new Vector2(100, 100)), new Vector2(0.5f, 0.5f));
+                    sprites[x, y] = sprite;
                 }
             }
 
-            //potentially uninvert the transform.position.y
+            sr = gameObject.AddComponent<SpriteRenderer>();
 
-            /*if (simpleCollision)
-            {
-                relativeCollisionBoxes.Add(new Rect(0, FrameDimensions.y - spriteDepth, FrameDimensions.x, spriteDepth));
-                CollisionBoxes.Add(new Rect(transform.position.x, -transform.position.y + FrameDimensions.y - spriteDepth, FrameDimensions.x, spriteDepth));
-            }
-            else
-            {
-                for (int i = 0; i < relativeCollisionBoxes.Count; i++)
-                    CollisionBoxes.Add(new Rect(transform.position.x + relativeCollisionBoxes[i].x, -transform.position.y + relativeCollisionBoxes[i].y, relativeCollisionBoxes[i].width, relativeCollisionBoxes[i].height));
-            }
+            sr.sortingLayerName = "Units";
 
-            transform.position = new Vector3(transform.position.x, transform.position.y, transform.position.y - FrameDimensions.y); */
+            transform.rotation = Quaternion.Euler(0, 45, 0);
 
         }
 
-        public void UpdateCollision()
+        public void ReStart(Texture2D texture)
         {
-            for(int i = 0; i < relativeCollisionBoxes.Count; i++)
-                CollisionBoxes[i] = new Rect(transform.position.x + relativeCollisionBoxes[i].x, -transform.position.y + relativeCollisionBoxes[i].y, relativeCollisionBoxes[i].width, relativeCollisionBoxes[i].height);
-        }
+            spriteLoad = texture;
 
+            sr = GetComponent<SpriteRenderer>();
+
+            verticalFrames = spriteLoad.height / 100;
+            horizontalFrames = spriteLoad.width / 100;
+
+            sprites = new Sprite[horizontalFrames, verticalFrames];
+
+            //FrameDimensions = spritesLoad[0].rect.size/32;
+
+            for (int y = 0; y < verticalFrames; y++)
+            {
+                for (int x = 0; x < horizontalFrames; x++)
+                {
+                    Sprite sprite = Sprite.Create(spriteLoad, new Rect(new Vector2(x * 100, y * 100), new Vector2(100, 100)), new Vector2(0.5f, 0.5f));
+                    sprites[x, y] = sprite;
+                }
+            }
+
+        }
     }
 }

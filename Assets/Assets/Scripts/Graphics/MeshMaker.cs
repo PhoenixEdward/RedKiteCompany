@@ -86,7 +86,6 @@ namespace RedKite
                 widthIndex = 0;
                 for (int x = 0; x < ((int)_scale.x); x++)
                 {
-                    Debug.Log("Executed");
                     graph[widthIndex + 1, heightIndex, (int)_scale.z, 0] = index;
                     backVertices[index] = new Vector3(x + 1, y, (int)_scale.z) + coordOffset;
 
@@ -104,10 +103,6 @@ namespace RedKite
                 }
                 heightIndex += 2;
             }
-
-            Debug.Log(backVertices[2]);
-            Debug.Log(backVertices[1]);
-
 
             index = 0;
             heightIndex = 0;
@@ -701,7 +696,6 @@ namespace RedKite
                 else
                 {
                     Color[] pixels = textures[texOrder[texIndex]].GetPixels();
-                    Debug.Log(pixels.Length);
                     outTexture.SetPixels(
                         texCoords[i].x, texCoords[i].y, 100, 100,
                         pixels);

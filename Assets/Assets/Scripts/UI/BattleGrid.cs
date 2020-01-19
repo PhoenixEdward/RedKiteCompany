@@ -10,15 +10,15 @@ namespace RedKite
         Tile clearTile;
         Tile rangeTile;
 
-        public Tilemap tilemap;
+        public Level level;
 
         PathFinder pathFinder = new PathFinder();
 
 
-        public static TileMapper tileMapper;
+        public static Tilemap map;
 
-        public static Node[] withinRange = null;
-        public static Node[] canMoveTo = null;
+        public static List<Node> withinRange = new List<Node>();
+        public static List<Node> canMoveTo = new List<Node>();
 
         Reticle reticle;
 
@@ -26,8 +26,7 @@ namespace RedKite
         // Start is called before the first frame update
         void Start()
         {
-            tileMapper = FindObjectOfType<TileMapper>();
-            tilemap = GetComponent<Tilemap>();
+            map = GetComponent<Tilemap>();
 
             clearTile = ScriptableObject.CreateInstance<Tile>();
 
@@ -35,11 +34,11 @@ namespace RedKite
             rangeTile.sprite = Resources.Load<Sprite>("UI/Range");
 
 
-            for (int x = 0; x < tilemap.cellBounds.xMax; x++)
+            for (int x = 0; x < map.cellBounds.xMax; x++)
             {
-                for (int y = 0; y < tilemap.cellBounds.yMax; y++)
+                for (int y = 0; y < map.cellBounds.yMax; y++)
                 {
-                    tilemap.SetTile(new Vector3Int(x, y, 0), clearTile);
+                    map.SetTile(new Vector3Int(x, y, 0), clearTile);
                 }
             }
 
@@ -49,7 +48,6 @@ namespace RedKite
         // Update is called once per frame
         void Update()
         {
-            //unit range must proceed tiletracker so as not to clear on deselect.
             UnitRange();
 
         }
@@ -63,16 +61,15 @@ namespace RedKite
                 //draw grid of valid movement tiles
                 //may need to keep an eye out for impassible moving units. could cause issues here.
 
-                if (reticle.selectedHero.IsMoving == false & withinRange == null)
+                if (reticle.selectedHero.IsMoving == false & withinRange.Count == 0)
                 {
+
+                    Debug.Log("Rand");
 
                     //formula for area of max unit range is (n+1)^2 + n^2 where n is movement speed.
                     //for now null for withinRange will be a single array with Vector3Int.Zero (default value) indicating a non walkable cell.
                     //this will either need a second array or be converted to a dictionary later to record WHY the cell isn't walkable (enemy unit, chest, wall).
                     //honestly not sure if this is the best place to store that data though.
-
-                    canMoveTo = new Node[(int)Mathf.Pow(reticle.selectedHero.movement + 1, 2) + (int)Mathf.Pow(reticle.selectedHero.movement, 2)];
-                    withinRange = new Node[(int)Mathf.Pow(reticle.selectedHero.movement + 1, 2) + (int)Mathf.Pow(reticle.selectedHero.movement, 2)];
 
 
                     int withinRangeIndex = 0;
@@ -92,12 +89,12 @@ namespace RedKite
                         {
                             cell = new Vector2Int((int)startingSpot.x + i, (int)startingSpot.y + j);
 
-                            if (Utility.ManhattanDistance(new Vector3Int(reticle.selectedHero.Coordinate.x, reticle.selectedHero.Coordinate.y,2), new Vector3Int(cell.x, cell.y,2)) <= reticle.selectedHero.movement)
+                            if (Utility.ManhattanDistance(new Vector3Int((int)reticle.selectedHero.Coordinate.x, (int)reticle.selectedHero.Coordinate.y,2), new Vector3Int(cell.x, cell.y,2)) <= reticle.selectedHero.movement)
                             {
 
                                 if (cell.x >= 0 & cell.x < TileMapper.W & cell.y >= 0 & cell.y < TileMapper.H)
                                 {
-                                    withinRange[withinRangeIndex] = PathFinder.graph[cell.x, cell.y];
+                                    withinRange.Add(PathFinder.graph[cell.x, cell.y]);
 
                                 }
 
@@ -109,48 +106,42 @@ namespace RedKite
 
                     //remove nodes that are not walkable or obstructed. May be worth while to create a seperate variable.
 
-                    for (int i = 0; i < withinRange.Length; i++)
+                    for (int i = 0; i < withinRange.Count; i++)
                     {
                         if (withinRange[i] != null)
                         {
-                            if (!pathFinder.IsReachable(reticle.selectedHero, withinRange[i], withinRange))
+                            if (pathFinder.IsReachable(reticle.selectedHero, withinRange[i], withinRange.ToArray()))
                             {
-                                canMoveTo[i] = null;
-                            }
-                            else
-                            {
-                                canMoveTo[i] = withinRange[i];
+                                canMoveTo.Add(withinRange[i]);
                             }
                         }
                     }
 
-                    for (int i = 0; i < canMoveTo.Length; i++)
+                    for (int i = 0; i < canMoveTo.Count; i++)
                     {
-                        if (canMoveTo[i] != null)
-                        {
-                            tilemap.SetTile(canMoveTo[i].cell, rangeTile);
-                        }
+
+                        map.SetTile(canMoveTo[i].cell, rangeTile);
                     }
 
-                    tilemap.RefreshAllTiles();
+                    map.RefreshAllTiles();
                 }
 
                 else if (reticle.selectedHero.IsMoving == true & withinRange != null & canMoveTo != null)
                 {
 
-                    for (int i = 0; i < canMoveTo.Length; i++)
+                    for (int i = 0; i < canMoveTo.Count; i++)
                     {
                         if (canMoveTo[i] != null)
                         {
-                            tilemap.SetTile(canMoveTo[i].cell, clearTile);
+                            map.SetTile(canMoveTo[i].cell, clearTile);
                         }
                     }
 
-                    withinRange = null;
-                    canMoveTo = null;
+                    withinRange = new List<Node>();
+                    canMoveTo = new List<Node>();
                 }
 
-                tilemap.RefreshAllTiles();
+                map.RefreshAllTiles();
 
             }
 
@@ -158,12 +149,12 @@ namespace RedKite
             else if (reticle.selectedHero == null & withinRange != null & canMoveTo != null)
             {
 
-                tilemap.ClearAllTiles();
+                map.ClearAllTiles();
 
-                tilemap.RefreshAllTiles();
+                map.RefreshAllTiles();
 
-                withinRange = null;
-                canMoveTo = null;
+                withinRange = new List<Node>();
+                canMoveTo = new List<Node>();
             }
 
         }

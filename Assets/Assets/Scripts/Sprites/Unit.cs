@@ -9,15 +9,14 @@ namespace RedKite
     public class Unit : GameSprite
     {
 
-        Vector3 offset = new Vector3(0.35f, 0, 0.35f);
+        protected Vector3 offset = new Vector3(0.35f, 0, 0.35f);
 
         //Should destination be here?
-        public TileMapper map;
         static Grid grid;
 
         PathFinder pathFinder = new PathFinder();
 
-        public Vector3Int Coordinate;
+        public Vector3 Coordinate = new Vector3(0,0,-2);
 
         protected List<Node> currentPath = null;
 
@@ -40,14 +39,15 @@ namespace RedKite
 
         public override void Start()
         {
+            base.Start();
+
             //possibly shortcut in TileMapper code
             grid = FindObjectOfType<Grid>();
 
-            map = FindObjectOfType<TileMapper>();
+            //transform.parent = grid.transform;
+            //level.tileMap = FindObjectOfType<TileMapper>();
 
             currentPath = null;
-
-            base.Start();
         }
 
         public virtual void Update()
@@ -60,11 +60,11 @@ namespace RedKite
 
                 Vector3 cellPos = grid.CellToWorld(currentPath[0].cell);
 
-                cellPos.y = transform.position.y;
+                cellPos.y = transform.localPosition.y;
 
                 Debug.Log(cellPos);
 
-                Vector3 currentPos = transform.position - offset;
+                Vector3 currentPos = transform.localPosition - offset;
 
                 if (currentPos != cellPos)
                 {
@@ -107,7 +107,7 @@ namespace RedKite
                     else
                         velocity.z = 0;
 
-                    transform.position = currentPos + offset;
+                    transform.localPosition = currentPos + offset;
                 }
                 else
                 { 
@@ -117,6 +117,7 @@ namespace RedKite
 
             if (timeSinceLastFrame > charSecondsPerFrame)
             {
+
                 timeSinceLastFrame = 0;
                 if (IsMoving)
                 {
@@ -124,12 +125,12 @@ namespace RedKite
                     if (velocity.x > 0)
                     {
                         if (verticalFrames > 1)
-                            VerticalRow = 3;
+                            VerticalRow = 1;
                     }
                     else if (velocity.x < 0)
                     {
                         if (verticalFrames > 2)
-                            VerticalRow = 1;
+                            VerticalRow = 3;
                     }
 
                     else if (velocity.z > 0)
@@ -139,8 +140,7 @@ namespace RedKite
                     }
                     else if (velocity.z < 0)
                     {
-                        if (verticalFrames > 4)
-                            VerticalRow = 4;
+                        VerticalRow = 0;
                     }
                 }
 
@@ -149,19 +149,19 @@ namespace RedKite
                 else
                 {
                     if (VerticalRow == 1 & 1 <= horizontalFrames)
-                        HorizontalRow = 0;
+                        HorizontalRow = 2;
                     else if (VerticalRow == 2 & 2 <= horizontalFrames)
                         HorizontalRow = 1;
                     else if (VerticalRow == 3 & 3 <= horizontalFrames)
-                        HorizontalRow = 2;
-                    else if (VerticalRow == 4 & 4 <= horizontalFrames)
+                        HorizontalRow = 0;
+                    else if (VerticalRow == 0 & 4 <= horizontalFrames)
                         HorizontalRow = 3;
 
-                    VerticalRow = 0;
+                    VerticalRow = 4;
                 }
 
                 //could move this code under "is moving" and it would probably eliminate the need of the code above.
-                if(velocity != Vector3.zero)
+                if(IsMoving)
                 { 
                     if (HorizontalRow < horizontalFrames - 1)
                         HorizontalRow += 1;
@@ -194,12 +194,15 @@ namespace RedKite
                 IsMoving = false;
             }
 
+            if (VerticalRow > verticalFrames | VerticalRow > verticalFrames)
+            {
+                VerticalRow = 0;
+                HorizontalRow = 0;
+            }
 
             timeSinceLastFrame += Time.deltaTime;
 
-            Sprite sprite = sprites[HorizontalRow, VerticalRow];
-
-            sr.sprite = sprite;
+            sr.sprite = sprites[HorizontalRow, VerticalRow];
 
         }
 
@@ -238,5 +241,10 @@ namespace RedKite
             currentPath = pathFinder.GeneratePathTo(this, x, y);
         }
 
+        public void ResetFrames()
+        {
+            HorizontalRow = 0;
+            VerticalRow = 0;
+        }
     }
 }

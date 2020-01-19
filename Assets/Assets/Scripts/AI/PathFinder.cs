@@ -8,20 +8,13 @@ using UnityEngine;
 namespace RedKite
 {
 
-    class PathFinder : MonoBehaviour
+    class PathFinder : Level
     {
         public static Node[,] graph;
 
         public Unit selectedHero;
 
         Reticle reticle;
-
-        void Start()
-        {
-            GenerateGraph();
-
-
-        }
 
         public List<Node> GeneratePathTo(Unit unit, int x, int y)
         {
@@ -40,8 +33,8 @@ namespace RedKite
             List<Node> unvisited = new List<Node>();
 
             Node source = graph[
-                                unit.Coordinate.x,
-                                unit.Coordinate.y
+                                (int)unit.Coordinate.x,
+                                (int)unit.Coordinate.y
                                 ];
 
             Node target = graph[
@@ -144,8 +137,8 @@ namespace RedKite
             List<Node> unvisited = new List<Node>();
 
             Node source = graph[
-                                unit.Coordinate.x,
-                                unit.Coordinate.y
+                                (int)unit.Coordinate.x,
+                                (int)unit.Coordinate.y
                                 ];
 
             if (node == source)
@@ -200,7 +193,7 @@ namespace RedKite
 
                 foreach (Node v in u.neighbours)
                 {
-                    if (Utility.ManhattanDistance(new Vector3Int(unit.Coordinate.x, unit.Coordinate.y,2), new Vector3Int(v.cell.x, v.cell.y,2)) <= unit.movement & 
+                    if (Utility.ManhattanDistance(new Vector3Int((int)unit.Coordinate.x,(int)unit.Coordinate.y,2), new Vector3Int(v.cell.x, v.cell.y,2)) <= unit.movement & 
                         Utility.WithinBounds(new Vector3(unit.Coordinate.x,2,unit.Coordinate.y),TileMapper.W,TileMapper.H))
                     {
                         float alt = dist[u] + CostToEnterTile(v.cell.x, v.cell.y);
@@ -245,7 +238,7 @@ namespace RedKite
         }
 
 
-        void GenerateGraph()
+        public void GenerateGraph()
         {
             // Initialize the array
             graph = new Node[TileMapper.W, TileMapper.H];

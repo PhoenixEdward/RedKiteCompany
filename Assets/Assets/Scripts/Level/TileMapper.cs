@@ -8,7 +8,7 @@ using System.Linq;
 
 namespace RedKite
 {
-    public class TileMapper : MonoBehaviour
+    public class TileMapper
     {
         public Cell[] tileTypes =
         {
@@ -54,7 +54,7 @@ namespace RedKite
         List<Unit> units = new List<Unit>();
         Grid grid;
 
-        void Awake()
+        public void Generate()
         {
 
 
@@ -90,7 +90,7 @@ namespace RedKite
             AddSpawn();
             roomIndex++;
 
-            for (int j = 0; j < 5000; j++)
+            for (int j = 0; j < 500; j++)
             {
                 if (AddArea())
                 {
