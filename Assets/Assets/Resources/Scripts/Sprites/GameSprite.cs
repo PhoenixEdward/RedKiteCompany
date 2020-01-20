@@ -8,7 +8,8 @@ namespace RedKite
     {
         public enum SpriteType {
             Tile,
-            Character
+            Character,
+            Prop
         }
 
         public enum Setting
@@ -28,17 +29,33 @@ namespace RedKite
         protected int verticalFrames;
         protected int horizontalFrames;
 
-        protected Texture2D spriteLoad;
+        protected int VerticalRow { get; set; }
+        protected int HorizontalRow { get; set; }
+
+        public Vector3 Coordinate = new Vector3(0, 0, -2);
+
+        //thse will need to be switched to protected after level editor is done
+        public Texture2D spriteLoad;
         public Sprite[,] sprites;
+
         protected SpriteRenderer sr;
-        protected Vector2 FrameDimensions;
+        protected Vector2Int FrameDimensions;
+
+        static protected CameraMovement cam;
+
+        protected Vector3 offset = new Vector3(0.35f, 0, 0.35f);
 
         //This will be set by fog of war. Unsure about stipulations of set.
         public bool IsVisible { get; set; }
 
+        public bool isIso;
+
+        public bool IsMoving;
 
         public virtual void Start()
         {
+            //Vector2 can never be null so cannot be null coalesced
+
             //find a way for only the first unit spawned will do this. You did it for spawn just do it again.
             if(isFirstSpawn)
             { 
@@ -46,14 +63,22 @@ namespace RedKite
                 isFirstSpawn = false;
             }
 
+            if(spriteLoad == null)
+            { 
 
-            if (spriteType == SpriteType.Character)
-                spriteLoad = Resources.Load<Texture2D>("Characters/" + spriteName);
-            else if (spriteType == SpriteType.Tile)
-                spriteLoad = Resources.Load<Texture2D>("Tiles/" + spriteName);
-            
-            verticalFrames = spriteLoad.height / 100;
-            horizontalFrames = spriteLoad.width / 100;
+                if (spriteType == SpriteType.Character)
+                    spriteLoad = Resources.Load<Texture2D>("Characters/" + spriteName);
+                else if (spriteType == SpriteType.Tile)
+                    spriteLoad = Resources.Load<Texture2D>("Tiles/" + spriteName);
+                else if (spriteType == SpriteType.Prop)
+                    spriteLoad = Resources.Load<Texture2D>("Props/" + spriteName);
+
+            }
+
+            FrameDimensions = FrameDimensions == Vector2.zero ? new Vector2Int(100, 100) : FrameDimensions;
+
+            verticalFrames = spriteLoad.height / FrameDimensions.y;
+            horizontalFrames = spriteLoad.width / FrameDimensions.x;
 
             sprites = new Sprite[horizontalFrames, verticalFrames];
 
@@ -61,7 +86,7 @@ namespace RedKite
             {
                 for (int x = 0; x < horizontalFrames; x++)
                 {
-                    Sprite sprite = Sprite.Create(spriteLoad, new Rect(new Vector2(x * 100, y * 100), new Vector2(100, 100)), new Vector2(0.5f, 0.5f));
+                    Sprite sprite = Sprite.Create(spriteLoad, new Rect(new Vector2(x * FrameDimensions.x, y * FrameDimensions.y), FrameDimensions), new Vector2(0.5f, 0.5f));
                     sprites[x, y] = sprite;
                 }
             }
@@ -70,12 +95,58 @@ namespace RedKite
 
             sr.sortingLayerName = "Units";
 
-            transform.rotation = Quaternion.Euler(0, 45, 0);
+            //transform.rotation = Quaternion.Euler(0, 45, 0);
 
         }
 
-        public void ReStart(Texture2D texture)
+        public virtual void Update()
         {
+            if(CameraMovement.facing == CameraMovement.Facing.NE)
+            {
+                transform.rotation = Quaternion.Euler(0, 45f, 0);
+
+                if(isIso)
+                    transform.position = Coordinate;
+
+                if (horizontalFrames > 3 & !IsMoving)
+                    HorizontalRow = 3;
+            }
+            else if (CameraMovement.facing == CameraMovement.Facing.NW)
+            {
+                transform.rotation = Quaternion.Euler(0, 135f, 0);
+
+                if (isIso)
+                    transform.position = Coordinate + new Vector3(0,0,.65f);
+
+                if (horizontalFrames > 2 & !IsMoving)
+                    HorizontalRow = 2;
+            }
+            else if (CameraMovement.facing == CameraMovement.Facing.SW)
+            {
+                transform.rotation = Quaternion.Euler(0, 225f, 0);
+
+                if (isIso)
+                    transform.position = Coordinate + new Vector3(.65f, 0, .65f);
+
+                if (horizontalFrames > 1 & !IsMoving)
+                    HorizontalRow = 1;
+            }
+            else
+            {
+                transform.rotation = Quaternion.Euler(0, 315f, 0);
+
+                if (isIso)
+                    transform.position = Coordinate + new Vector3(.65f, 0, 0);
+
+                if(!IsMoving)
+                    HorizontalRow = 0;
+            }
+        }
+
+        public void ReStart(string textureName, Texture2D texture)
+        {
+            spriteName = textureName.Substring(0, textureName.Length - 4);
+
             spriteLoad = texture;
 
             verticalFrames = spriteLoad.height / 100;

@@ -10,12 +10,13 @@ namespace RedKite
         protected float timeSinceLastMove = 0;
         protected float secondsPerMove = 0.0167f;
         protected float pix = 32f/8;
-        protected Unit hero;
+        protected Hero[] heroes;
         protected Vector2 xBounds;
         protected Vector2 yBounds;
 
         public static Facing facing;
 
+        //these are all backwards. Should fix.
         public enum Facing
         {
             NE,
@@ -26,7 +27,9 @@ namespace RedKite
 
         void OnEnable()
         {
-            transform.position = TileMapper.Instance.spawnPoint;
+            heroes = FindObjectsOfType<Hero>();
+
+            transform.position = TileMapper.Instance.Areas[0].Floor.Center + new Vector3(-15f, 15f, -15f);
 
             xBounds = new Vector2(0, TileMapper.Instance.W);
             yBounds = new Vector2(0, TileMapper.Instance.H);
@@ -35,7 +38,7 @@ namespace RedKite
 
         void Update()
         {
-            if(Input.GetKeyDown(KeyCode.E))
+            if(Input.GetKeyDown(KeyCode.Q))
             { 
                 Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
                 RaycastHit hit;
@@ -51,16 +54,11 @@ namespace RedKite
                         facing = Facing.SE;
                     else
                         facing = Facing.NE;
-
-                    foreach(GameSprite sprite in GameSpriteManager.Instance.Sprites)
-                    {
-                        sprite.transform.Rotate(new Vector3(0, 90f, 0));
-                    }
                 }
 
             }
 
-            if (Input.GetKeyDown(KeyCode.Q))
+            if (Input.GetKeyDown(KeyCode.E))
             {
                 Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
                 RaycastHit hit;
@@ -76,11 +74,6 @@ namespace RedKite
                         facing = Facing.NW;
                     else
                         facing = Facing.NE;
-
-                    foreach (GameSprite sprite in GameSpriteManager.Instance.Sprites)
-                    {
-                        sprite.transform.Rotate(new Vector3(0, -90f, 0));
-                    }
                 }
 
             }

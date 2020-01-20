@@ -56,11 +56,11 @@ namespace RedKite
 
             cubeMesh.MergeSides();
 
-            tris = cubeMesh.mesh.triangles;
-            verts = cubeMesh.mesh.vertices;
-            uvs = cubeMesh.mesh.uv;
+            tris = cubeMesh.Mesh.triangles;
+            verts = cubeMesh.Mesh.vertices;
+            uvs = cubeMesh.Mesh.uv;
 
-            meshFilter.mesh = cubeMesh.mesh;
+            meshFilter.mesh = cubeMesh.Mesh;
 
         }
 
@@ -83,7 +83,7 @@ namespace RedKite
 
                 meshMaker.MergeSides();
 
-                meshFilter.mesh = meshMaker.mesh;
+                meshFilter.mesh = meshMaker.Mesh;
             }
 
         }
@@ -107,7 +107,7 @@ namespace RedKite
 
                 meshMaker.MergeSides();
 
-                meshFilter.mesh = meshMaker.mesh;
+                meshFilter.mesh = meshMaker.Mesh;
             }
         }
 

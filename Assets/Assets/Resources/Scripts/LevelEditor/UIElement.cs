@@ -11,14 +11,16 @@ namespace RedKite
     {
         Dropdown dropdown;
         Toggle mirrored;
-        public SpriteSelection spriteSelector;
-        bool firstClick = true;
+        SpriteSelection spriteSelector;
+        int prevSelection;
+
 
         public void Start()
         {
             dropdown = GetComponent<Dropdown>();
             mirrored = GetComponentInChildren<Toggle>();
             spriteSelector = GetComponentInParent<SpriteSelection>();
+            prevSelection = dropdown.value;
         }
 
         void OnGUI()
@@ -27,11 +29,16 @@ namespace RedKite
 
         public void OnSelect(BaseEventData baseEvent)
         {
-            //identities are base on order from top to bottom in GUI menu.
-            if (Convert.ToInt32(gameObject.name) != 3 & Convert.ToInt32(gameObject.name) != 4)
-                StartCoroutine(spriteSelector.GetTextures(dropdown.options[dropdown.value].text, Convert.ToInt32(gameObject.name), mirrored.isOn));
-            else
-                StartCoroutine(spriteSelector.GetTextures(dropdown.options[dropdown.value].text, Convert.ToInt32(gameObject.name), false));
+            if(dropdown.value != prevSelection)
+            { 
+                //identities are base on order from top to bottom in GUI menu.
+                if (Convert.ToInt32(gameObject.name) != 3 & Convert.ToInt32(gameObject.name) != 4)
+                    StartCoroutine(spriteSelector.GetTextures(dropdown.options[dropdown.value].text, Convert.ToInt32(gameObject.name), mirrored.isOn));
+                else
+                    StartCoroutine(spriteSelector.GetTextures(dropdown.options[dropdown.value].text, Convert.ToInt32(gameObject.name), false));
+
+                prevSelection = dropdown.value;
+            }
 
         }
 

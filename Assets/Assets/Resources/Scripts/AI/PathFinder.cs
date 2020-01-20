@@ -8,7 +8,7 @@ using UnityEngine;
 namespace RedKite
 {
 
-    class PathFinder : Level
+    class PathFinder
     {
         public static Node[,] graph;
 
@@ -16,11 +16,11 @@ namespace RedKite
 
         Reticle reticle;
 
-        public List<Node> GeneratePathTo(Unit unit, int x, int y)
+        public List<Node> GeneratePathTo(Vector3 startCoord, Vector3 destCoord)
         {
             // Clear out our Hero's old path.
 
-            if (HeroCanEnterTile(x, y) == false)
+            if (HeroCanEnterTile((int)destCoord.x, (int)destCoord.z) == false)
             {
                 // We probably clicked on a mountain or something, so just quit out.
                 return null;
@@ -33,13 +33,13 @@ namespace RedKite
             List<Node> unvisited = new List<Node>();
 
             Node source = graph[
-                                (int)unit.Coordinate.x,
-                                (int)unit.Coordinate.y
+                                (int)startCoord.x,
+                                (int)startCoord.y
                                 ];
 
             Node target = graph[
-                                x,
-                                y
+                                (int)destCoord.x,
+                                (int)destCoord.z
                                 ];
 
             dist[source] = 0;
@@ -223,7 +223,7 @@ namespace RedKite
 
         float CostToEnterTile(int x, int y)
         {
-            Cell tt = TileMapper.Instance.tiles[x, y];
+            Cell tt = TileMapper.Instance.Tiles[x, y];
 
             return tt.movementCost;
         }
@@ -234,7 +234,7 @@ namespace RedKite
             // We could test the unit's walk/hover/fly type against various
             // terrain flags here to see if they are allowed to enter the tile.
 
-            return TileMapper.Instance.tiles[x, y].IsWalkable;
+            return TileMapper.Instance.Tiles[x, y].IsWalkable;
         }
 
 

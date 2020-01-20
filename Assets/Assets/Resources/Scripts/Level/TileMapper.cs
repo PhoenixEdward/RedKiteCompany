@@ -29,39 +29,39 @@ namespace RedKite
 
         public int H;
         public int W;
-        public char[,] map;
+        protected char[,] map;
+
+        public Dictionary<int, Area> Areas { get; private set; }
 
         int areaCount;
-        public Dictionary<int, Area> areas;
         int roomIndex = 0;
-        int allRuns;
 
-        const char TILE_VOID = ' ';
+        protected static readonly char TILE_VOID = ' ';
         //static char TILE_FLOOR = '.';
-        const char TILE_WALL = '#';
-        const char TILE_CORNER = '!';
-        const char TILE_HALL = '+';
-        const char TILE_SPAWN = '@';
+        protected static readonly char TILE_WALL = '#';
+        protected static readonly char TILE_CORNER = '!';
+        protected static readonly char TILE_HALL = '+';
+        protected static readonly char TILE_SPAWN = '@';
         //static char TILE_ROOM_CORNER = '?';
         //static char TILE_VISITED = '$';
         //static char TILE_POPULAR = '&';
-        const char TILE_WALL_CORNER = '%';
+        protected static readonly char TILE_WALL_CORNER = '%';
         int failedDoors;
         int[] roomFailures = new int[16] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
 
         //everything below is unity related
         public List<Vector3Int>[] RoomTiles { get; private set; }
 
-        static System.Random rndState = new System.Random();
+        protected static System.Random rndState = new System.Random();
         static int rnd(int x) => rndState.Next() % x;
 
-        public Cell[,] tiles;
+        public Cell[,] Tiles { get; protected set; }
 
-        public Vector3Int spawnPoint;
+        Vector3Int spawnPoint;
         public int index = 0;
         //to delete below
 
-        public void Generate()
+        public virtual void Generate()
         {
 
 
@@ -71,10 +71,10 @@ namespace RedKite
             map = new char[W, H];
 
             areaCount = 10;
-            areas = new Dictionary<int,Area>();
+            Areas = new Dictionary<int,Area>();
 
 
-            tiles = new Cell[W, H];
+            Tiles = new Cell[W, H];
 
             //check if this even does anything anymore? Probably not necessary now.
 
@@ -87,7 +87,6 @@ namespace RedKite
 
 
             ClearMap();
-
 
             // generate tilemap data
             roomIndex = 0;
@@ -109,7 +108,7 @@ namespace RedKite
                     {
                         Debug.Log("Run Again");
                         roomIndex = 0;
-                        areas.Clear();
+                        Areas.Clear();
                         ClearMap();
                         AddSpawn();
                         roomIndex++;
@@ -123,9 +122,9 @@ namespace RedKite
 
             SplitAllWalls();
 
-            Utility.LevelToJSON(areas);
+            Utility.LevelToJSON(Areas);
 
-            foreach (Area area in areas.Values)
+            foreach (Area area in Areas.Values)
             {
                 foreach(Area.Wall wall in area.Walls)
                 {
@@ -141,7 +140,7 @@ namespace RedKite
 
             }
 
-            foreach (Area area in areas.Values)
+            foreach (Area area in Areas.Values)
             {
                 foreach (Area.Wall wall in area.Walls)
                 {
@@ -167,7 +166,7 @@ namespace RedKite
                     char c = map[x, y];
                     if (c != TILE_VOID & c != TILE_WALL & c != TILE_WALL_CORNER)
                     {
-                        tiles[x, y] = tileTypes[1];
+                        Tiles[x, y] = tileTypes[1];
                         if(c==TILE_SPAWN)
                         { 
                             RoomTiles[0].Add(new Vector3Int(x, y, 1));
@@ -180,12 +179,12 @@ namespace RedKite
                     }
                     else if (c == TILE_WALL | c == TILE_WALL_CORNER)
                     {
-                        tiles[x, y] = tileTypes[2];
+                        Tiles[x, y] = tileTypes[2];
 
                     }
                     else if (c == TILE_VOID)
                     {
-                        tiles[x, y] = tileTypes[0];
+                        Tiles[x, y] = tileTypes[0];
                     }
                 }
             }
@@ -194,7 +193,7 @@ namespace RedKite
 
         }
 
-        void ClearMap()
+        protected void ClearMap()
         {
             //instantiate void cells
             for (int y = 0; y < map.GetLength(1); y++)
@@ -242,7 +241,7 @@ namespace RedKite
             map[(int)spawn.x, (int)spawn.z] = TILE_SPAWN;
 
 
-            areas.Add(roomIndex, firstArea);
+            Areas.Add(roomIndex, firstArea);
 
         }
 
@@ -288,7 +287,7 @@ namespace RedKite
                 map[(int)wall.Max.x, (int)wall.Max.z] = TILE_WALL_CORNER;
             }
 
-            areas.Add(roomIndex, foundRoom);
+            Areas.Add(roomIndex, foundRoom);
 
             return true;
 
@@ -296,7 +295,7 @@ namespace RedKite
 
         void SplitAllWalls()
         {
-            foreach (Area area in areas.Values)
+            foreach (Area area in Areas.Values)
                 foreach (Area.Wall wall in area.Walls)
                 { 
                     wall.Split();
@@ -305,7 +304,7 @@ namespace RedKite
 
         void FindAllOverlaps()
         {
-            foreach (Area area in areas.Values)
+            foreach (Area area in Areas.Values)
                 foreach (Area.Wall wall in area.Walls)
                 {
                     wall.FindOverlaps();
@@ -320,15 +319,15 @@ namespace RedKite
             int foundPaths = 0;
 
             //get random list of indices to jump through dictionary.
-            List<int> allIndices = Enumerable.Range(0, areas.Count).ToList();
+            List<int> allIndices = Enumerable.Range(0, Areas.Count).ToList();
             Utility.Shuffle(allIndices);
 
             foreach (int area in allIndices)
             {
-                Utility.Shuffle(areas[area].Walls);
-                for (int oWall = 0; oWall < areas[area].Walls.Count; oWall++)
+                Utility.Shuffle(Areas[area].Walls);
+                for (int oWall = 0; oWall < Areas[area].Walls.Count; oWall++)
                 {
-                    Area.Wall oldWall = areas[area].Walls[oWall];
+                    Area.Wall oldWall = Areas[area].Walls[oWall];
                     Utility.Shuffle(workingArea.Walls);
                     for (int nWall = 0; nWall < workingArea.Walls.Count; nWall++)
                     {
@@ -443,7 +442,7 @@ namespace RedKite
                                     }
 
                                     //width is minus one because it includes the startCoord.
-                                    newWall.Doors.Add(areas[area].RoomIndex, new Area.Door(doorCoord, doorCoord + ((width - 1) * up),false));
+                                    newWall.Doors.Add(Areas[area].RoomIndex, new Area.Door(doorCoord, doorCoord + ((width - 1) * up),false));
 
                                     foundPaths++;
 
@@ -458,13 +457,13 @@ namespace RedKite
         }
         Area FindArea()
         {
-            List<int> allIndices = Enumerable.Range(0, areas.Count).ToList();
+            List<int> allIndices = Enumerable.Range(0, Areas.Count).ToList();
 
             Utility.Shuffle(allIndices);
 
             foreach (int area in allIndices)
             {
-                foreach (Area.Wall wall in areas[area].Walls.OrderBy(x => rndState.Next()))
+                foreach (Area.Wall wall in Areas[area].Walls.OrderBy(x => rndState.Next()))
                 {
 
                     bool isLong;
@@ -472,13 +471,13 @@ namespace RedKite
                     //because width and height are relative to orientation.
                     if (wall.Orientation == Orient.North | wall.Orientation == Orient.South)
                     {
-                        isLong = areas[area].Floor.TrueNE.z - areas[area].Floor.TrueSW.z >
-                            areas[area].Floor.TrueNE.x - areas[area].Floor.TrueSW.x ? false : true;
+                        isLong = Areas[area].Floor.TrueNE.z - Areas[area].Floor.TrueSW.z >
+                            Areas[area].Floor.TrueNE.x - Areas[area].Floor.TrueSW.x ? false : true;
                     }
                     else
                     {
-                        isLong = areas[area].Floor.TrueNE.z - areas[area].Floor.TrueSW.z >
-                            areas[area].Floor.TrueNE.x - areas[area].Floor.TrueSW.x ? true : false;
+                        isLong = Areas[area].Floor.TrueNE.z - Areas[area].Floor.TrueSW.z >
+                            Areas[area].Floor.TrueNE.x - Areas[area].Floor.TrueSW.x ? true : false;
                     }
 
                     int w = isLong ? rndState.Next(8, 10) : rndState.Next(10, 16);
@@ -507,7 +506,6 @@ namespace RedKite
                     //move it out one space from the wall and select as corner of new floor.
                     Vector3 startPoint = oldCoord + wall.Orientation.Forward + (wall.Orientation.Right * justify);
 
-                    allRuns++;
                     roomFailures[roomIndex]++;
 
                     Area testArea = new Area(wall.Orientation, roomIndex, startPoint, w - 2, h - 2);
@@ -555,6 +553,14 @@ namespace RedKite
             return null;
         }
 
+        public Vector3[] GetSpawnPoints(int spawnNumber)
+        {
+            List<Vector3> spawnPoints = Areas[0].GetCoords().ToList();
+
+            spawnPoints.Shuffle();
+
+            return spawnPoints.Take(spawnNumber).ToArray();
+        }
 
     }
 

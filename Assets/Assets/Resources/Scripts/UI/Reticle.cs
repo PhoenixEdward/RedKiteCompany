@@ -11,7 +11,7 @@ namespace RedKite
         Vector3Int temp = Vector3Int.zero;
 
         [SerializeField]
-        Vector3Int highlight;
+        public Vector3Int highlight;
         Tile highlightTile;
         Tile selectTile;
 
@@ -67,12 +67,12 @@ namespace RedKite
                 {
                     if (destination != null)
                     {
-                        if (TileMapper.Instance.tiles[destination.cell.x, destination.cell.y].IsWalkable == true & selectedHero.IsMoving == false)
+                        if (TileMapper.Instance.Tiles[destination.cell.x, destination.cell.y].IsWalkable == true & selectedHero.IsMoving == false)
                             if (Utility.ManhattanDistance(new Vector3Int((int)selectedHero.Coordinate.x, (int)selectedHero.Coordinate.y,2), new Vector3Int(destination.cell.x, destination.cell.y,2)) <= selectedHero.movement)
                             {
                                 if (pathFinder.IsReachable(selectedHero, destination, BattleGrid.withinRange.ToArray()))
                                 { 
-                                    selectedHero.Move(destination.cell.x, destination.cell.y);
+                                    selectedHero.Move(new Vector3(destination.cell.x,1,destination.cell.y));
                                     destination = null;
                                 }
                             }

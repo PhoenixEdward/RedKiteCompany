@@ -7,7 +7,7 @@ using UnityEngine;
 
 namespace RedKite
 {
-    public class Segment : MonoBehaviour
+    public class Segment
     {
         public bool IsPath;
         public bool IsRemoved;

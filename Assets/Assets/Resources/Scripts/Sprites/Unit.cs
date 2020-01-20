@@ -8,27 +8,17 @@ namespace RedKite
     [System.Serializable]
     public class Unit : GameSprite
     {
-
-        protected Vector3 offset = new Vector3(0.35f, 0, 0.35f);
-
         //Should destination be here?
         static Grid grid;
 
         PathFinder pathFinder = new PathFinder();
-
-        public Vector3 Coordinate = new Vector3(0,0,-2);
 
         protected List<Node> currentPath = null;
 
         int speed = 2;
         public int movement = 4;
 
-
-        public int VerticalRow { get; set; }
-        public int HorizontalRow { get; set; }
-
         public Vector3 Destination { get; set; } = Vector3.zero;
-        public bool IsMoving;
         public bool IsAnimated { get; set; }
         public bool IsReverseAnimated { get; set; }
 
@@ -50,9 +40,9 @@ namespace RedKite
             currentPath = null;
         }
 
-        public virtual void Update()
+        public override void Update()
         {
-  
+            base.Update();
 
             if (currentPath != null)
             {
@@ -300,9 +290,9 @@ namespace RedKite
 
         }
 
-        public void Move(int x, int y)
+        public void Move(Vector3 destination)
         {
-            currentPath = pathFinder.GeneratePathTo(this, x, y);
+            currentPath = pathFinder.GeneratePathTo(Coordinate, destination);
         }
 
         public void ResetFrames()

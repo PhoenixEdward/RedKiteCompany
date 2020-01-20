@@ -9,42 +9,23 @@ namespace RedKite
     [System.Serializable]
     [RequireComponent(typeof(MeshFilter))]
     [RequireComponent(typeof(MeshRenderer))]
-    public class MeshMaker : MonoBehaviour
+    public class MeshMaker
     {
-        public Mesh mesh;
+        public Mesh Mesh { get; protected set; }
         ///<summary>Submeshes go from Front, Top, Back, Bottom, Left, to Right.</summary>
-        public Mesh[] subMeshes = new Mesh[6];
-        public int[,,,] graph;
+        public Mesh[] SubMeshes { get; protected set; } = new Mesh[6];
+        int[,,,] graph;
         Vector3 scale;
         Vector3 position;
 
-        public Vector3[] subMeshScales = new Vector3[6];
-        public Vector3[] subMeshPositions = new Vector3[6];
-
-        public Texture2D[] subMeshTextures = new Texture2D[6];
-
-        public List<Bounds>[] subMeshBounds = new List<Bounds>[6] { new List<Bounds>(), new List<Bounds>(),
-            new List<Bounds>(), new List<Bounds>(), new List<Bounds>(), new List<Bounds>() };
+        public Texture2D[] SubMeshTextures { get; protected set; } = new Texture2D[6];
+        public string[] subMeshTextureNames { get; protected set; } = new string[6];
 
 
         public void NewMakeMesh(Vector3 _scale, Vector3 _position)
         {
             position = _position;
             scale = _scale;
-
-            subMeshScales[0] = new Vector3(scale.x, scale.y, 0);
-            subMeshScales[1] = new Vector3(scale.x, 0, scale.z);
-            subMeshScales[2] = new Vector3(scale.x, scale.y, 0);
-            subMeshScales[3] = new Vector3(scale.x, 0, scale.z);
-            subMeshScales[4] = new Vector3(0, scale.y, scale.z);
-            subMeshScales[5] = new Vector3(0, scale.y, scale.z);
-
-            subMeshPositions[0] = new Vector3(position.x, position.y, position.z - (scale.z / 2));
-            subMeshPositions[1] = new Vector3(position.x, position.y + (scale.y / 2), position.z);
-            subMeshPositions[2] = new Vector3(position.x, position.y, position.z + (scale.z / 2));
-            subMeshPositions[3] = new Vector3(position.x, position.y - (scale.y / 2), position.z);
-            subMeshPositions[4] = new Vector3(position.x - (scale.x / 2), position.y, position.y);
-            subMeshPositions[5] = new Vector3(position.x + (scale.x / 2), position.y, position.z);
 
             int frontTriCount = ((int)_scale.x * (int)_scale.y) * 6;
             int topTriCount = ((int)_scale.z * (int)_scale.x) * 6;
@@ -347,63 +328,52 @@ namespace RedKite
 
             //create back submesh
 
-            subMeshes[0] = new Mesh();
-            subMeshes[0].Clear();
-            subMeshes[0].vertices = backVertices;
-            subMeshes[0].triangles = backTriangles;
+            SubMeshes[0] = new Mesh();
+            SubMeshes[0].Clear();
+            SubMeshes[0].vertices = backVertices;
+            SubMeshes[0].triangles = backTriangles;
             //subMeshes[0].Optimize();
             //subMeshes[0].RecalculateNormals();
 
             //create front submesh
-            subMeshes[1] = new Mesh();
-            subMeshes[1].Clear();
-            subMeshes[1].vertices = frontVertices;
-            subMeshes[1].triangles = frontTriangles;
+            SubMeshes[1] = new Mesh();
+            SubMeshes[1].Clear();
+            SubMeshes[1].vertices = frontVertices;
+            SubMeshes[1].triangles = frontTriangles;
             //subMeshes[1].Optimize();
             //subMeshes[1].RecalculateNormals();
 
             //create top submesh
-            subMeshes[2] = new Mesh();
-            subMeshes[2].Clear();
-            subMeshes[2].vertices = topVertices;
-            subMeshes[2].triangles = topTriangles;
+            SubMeshes[2] = new Mesh();
+            SubMeshes[2].Clear();
+            SubMeshes[2].vertices = topVertices;
+            SubMeshes[2].triangles = topTriangles;
             //subMeshes[2].Optimize();
             //subMeshes[2].RecalculateNormals();
 
             //create bottom submesh
-            subMeshes[3] = new Mesh();
-            subMeshes[3].Clear();
-            subMeshes[3].vertices = bottomVertices;
-            subMeshes[3].triangles = bottomTriangles;
+            SubMeshes[3] = new Mesh();
+            SubMeshes[3].Clear();
+            SubMeshes[3].vertices = bottomVertices;
+            SubMeshes[3].triangles = bottomTriangles;
             //subMeshes[3].Optimize();
             //subMeshes[3].RecalculateNormals();
 
             //create left submesh
-            subMeshes[4] = new Mesh();
-            subMeshes[4].Clear();
-            subMeshes[4].vertices = leftVertices;
-            subMeshes[4].triangles = leftTriangles;
+            SubMeshes[4] = new Mesh();
+            SubMeshes[4].Clear();
+            SubMeshes[4].vertices = leftVertices;
+            SubMeshes[4].triangles = leftTriangles;
             //subMeshes[4].Optimize();
             //subMeshes[4].RecalculateNormals();
 
             //create right submesh
-            subMeshes[5] = new Mesh();
-            subMeshes[5].Clear();
-            subMeshes[5].vertices = rightVertices;
-            subMeshes[5].triangles = rightTriangles;
+            SubMeshes[5] = new Mesh();
+            SubMeshes[5].Clear();
+            SubMeshes[5].vertices = rightVertices;
+            SubMeshes[5].triangles = rightTriangles;
             //subMeshes[5].Optimize();
             //subMeshes[5].RecalculateNormals();
-
-            //record bounds of individual submeshes (necessary for consitency later down the line even if nothing is merged with it.
-            subMeshBounds[0].Add(new Bounds(subMeshes[0].bounds.center + position, subMeshes[0].bounds.size));
-            subMeshBounds[1].Add(new Bounds(subMeshes[1].bounds.center + position, subMeshes[1].bounds.size));
-            subMeshBounds[2].Add(new Bounds(subMeshes[2].bounds.center + position, subMeshes[2].bounds.size));
-            subMeshBounds[3].Add(new Bounds(subMeshes[3].bounds.center + position, subMeshes[3].bounds.size));
-            subMeshBounds[4].Add(new Bounds(subMeshes[4].bounds.center + position, subMeshes[4].bounds.size));
-            subMeshBounds[5].Add(new Bounds(subMeshes[5].bounds.center + position, subMeshes[5].bounds.size));
-
-
-
         }
 
         public void SetTextures(Renderer renderer, Texture2D[] textures, bool[] isMirrored)
@@ -413,21 +383,21 @@ namespace RedKite
             /// top, front, back, left, right, bottom.
             /// </summary>
 
-            subMeshTextures[0] = textures[0];
-            subMeshTextures[1] = textures[1];
-            subMeshTextures[2] = textures[2];
-            subMeshTextures[3] = textures[3];
-            subMeshTextures[4] = textures[4];
-            subMeshTextures[5] = textures[5];
+            SubMeshTextures[0] = textures[0];
+            SubMeshTextures[1] = textures[1];
+            SubMeshTextures[2] = textures[2];
+            SubMeshTextures[3] = textures[3];
+            SubMeshTextures[4] = textures[4];
+            SubMeshTextures[5] = textures[5];
 
-            subMeshes[0].uv = FindUVs(subMeshes[0], subMeshBounds[0], 0, isMirrored[0]);
-            subMeshes[1].uv = FindUVs(subMeshes[1], subMeshBounds[1], 1, isMirrored[1]);
-            subMeshes[2].uv = FindUVs(subMeshes[2], subMeshBounds[2], 2, isMirrored[2]);
-            subMeshes[3].uv = FindUVs(subMeshes[3], subMeshBounds[3], 3, isMirrored[3]);
-            subMeshes[4].uv = FindUVs(subMeshes[4], subMeshBounds[4], 4, isMirrored[4]);
-            subMeshes[5].uv = FindUVs(subMeshes[5], subMeshBounds[5], 5, isMirrored[5]);
+            SubMeshes[0].uv = FindUVs(SubMeshes[0], 0, isMirrored[0]);
+            SubMeshes[1].uv = FindUVs(SubMeshes[1], 1, isMirrored[1]);
+            SubMeshes[2].uv = FindUVs(SubMeshes[2], 2, isMirrored[2]);
+            SubMeshes[3].uv = FindUVs(SubMeshes[3], 3, isMirrored[3]);
+            SubMeshes[4].uv = FindUVs(SubMeshes[4], 4, isMirrored[4]);
+            SubMeshes[5].uv = FindUVs(SubMeshes[5], 5, isMirrored[5]);
 
-            Texture2D cubeTex = CreateCubeTexture(subMeshTextures);
+            Texture2D cubeTex = CreateCubeTexture(SubMeshTextures);
 
             renderer.material.mainTexture = cubeTex;
 
@@ -440,11 +410,11 @@ namespace RedKite
             /// top, front, back, left, right, bottom.
             /// </summary>
 
-            subMeshTextures[side] = texture;
+            SubMeshTextures[side] = texture;
 
-            subMeshes[side].uv = FindUVs(subMeshes[side], subMeshBounds[side], side, isMirrored);
+            SubMeshes[side].uv = FindUVs(SubMeshes[side], side, isMirrored);
 
-            Texture2D updateTexture = CreateCubeTexture(subMeshTextures);
+            Texture2D updateTexture = CreateCubeTexture(SubMeshTextures);
 
             renderer.material.mainTexture = updateTexture;
         }
@@ -456,27 +426,27 @@ namespace RedKite
             /// top, front, back, left, right, bottom.
             /// </summary>
 
-            subMeshTextures[0] = texture;
-            subMeshTextures[1] = texture;
-            subMeshTextures[3] = texture;
-            subMeshTextures[4] = texture;
-            subMeshTextures[5] = texture;
+            SubMeshTextures[0] = texture;
+            SubMeshTextures[1] = texture;
+            SubMeshTextures[3] = texture;
+            SubMeshTextures[4] = texture;
+            SubMeshTextures[5] = texture;
 
-            subMeshes[1].uv = FindUVs(subMeshes[1], subMeshBounds[1], 1, isMirrored);
-            subMeshes[2].uv = FindUVs(subMeshes[2], subMeshBounds[2], 2, isMirrored);
-            subMeshes[3].uv = FindUVs(subMeshes[3], subMeshBounds[3], 3, isMirrored);
-            subMeshes[4].uv = FindUVs(subMeshes[4], subMeshBounds[4], 4, isMirrored);
-            subMeshes[5].uv = FindUVs(subMeshes[5], subMeshBounds[5], 5, isMirrored);
+            SubMeshes[1].uv = FindUVs(SubMeshes[1], 1, isMirrored);
+            SubMeshes[2].uv = FindUVs(SubMeshes[2], 2, isMirrored);
+            SubMeshes[3].uv = FindUVs(SubMeshes[3], 3, isMirrored);
+            SubMeshes[4].uv = FindUVs(SubMeshes[4], 4, isMirrored);
+            SubMeshes[5].uv = FindUVs(SubMeshes[5], 5, isMirrored);
 
 
-            Texture2D updateTexture = CreateCubeTexture(subMeshTextures);
+            Texture2D updateTexture = CreateCubeTexture(SubMeshTextures);
 
 
 
             renderer.material.mainTexture = updateTexture;
         }
 
-        public Vector2[] FindUVs(Mesh mesh,List<Bounds> boundsList ,int side, bool isMirrored)
+        public Vector2[] FindUVs(Mesh mesh, int side, bool isMirrored)
         {
 
             Vector2[] uvs = new Vector2[mesh.vertexCount];
@@ -546,7 +516,6 @@ namespace RedKite
                     else
                         rotH = 1;
 
-                    Debug.Log(rotV + " " + rotH);
                     //bottom right
                     uvs[index + rotOffset[rotV][0][rotH]] = new Vector2(0.65f, 0);
                     //bottom left
@@ -720,16 +689,14 @@ namespace RedKite
                 int i = 0;
                 while (i < meshMakers.Count)
                 {
-                    combine[i].mesh = meshMakers[i].subMeshes[plane];
+                    combine[i].mesh = meshMakers[i].SubMeshes[plane];
                     combine[i].transform = Matrix4x4.TRS(meshMakers[i].position, Quaternion.identity, Vector3.one);
-
-                    outMesh.subMeshBounds[plane].AddRange(meshMakers[i].subMeshBounds[plane]);
 
                     i++;
                 }
 
-                outMesh.subMeshes[plane] = new Mesh();
-                outMesh.subMeshes[plane].CombineMeshes(combine, true, true);
+                outMesh.SubMeshes[plane] = new Mesh();
+                outMesh.SubMeshes[plane].CombineMeshes(combine, true, true);
                 //outMesh.subMeshes[plane].Optimize();
             }
 
@@ -738,21 +705,21 @@ namespace RedKite
 
         public void MergeSides()
         {
-            CombineInstance[] combine = new CombineInstance[subMeshes.Length];
+            CombineInstance[] combine = new CombineInstance[SubMeshes.Length];
 
             int i = 0;
-            while (i < subMeshes.Length)
+            while (i < SubMeshes.Length)
             {
-                combine[i].mesh = subMeshes[i];
+                combine[i].mesh = SubMeshes[i];
                 combine[i].transform = Matrix4x4.TRS(Vector3.zero, Quaternion.identity, Vector3.one);
                         
                 i++;
             }
 
-            mesh = new Mesh();
-            mesh.CombineMeshes(combine, true, true);
+            Mesh = new Mesh();
+            Mesh.CombineMeshes(combine, true, true);
             //mesh.Optimize();
-            mesh.RecalculateNormals();
+            Mesh.RecalculateNormals();
 
         }
 

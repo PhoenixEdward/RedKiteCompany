@@ -9,20 +9,9 @@ namespace RedKite
     {
         bool failedSpawn;
         static List<Vector2> activeSpawns = new List<Vector2>();
-
-        public static Vector3[] spawnOffset = {
-            Vector3.zero,
-            new Vector3(0,0,2),
-            new Vector3(0,0,-2),
-            new Vector3(2,0,0),
-            new Vector3(2,0,2),
-            new Vector3(2,0,-2),
-            new Vector3(-2,0, 0),
-            new Vector3(-2,0, 2),
-            new Vector3(2,0,-2)
-
-        };
-
+        static bool firstSpawn = true;
+        static Vector3[] spawnPoints;
+        static int unitCount = 2;
 
         public override void Start()
         {
@@ -30,27 +19,20 @@ namespace RedKite
 
             base.Start();
 
-            for (int i = 0; i < spawnOffset.Length; i++)
+            if(firstSpawn)
             {
-                if(Utility.WithinBounds(TileMapper.Instance.spawnPoint + spawnOffset[i], TileMapper.Instance.W,TileMapper.Instance.H))
-                    if (TileMapper.Instance.tiles[(int)(TileMapper.Instance.spawnPoint.x + spawnOffset[i].x), (int)(TileMapper.Instance.spawnPoint.z + spawnOffset[i].z)].IsWalkable)
-                    {
-                        //check if spawn is occupied. Will need to change later to account for non hero units and other objects spawning
-                        if (!activeSpawns.Contains(spawnOffset[i]))
-                        {
-                            transform.position = new Vector3(TileMapper.Instance.spawnPoint.x + spawnOffset[i].x, 2 ,TileMapper.Instance.spawnPoint.z + spawnOffset[i].z) + offset;
-                            activeSpawns.Add(spawnOffset[i]);
-                            break;
-                        }
-                    }
-
-                if (i == spawnOffset.Length - 1)
-                    failedSpawn = true;
+                spawnPoints = TileMapper.Instance.GetSpawnPoints(unitCount);
+                firstSpawn = false;
             }
 
-            if (failedSpawn)
+            foreach(Vector3 spawnPoint in spawnPoints)
             {
-                gameObject.SetActive(false);
+                if (!activeSpawns.Contains(spawnPoint))
+                {
+                    transform.position = spawnPoint + offset + Vector3.up;
+                    activeSpawns.Add(spawnPoint);
+                    break;
+                }
             }
 
             Coordinate.x = Mathf.Floor(transform.position.x);
@@ -61,6 +43,7 @@ namespace RedKite
         public static void ClearStatic()
         {
             activeSpawns.Clear();
+            firstSpawn = true;
         }
 
         public override void Update()
