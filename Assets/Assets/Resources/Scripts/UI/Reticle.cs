@@ -26,9 +26,9 @@ namespace RedKite
 
         Node destination;
 
-        List<Unit> units = new List<Unit>();
+        List<Hero> units = new List<Hero>();
 
-        public Unit selectedHero;
+        public Hero selectedHero;
 
         Tilemap tilemap;
 
@@ -50,7 +50,7 @@ namespace RedKite
 
             tilemap = GetComponent<Tilemap>();
 
-            units = GameSpriteManager.Instance.Units;
+            units = GameSpriteManager.Instance.Heroes;
 
             grid = FindObjectOfType<Grid>();
 
@@ -101,7 +101,7 @@ namespace RedKite
                     destination = null;
                 }
             }
-            foreach (Unit unit in units)
+            foreach (Hero unit in units)
             {
                 if (new Vector2(unit.Coordinate.x, unit.Coordinate.y) == new Vector2(highlight.x, highlight.y) & selectedHero == null)
                 {

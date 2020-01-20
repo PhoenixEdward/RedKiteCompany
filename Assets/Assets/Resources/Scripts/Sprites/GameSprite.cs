@@ -50,8 +50,6 @@ namespace RedKite
                 spriteLoad = Resources.Load<Texture2D>("Characters/" + spriteName);
             else if (spriteType == SpriteType.Tile)
                 spriteLoad = Resources.Load<Texture2D>("Tiles/" + spriteName);
-
-            Debug.Log(spriteLoad.width);
             
             verticalFrames = spriteLoad.height / 100;
             horizontalFrames = spriteLoad.width / 100;

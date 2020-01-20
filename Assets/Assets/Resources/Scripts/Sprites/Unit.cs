@@ -62,8 +62,6 @@ namespace RedKite
 
                 cellPos.y = transform.localPosition.y;
 
-                Debug.Log(cellPos);
-
                 Vector3 currentPos = transform.localPosition - offset;
 
                 if (currentPos != cellPos)
@@ -74,14 +72,12 @@ namespace RedKite
                         currentPos.x += Mathf.Min(speed * Time.deltaTime, Mathf.Abs(currentPos.x - cellPos.x));
 
                         velocity.x = 1;
-                        Debug.Log("Is moving up");
 
                     }
                     else if (currentPos.x > cellPos.x)
                     {
                         currentPos.x -= Mathf.Min(speed * Time.deltaTime, Mathf.Abs(currentPos.x - cellPos.x));
                         velocity.x = -1;
-                        Debug.Log("Is moving down");
 
                     }
                     else
@@ -92,14 +88,11 @@ namespace RedKite
                         currentPos.z += Mathf.Min(speed * Time.deltaTime, Mathf.Abs(currentPos.z - cellPos.z));
 
                         velocity.z = 1;
-                        Debug.Log("Is moving right");
 
                     }
                     else if (currentPos.z > cellPos.z)
                     {
                         currentPos.z -= Mathf.Min(speed * Time.deltaTime, Mathf.Abs(currentPos.z - cellPos.z));
-
-                        Debug.Log("Is moving left");
 
                         velocity.z = -1;
                     }

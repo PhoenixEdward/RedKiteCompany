@@ -420,23 +420,12 @@ namespace RedKite
             subMeshTextures[4] = textures[4];
             subMeshTextures[5] = textures[5];
 
-            if (!isMirrored[0])
-                subMeshes[0].uv = FindSingleUVs(subMeshes[0], subMeshBounds[0], 0);
-
-            if (!isMirrored[1])
-                subMeshes[1].uv = FindSingleUVs(subMeshes[1], subMeshBounds[1], 1);
-
-            if (!isMirrored[2])
-                subMeshes[2].uv = FindSingleUVs(subMeshes[2], subMeshBounds[2], 2);
-
-            if (!isMirrored[3])
-                subMeshes[3].uv = FindSingleUVs(subMeshes[3], subMeshBounds[3], 3);
-
-            if(!isMirrored[4])
-                subMeshes[4].uv = FindSingleUVs(subMeshes[4], subMeshBounds[4], 4);
-
-            if (!isMirrored[5])
-                subMeshes[5].uv = FindSingleUVs(subMeshes[5], subMeshBounds[5], 5);
+            subMeshes[0].uv = FindUVs(subMeshes[0], subMeshBounds[0], 0, isMirrored[0]);
+            subMeshes[1].uv = FindUVs(subMeshes[1], subMeshBounds[1], 1, isMirrored[1]);
+            subMeshes[2].uv = FindUVs(subMeshes[2], subMeshBounds[2], 2, isMirrored[2]);
+            subMeshes[3].uv = FindUVs(subMeshes[3], subMeshBounds[3], 3, isMirrored[3]);
+            subMeshes[4].uv = FindUVs(subMeshes[4], subMeshBounds[4], 4, isMirrored[4]);
+            subMeshes[5].uv = FindUVs(subMeshes[5], subMeshBounds[5], 5, isMirrored[5]);
 
             Texture2D cubeTex = CreateCubeTexture(subMeshTextures);
 
@@ -453,15 +442,14 @@ namespace RedKite
 
             subMeshTextures[side] = texture;
 
-            if (!isMirrored)
-                subMeshes[side].uv = FindSingleUVs(subMeshes[side], subMeshBounds[side], side);
+            subMeshes[side].uv = FindUVs(subMeshes[side], subMeshBounds[side], side, isMirrored);
 
             Texture2D updateTexture = CreateCubeTexture(subMeshTextures);
 
             renderer.material.mainTexture = updateTexture;
         }
 
-        public void UpdateSideTextures(Renderer renderer, Texture2D texture)
+        public void UpdateSideTextures(Renderer renderer, Texture2D texture, bool isMirrored)
         {
             /// <summary>
             /// Textures should be organized as follows in the array: 
@@ -474,17 +462,74 @@ namespace RedKite
             subMeshTextures[4] = texture;
             subMeshTextures[5] = texture;
 
+            subMeshes[1].uv = FindUVs(subMeshes[1], subMeshBounds[1], 1, isMirrored);
+            subMeshes[2].uv = FindUVs(subMeshes[2], subMeshBounds[2], 2, isMirrored);
+            subMeshes[3].uv = FindUVs(subMeshes[3], subMeshBounds[3], 3, isMirrored);
+            subMeshes[4].uv = FindUVs(subMeshes[4], subMeshBounds[4], 4, isMirrored);
+            subMeshes[5].uv = FindUVs(subMeshes[5], subMeshBounds[5], 5, isMirrored);
+
 
             Texture2D updateTexture = CreateCubeTexture(subMeshTextures);
+
+
 
             renderer.material.mainTexture = updateTexture;
         }
 
-        public Vector2[] FindSingleUVs(Mesh mesh,List<Bounds> boundsList ,int side)
+        public Vector2[] FindUVs(Mesh mesh,List<Bounds> boundsList ,int side, bool isMirrored)
         {
 
             Vector2[] uvs = new Vector2[mesh.vertexCount];
 
+            int[][][] rotOffset = new int[2][][];
+
+            if (!isMirrored)
+            { 
+                for(int i = 0; i < rotOffset.GetLength(0); i++)
+                {
+                    rotOffset[i] = new int[4][];
+                    for (int j = 0; j < rotOffset[i].Length; j++)
+                        rotOffset[i][j] = new int[] {0,0};
+                }
+            }
+            else
+            {
+                //potentially look at front and top. They are slightly different because first index starts on top.
+                if(side == 0)
+                {
+                    rotOffset[0] = new int[][] { new int[] { 0, 1}, new int[] { 0, -1}, new int[] { 0, 1 }, new int[] { 0, -1} };
+                    rotOffset[1] = new int[][] { new int[] { 2, 3 }, new int[] { 2, 1 }, new int[] { -2, -1 }, new int[] { -2, -3} };
+                }
+                if (side == 1)
+                {
+                    rotOffset[0] = new int[][] { new int[] { 0, 1 }, new int[] { 0, -1 }, new int[] { 0, 1 }, new int[] { 0, -1 } };
+                    rotOffset[1] = new int[][] { new int[] { 2, 3 }, new int[] { 2, 1 }, new int[] { -2, -1 }, new int[] { -2, -3 } };
+                }
+                if (side == 2)
+                {
+                    rotOffset[0] = new int[][] { new int[] { 0, 1 }, new int[] { 0, -1 }, new int[] { 0, 1 }, new int[] { 0, -1 } };
+                    rotOffset[1] = new int[][] { new int[] { 2, 3 }, new int[] { 2, 1 }, new int[] { -2, -1 }, new int[] { -2, -3 } };
+                }
+                if (side == 3)
+                {
+                    rotOffset[0] = new int[][] { new int[] { 0, 3 }, new int[] { 0, 1 }, new int[] { 0, -1 }, new int[] { 0, -3 } };
+                    rotOffset[1] = new int[][] { new int[] { 1, 2 }, new int[] { -1, 2 }, new int[] { 1, -2 }, new int[] { -1, -2 } };
+
+                }
+                if (side == 4)
+                {
+                    rotOffset[0] = new int[][] { new int[] { 0, 3 }, new int[] { 0, 1 }, new int[] { 0, -1 }, new int[] { 0, -3 } };
+                    rotOffset[1] = new int[][] { new int[] { 1, 2 }, new int[] { -1, 2 }, new int[] { 1, -2 }, new int[] { -1, -2 } };
+                }
+                if (side == 5)
+                {
+                    rotOffset[0] = new int[][] { new int[] { 0, 3 }, new int[] { 0, 1 }, new int[] { 0, -1 }, new int[] { 0, -3 } };
+                    rotOffset[1] = new int[][] { new int[] { 1, 2 }, new int[] { -1, 2 }, new int[] { 1, -2 }, new int[] { -1, -2 } };
+                }
+            }
+
+            int rotV;
+            int rotH;
             int index = 0;
 
             if(side == 0)
@@ -492,14 +537,24 @@ namespace RedKite
                 //backUVs
                 while (index < mesh.vertexCount)
                 {
+                    if (Math.Floor(mesh.vertices[index].y) % 2 == 0)
+                        rotV = 0;
+                    else
+                        rotV = 1;
+                    if (Math.Floor(mesh.vertices[index].x) % 2 == 0)
+                        rotH = 0;
+                    else
+                        rotH = 1;
+
+                    Debug.Log(rotV + " " + rotH);
                     //bottom right
-                    uvs[index] = new Vector2(0.65f, 0);
+                    uvs[index + rotOffset[rotV][0][rotH]] = new Vector2(0.65f, 0);
                     //bottom left
-                    uvs[index + 1] = new Vector2(0.33f, 0);
+                    uvs[index + 1 + rotOffset[rotV][1][rotH]] = new Vector2(0.33f, 0);
                     //top right
-                    uvs[index + 2] = new Vector2(0.66f, 0.24f);
+                    uvs[index + 2 + rotOffset[rotV][2][rotH]] = new Vector2(0.66f, 0.24f);
                     //top left
-                    uvs[index + 3] = new Vector2(0.33f, 0.25f);
+                    uvs[index + 3 + rotOffset[rotV][3][rotH]] = new Vector2(0.33f, 0.25f);
 
                     index += 4;
 
@@ -511,17 +566,27 @@ namespace RedKite
             { 
                 //front uvs
                 while(index < mesh.vertexCount)
-                { 
-                        //top right
-                        uvs[index] = new Vector3(0.65f,0.74f);
-                        // top left
-                        uvs[index + 1] = new Vector3(0.33f, 0.74f);
-                        // bottom right;
-                        uvs[index + 2] = new Vector2(0.65f, 0.49f);
-                        //bottom left
-                        uvs[index + 3] = new Vector2(0.33f, 0.49f);
+                {
+                    if (Math.Floor(mesh.vertices[index].y) % 2 == 0)
+                        rotV = 0;
+                    else
+                        rotV = 1;
+                    if (Math.Floor(mesh.vertices[index].x) % 2 == 0)
+                        rotH = 0;
+                    else
+                        rotH = 1;
+
+                    //top right
+                    uvs[index + rotOffset[rotV][0][rotH]] = new Vector3(0.65f,0.74f);
+                    // top left
+                    uvs[index + 1 + rotOffset[rotV][1][rotH]] = new Vector3(0.33f, 0.74f);
+                    // bottom right;
+                    uvs[index + 2 + rotOffset[rotV][2][rotH]] = new Vector2(0.65f, 0.50f);
+                    //bottom left
+                    uvs[index + 3 + rotOffset[rotV][3][rotH]] = new Vector2(0.33f, 0.50f);
 
                         index += 4;
+
                 }
             }
             
@@ -530,16 +595,26 @@ namespace RedKite
                 //top uvs
                 while (index < mesh.vertexCount)
                 {
+                    if (Math.Floor(mesh.vertices[index].z) % 2 == 0)
+                        rotV = 0;
+                    else
+                        rotV = 1;
+                    if (Math.Floor(mesh.vertices[index].x) % 2 == 0)
+                        rotH = 0;
+                    else
+                        rotH = 1;
+
                     //top right
-                    uvs[index] = new Vector3(0.64f, 1);
+                    uvs[index + rotOffset[rotV][0][rotH]] = new Vector3(0.64f, 1);
                     //top left
-                    uvs[index + 1] = new Vector3(0.33f, 1f);
+                    uvs[index + 1 + rotOffset[rotV][1][rotH]] = new Vector3(0.33f, 1f);
                     //bottom right
-                    uvs[index + 2] = new Vector3(0.64f, 0.75f);
+                    uvs[index + 2 + rotOffset[rotV][2][rotH]] = new Vector3(0.64f, 0.75f);
                     //bottom left
-                    uvs[index + 3] = new Vector3(0.33f, 0.75f);
+                    uvs[index + 3 + rotOffset[rotV][3][rotH]] = new Vector3(0.33f, 0.75f);
 
                     index += 4;
+
                 }
 
             }
@@ -549,16 +624,27 @@ namespace RedKite
                 //bottom uvs
                 while (index < mesh.vertexCount)
                 {
+
+                    if (Math.Floor(mesh.vertices[index].z) % 2 == 0)
+                        rotV = 0;
+                    else
+                        rotV = 1;
+                    if (Math.Floor(mesh.vertices[index].x) % 2 == 0)
+                        rotH = 0;
+                    else
+                        rotH = 1;
+
                     //bottom right
-                    uvs[index] = new Vector3(0.64f, 0.25f);
+                    uvs[index + rotOffset[rotV][0][rotH]] = new Vector3(0.64f, 0.25f);
                     //top right
-                    uvs[index + 1] = new Vector3(0.64f, 0.49f);
+                    uvs[index + 1 + rotOffset[rotV][1][rotH]] = new Vector3(0.64f, 0.49f);
                     //top left
-                    uvs[index + 2] = new Vector3(0.33f, 0.49f);
+                    uvs[index + 2 + rotOffset[rotV][2][rotH]] = new Vector3(0.33f, 0.49f);
                     //bottom left
-                    uvs[index + 3] = new Vector3(0.33f, 0.25f);
+                    uvs[index + 3 + rotOffset[rotV][3][rotH]] = new Vector3(0.33f, 0.25f);
 
                     index += 4;
+
                 }
             }
 
@@ -567,14 +653,24 @@ namespace RedKite
                 //left uvs
                 while (index < mesh.vertexCount)
                 {
-                    //top left
-                    uvs[index +  1] = new Vector3(0, 0.74f);
+
+                    if (Math.Floor(mesh.vertices[index].y) % 2 == 0)
+                        rotV = 0;
+                    else
+                        rotV = 1;
+                    if (Math.Floor(mesh.vertices[index].z) % 2 == 0)
+                        rotH = 0;
+                    else
+                        rotH = 1;
+
                     //bottom left
-                    uvs[index] = new Vector3(0, 0.5f);
-                    //bottom right
-                    uvs[index + 3] = new Vector3(0.32f, 0.5f);
+                    uvs[index + rotOffset[rotV][0][rotH]] = new Vector3(0, 0.5f);
+                    //top left
+                    uvs[index + 1 + rotOffset[rotV][1][rotH]] = new Vector3(0, 0.74f);
                     //top right
-                    uvs[index + 2] = new Vector3(0.32f, 0.74f);
+                    uvs[index + 2 + rotOffset[rotV][2][rotH]] = new Vector3(0.32f, 0.74f);
+                    //bottom right
+                    uvs[index + 3 + rotOffset[rotV][3][rotH]] = new Vector3(0.32f, 0.5f);
 
                     index += 4;
                 }
@@ -585,14 +681,23 @@ namespace RedKite
                 //right uvs
                 while (index < mesh.vertexCount)
                 {
+                    if (Math.Floor(mesh.vertices[index].y) % 2 == 0)
+                        rotV = 0;
+                    else
+                        rotV = 1;
+                    if (Math.Floor(mesh.vertices[index].z) % 2 == 0)
+                        rotH = 0;
+                    else
+                        rotH = 1;
+
                     //bottom left
-                    uvs[index] = new Vector3(0.66f, 0.5f);
+                    uvs[index + rotOffset[rotV][0][rotH]] = new Vector3(0.66f, 0.5f);
                     //top left
-                    uvs[index + 1] = new Vector3(0.66f, 0.74f); 
+                    uvs[index + 1 + rotOffset[rotV][1][rotH]] = new Vector3(0.66f, 0.74f); 
                     //top right
-                    uvs[index + 2] = new Vector3(1f, 0.74f);
+                    uvs[index + 2 + rotOffset[rotV][2][rotH]] = new Vector3(1f, 0.74f);
                     //bottom right
-                    uvs[index + 3] = new Vector3(1f, 0.5f);
+                    uvs[index + 3 + rotOffset[rotV][3][rotH]] = new Vector3(1f, 0.5f);
 
                     index += 4;
                 }

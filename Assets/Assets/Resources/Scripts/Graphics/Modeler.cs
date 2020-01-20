@@ -30,6 +30,7 @@ namespace RedKite
         // Start is called before the first frame update
         public void Start()
         {
+
             floorTex = Resources.Load<Texture2D>("Tiles/WoodFloor");
             topWallTex = Resources.Load<Texture2D>("Tiles/BambooFloor");
             wallTex = Resources.Load<Texture2D>("Tiles/jFlower");
@@ -44,13 +45,27 @@ namespace RedKite
             wallFilter = walls.AddComponent<MeshFilter>();
             wallRenderer = walls.AddComponent<MeshRenderer>();
 
+            wallRenderer.material.shader = Shader.Find("Custom/Terrain");
+
             floorFilter = floor.AddComponent<MeshFilter>();
             floorRenderer = floor.AddComponent<MeshRenderer>();
 
+            floorRenderer.material.shader = Shader.Find("Custom/Terrain");
+
             RenderWalls(wallFilter,wallRenderer);
             RenderFloor(floorFilter, floorRenderer);
+        }
 
-            floor.AddComponent<MeshCollider>();
+        public void Regen()
+        {
+            wallFilter.mesh.Clear();
+            floorFilter.mesh.Clear();
+
+            wallMeshes.Clear();
+            floorMeshes.Clear();
+
+            RenderWalls(wallFilter, wallRenderer);
+            RenderFloor(floorFilter, floorRenderer);
         }
 
         // Update is called once per frame
@@ -85,10 +100,6 @@ namespace RedKite
                             if (path.IsRemoved == false)
                             {
                                 //skip over north and south corners to avoid duplication.
-                                if (path.IsCorner & (path.Orientation == Orient.North | path.Orientation == Orient.South))
-                                {
-                                    continue;
-                                }
 
                                 MeshMaker cornerMesh = new MeshMaker();
 
@@ -152,33 +163,33 @@ namespace RedKite
             meshFilter.mesh = floorMesh.mesh;
         }
 
-        public void SetTopWallTexture(Texture2D myTexture)
+        public void SetTopWallTexture(Texture2D myTexture, bool isMirrored)
         {
                 wallFilter.mesh.Clear();
 
-                wallMesh.UpdateOneTexture(wallRenderer, myTexture, 2, false);
+                wallMesh.UpdateOneTexture(wallRenderer, myTexture, 2, isMirrored);
 
                 wallMesh.MergeSides();
 
                 wallFilter.mesh = wallMesh.mesh;
         }
 
-        public void SetSideWallTextures(Texture2D myTexture)
+        public void SetSideWallTextures(Texture2D myTexture, bool isMirrored)
         {
                 wallFilter.mesh.Clear();
 
-                wallMesh.UpdateSideTextures(wallRenderer, myTexture);
+                wallMesh.UpdateSideTextures(wallRenderer, myTexture, isMirrored);
 
                 wallMesh.MergeSides();
 
                 wallFilter.mesh = wallMesh.mesh;
         }
-        public void SetFloorTexture(Texture2D myTexture)
+        public void SetFloorTexture(Texture2D myTexture, bool isMirrored)
         {
             floorFilter.mesh.Clear();
 
             floorMesh.SetTextures(floorRenderer, new Texture2D[] { myTexture, myTexture, myTexture, myTexture, myTexture, myTexture },
-                new bool[] { false, false, false, false, false, false });
+                new bool[] { isMirrored, isMirrored, isMirrored, isMirrored, isMirrored, isMirrored });
 
             floorMesh.MergeSides();
 

@@ -29,8 +29,9 @@ namespace RedKite
             }
         }
 
-        public List<Unit> Units { get; private set; }
-        public List<Enemy> Enemies { get; private set; }
+        public List<GameSprite> Sprites { get; private set; } = new List<GameSprite>();
+        public List<Hero> Heroes { get; private set; } = new List<Hero>();
+        public List<Enemy> Enemies { get; private set; } = new List<Enemy>();
 
         void Awake()
         {
@@ -42,9 +43,16 @@ namespace RedKite
             {
                 Destroy(gameObject);
             }
-            Units = FindObjectsOfType<Unit>().ToList();
 
-            Enemies = FindObjectsOfType<Enemy>().ToList();
+            Sprites = FindObjectsOfType<GameSprite>().ToList();
+
+            foreach (GameSprite sprite in Sprites)
+            {
+                if (sprite is Hero)
+                    Heroes.Add((Hero)sprite);
+                else if(sprite is Enemy)
+                    Enemies.Add((Enemy)sprite);
+            }
 
         }
 

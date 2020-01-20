@@ -10,12 +10,14 @@ namespace RedKite
     public class UIElement : MonoBehaviour, ISelectHandler
     {
         Dropdown dropdown;
+        Toggle mirrored;
         public SpriteSelection spriteSelector;
         bool firstClick = true;
 
         public void Start()
         {
             dropdown = GetComponent<Dropdown>();
+            mirrored = GetComponentInChildren<Toggle>();
             spriteSelector = GetComponentInParent<SpriteSelection>();
         }
 
@@ -26,11 +28,15 @@ namespace RedKite
         public void OnSelect(BaseEventData baseEvent)
         {
             //identities are base on order from top to bottom in GUI menu.
-            if(!firstClick)
-            { 
-                StartCoroutine(spriteSelector.GetTextures(dropdown.options[dropdown.value].text, Convert.ToInt32(gameObject.name)));
-                Debug.Log(Convert.ToInt32(gameObject.name));
-                firstClick = true;
+            if (!firstClick)
+            {
+                if (Convert.ToInt32(gameObject.name) != 3 & Convert.ToInt32(gameObject.name) != 4)
+                { 
+                    StartCoroutine(spriteSelector.GetTextures(dropdown.options[dropdown.value].text, Convert.ToInt32(gameObject.name), mirrored.isOn));
+                    firstClick = true;
+                }
+                else
+                    StartCoroutine(spriteSelector.GetTextures(dropdown.options[dropdown.value].text, Convert.ToInt32(gameObject.name), false));
             }
             else
             {

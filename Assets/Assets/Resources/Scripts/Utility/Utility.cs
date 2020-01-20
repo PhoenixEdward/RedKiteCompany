@@ -202,7 +202,7 @@ namespace RedKite
 
         }
 
-        public static Vector3Int CartToIso(Vector3 cartesian)
+        public static Vector3 CartToIso(Vector3 cartesian)
         {
             return Vector3Int.RoundToInt(new Vector3(cartesian.x - cartesian.y, (cartesian.x + cartesian.y) / 2, cartesian.z));
         }

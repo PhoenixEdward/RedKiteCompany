@@ -58,6 +58,10 @@ namespace RedKite
 
                     Debug.Log(options.Count);
 
+                    dropdowns[0].ClearOptions();
+                    dropdowns[1].ClearOptions();
+                    dropdowns[2].ClearOptions();
+
                     dropdowns[0].AddOptions(options);
                     dropdowns[1].AddOptions(options);
                     dropdowns[2].AddOptions(options);
@@ -75,6 +79,9 @@ namespace RedKite
                     }
 
                     spriteOptions = spriteOptions.OrderBy(x => x.text).ToList();
+
+                    dropdowns[3].ClearOptions();
+                    dropdowns[4].ClearOptions();
 
                     dropdowns[3].AddOptions(spriteOptions);
                     dropdowns[4].AddOptions(spriteOptions);
@@ -94,7 +101,7 @@ namespace RedKite
             timesSinceCoolDown += Time.deltaTime;
         }
 
-        public IEnumerator GetTextures(string textureName, int identity)
+        public IEnumerator GetTextures(string textureName, int identity, bool isMirrored)
         {
             string path = "file:///" + Application.dataPath + "\\Sprites";
 
@@ -116,11 +123,11 @@ namespace RedKite
                 Texture2D myTexture = ((DownloadHandlerTexture)www.downloadHandler).texture;
 
                 if (identity == 0)
-                    modeler.SetTopWallTexture(myTexture);
+                    modeler.SetTopWallTexture(myTexture, isMirrored);
                 else if (identity == 1)
-                    modeler.SetSideWallTextures(myTexture);
+                    modeler.SetSideWallTextures(myTexture, isMirrored);
                 else if (identity == 2)
-                    modeler.SetFloorTexture(myTexture);
+                    modeler.SetFloorTexture(myTexture, isMirrored);
                 else if (identity == 3)
                     units[0].ReStart(myTexture);
                 else

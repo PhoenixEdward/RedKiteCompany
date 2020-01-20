@@ -8,9 +8,9 @@ using System.Linq;
 
 namespace RedKite
 {
-    public class TileMapper
+    public static class TileMapper
     {
-        public Cell[] tileTypes =
+        public static Cell[] tileTypes =
         {
             new Cell(Cell.Type.Empty),
             new Cell(Cell.Type.Floor),
@@ -48,13 +48,11 @@ namespace RedKite
 
         public static Cell[,] tiles;
 
-        public Vector3Int spawnPoint;
+        public static Vector3Int spawnPoint;
         public static int index = 0;
         //to delete below
-        List<Unit> units = new List<Unit>();
-        Grid grid;
 
-        public void Generate()
+        public static void Generate()
         {
 
 
@@ -79,27 +77,37 @@ namespace RedKite
             }
 
 
-            //instantiate void cells
-            for (int y = 0; y < map.GetLength(1); y++)
-                for (int x = 0; x < map.GetLength(0); x++)
-                    map[x, y] = TILE_VOID;
-            
-            
+            ClearMap();
+
+
             // generate tilemap data
+            roomIndex = 0;
 
             AddSpawn();
             roomIndex++;
 
-            for (int j = 0; j < 500; j++)
-            {
-                if (AddArea())
+            for(int i = 0; i < 5; i++)
+            { 
+                for (int j = 0; j < 500; j++)
                 {
-                    roomIndex++;
+                    if (AddArea())
+                    {
+                        roomIndex++;
+                    }
+                    if (roomIndex > areaCount - 1)
+                        break;
+                    if (j == 499)
+                    {
+                        Debug.Log("Run Again");
+                        roomIndex = 0;
+                        areas.Clear();
+                        ClearMap();
+                        AddSpawn();
+                        roomIndex++;
+                    }
                 }
                 if (roomIndex > areaCount - 1)
                     break;
-                if (j == 4999)
-                    Debug.Log("Bullshit!");
             }
 
             FindAllOverlaps();
@@ -175,6 +183,14 @@ namespace RedKite
 
             //Utility.LevelToJSON(areas);
 
+        }
+
+        static void ClearMap()
+        {
+            //instantiate void cells
+            for (int y = 0; y < map.GetLength(1); y++)
+                for (int x = 0; x < map.GetLength(0); x++)
+                    map[x, y] = TILE_VOID;
         }
 
         static void AddSpawn(int maxWidth = 8, int maxHeight = 10)

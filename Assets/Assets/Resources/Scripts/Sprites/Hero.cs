@@ -28,19 +28,17 @@ namespace RedKite
         {
             spriteType = SpriteType.Character;
 
-            Debug.Log(spriteName);
-
             base.Start();
 
             for (int i = 0; i < spawnOffset.Length; i++)
             {
-                if(Utility.WithinBounds(level.tileMap.spawnPoint + spawnOffset[i], TileMapper.W,TileMapper.H))
-                    if (TileMapper.tiles[(int)(level.tileMap.spawnPoint.x + spawnOffset[i].x), (int)(level.tileMap.spawnPoint.z + spawnOffset[i].z)].IsWalkable)
+                if(Utility.WithinBounds(TileMapper.spawnPoint + spawnOffset[i], TileMapper.W,TileMapper.H))
+                    if (TileMapper.tiles[(int)(TileMapper.spawnPoint.x + spawnOffset[i].x), (int)(TileMapper.spawnPoint.z + spawnOffset[i].z)].IsWalkable)
                     {
                         //check if spawn is occupied. Will need to change later to account for non hero units and other objects spawning
                         if (!activeSpawns.Contains(spawnOffset[i]))
                         {
-                            transform.position = new Vector3(level.tileMap.spawnPoint.x + spawnOffset[i].x, 2 ,level.tileMap.spawnPoint.z + spawnOffset[i].z) + offset;
+                            transform.position = new Vector3(TileMapper.spawnPoint.x + spawnOffset[i].x, 2 ,TileMapper.spawnPoint.z + spawnOffset[i].z) + offset;
                             activeSpawns.Add(spawnOffset[i]);
                             break;
                         }
@@ -58,8 +56,11 @@ namespace RedKite
             Coordinate.x = Mathf.Floor(transform.position.x);
             Coordinate.y = Mathf.Floor(transform.position.z);
 
-            Debug.Log(Coordinate);
+        }
 
+        public static void ClearStatic()
+        {
+            activeSpawns.Clear();
         }
 
         public override void Update()
