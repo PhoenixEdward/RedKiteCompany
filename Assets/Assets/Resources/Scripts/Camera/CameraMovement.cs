@@ -14,9 +14,9 @@ namespace RedKite
         protected Vector2 xBounds;
         protected Vector2 yBounds;
 
-        Facing facing;
+        public static Facing facing;
 
-        enum Facing
+        public enum Facing
         {
             NE,
             NW,
@@ -60,32 +60,30 @@ namespace RedKite
 
             }
 
-            /*
             if (Input.GetKeyDown(KeyCode.Q))
             {
                 Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
                 RaycastHit hit;
                 if (Physics.Raycast(ray, out hit, Mathf.Infinity))
                 {
-                    transform.RotateAround(hit.point, Vector3.up, -90f);
+                    transform.RotateAround(hit.point, Vector3.down, 90f);
 
                     if (facing == Facing.NE)
                         facing = Facing.SE;
-                    else if (facing == Facing.NW)
-                        facing = Facing.NE;
+                    else if (facing == Facing.SE)
+                        facing = Facing.SW;
                     else if (facing == Facing.SW)
                         facing = Facing.NW;
                     else
-                        facing = Facing.NW;
+                        facing = Facing.NE;
 
                     foreach (GameSprite sprite in GameSpriteManager.Instance.Sprites)
                     {
-                        transform.Rotate(new Vector3(0, -90f, 0));
+                        sprite.transform.Rotate(new Vector3(0, -90f, 0));
                     }
                 }
 
             }
-            */
             
 
             Vector3 movement = Vector3.zero;

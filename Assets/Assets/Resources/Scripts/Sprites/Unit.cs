@@ -114,26 +114,97 @@ namespace RedKite
                 timeSinceLastFrame = 0;
                 if (IsMoving)
                 {
+                    if(CameraMovement.facing == CameraMovement.Facing.NE)
+                    { 
+                        if (velocity.x > 0)
+                        {
+                            if (verticalFrames > 1)
+                                VerticalRow = 1;
+                        }
+                        else if (velocity.x < 0)
+                        {
+                            if (verticalFrames > 2)
+                                VerticalRow = 3;
+                        }
 
-                    if (velocity.x > 0)
-                    {
-                        if (verticalFrames > 1)
-                            VerticalRow = 1;
+                        else if (velocity.z > 0)
+                        {
+                            if (verticalFrames > 3)
+                                VerticalRow = 2;
+                        }
+                        else if (velocity.z < 0)
+                        {
+                            VerticalRow = 0;
+                        }
                     }
-                    else if (velocity.x < 0)
+                    else if (CameraMovement.facing == CameraMovement.Facing.NW)
                     {
-                        if (verticalFrames > 2)
+                        if (velocity.z < 0)
+                        {
+                            if (verticalFrames > 1)
+                                VerticalRow = 1;
+                        }
+                        else if (velocity.z > 0)
+                        {
+                            if (verticalFrames > 2)
+                                VerticalRow = 3;
+                        }
+
+                        else if (velocity.x > 0)
+                        {
+                            if (verticalFrames > 3)
+                                VerticalRow = 2;
+                        }
+                        else if (velocity.x < 0)
+                        {
+                            VerticalRow = 0;
+                        }
+                    }
+                    else if (CameraMovement.facing == CameraMovement.Facing.SW)
+                    {
+                        if (velocity.z < 0)
+                        {
+                            if (verticalFrames > 1)
+                                VerticalRow = 2;
+                        }
+                        else if (velocity.z > 0)
+                        {
+                            if (verticalFrames > 2)
+                                VerticalRow = 0;
+                        }
+
+                        else if (velocity.x < 0)
+                        {
+                            if (verticalFrames > 3)
+                                VerticalRow = 1;
+                        }
+                        else if (velocity.x > 0)
+                        {
                             VerticalRow = 3;
+                        }
                     }
+                    else
+                    {
+                        if (velocity.x < 0)
+                        {
+                            if (verticalFrames > 1)
+                                VerticalRow = 2;
+                        }
+                        else if (velocity.x > 0)
+                        {
+                            if (verticalFrames > 2)
+                                VerticalRow = 0;
+                        }
 
-                    else if (velocity.z > 0)
-                    {
-                        if (verticalFrames > 3)
-                            VerticalRow = 2;
-                    }
-                    else if (velocity.z < 0)
-                    {
-                        VerticalRow = 0;
+                        else if (velocity.z > 0)
+                        {
+                            if (verticalFrames > 3)
+                                VerticalRow = 1;
+                        }
+                        else if (velocity.z < 0)
+                        {
+                            VerticalRow = 3;
+                        }
                     }
                 }
 
