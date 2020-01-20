@@ -28,20 +28,11 @@ namespace RedKite
         public void OnSelect(BaseEventData baseEvent)
         {
             //identities are base on order from top to bottom in GUI menu.
-            if (!firstClick)
-            {
-                if (Convert.ToInt32(gameObject.name) != 3 & Convert.ToInt32(gameObject.name) != 4)
-                { 
-                    StartCoroutine(spriteSelector.GetTextures(dropdown.options[dropdown.value].text, Convert.ToInt32(gameObject.name), mirrored.isOn));
-                    firstClick = true;
-                }
-                else
-                    StartCoroutine(spriteSelector.GetTextures(dropdown.options[dropdown.value].text, Convert.ToInt32(gameObject.name), false));
-            }
+            if (Convert.ToInt32(gameObject.name) != 3 & Convert.ToInt32(gameObject.name) != 4)
+                StartCoroutine(spriteSelector.GetTextures(dropdown.options[dropdown.value].text, Convert.ToInt32(gameObject.name), mirrored.isOn));
             else
-            {
-                firstClick = false;
-            }
+                StartCoroutine(spriteSelector.GetTextures(dropdown.options[dropdown.value].text, Convert.ToInt32(gameObject.name), false));
+
         }
 
 

@@ -54,6 +54,10 @@ namespace RedKite
 
             RenderWalls(wallFilter,wallRenderer);
             RenderFloor(floorFilter, floorRenderer);
+
+            walls.AddComponent<MeshCollider>();
+            floor.AddComponent<MeshCollider>();
+
         }
 
         public void Regen()

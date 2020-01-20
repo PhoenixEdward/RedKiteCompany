@@ -72,6 +72,8 @@ namespace RedKite
             unit2.spriteName = "MageGuy";
             heroes.Add(hero2);
 
+            GameSpriteManager.Instance.GetSprites();
+
             cam.enabled = true;
         }
 

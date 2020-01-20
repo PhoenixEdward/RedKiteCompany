@@ -44,18 +44,24 @@ namespace RedKite
                 Destroy(gameObject);
             }
 
+            GetSprites();
+
+        }
+
+        public void  GetSprites()
+        {
             Sprites = FindObjectsOfType<GameSprite>().ToList();
+
+            Heroes.Clear();
+            Enemies.Clear();
 
             foreach (GameSprite sprite in Sprites)
             {
                 if (sprite is Hero)
                     Heroes.Add((Hero)sprite);
-                else if(sprite is Enemy)
+                else if (sprite is Enemy)
                     Enemies.Add((Enemy)sprite);
             }
-
         }
-
-
     }
 }

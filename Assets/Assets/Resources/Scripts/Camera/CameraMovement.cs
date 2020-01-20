@@ -60,6 +60,7 @@ namespace RedKite
 
             }
 
+            /*
             if (Input.GetKeyDown(KeyCode.Q))
             {
                 Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
@@ -84,7 +85,7 @@ namespace RedKite
                 }
 
             }
-
+            */
             
 
             Vector3 movement = Vector3.zero;
@@ -93,19 +94,23 @@ namespace RedKite
             { 
                 if (Input.GetKey(KeyCode.W))
                 {
-                    movement.y += pix * Time.deltaTime;
+                    movement.x += pix * Time.deltaTime;
+                    movement.z += pix * Time.deltaTime;
                 }
                 if (Input.GetKey(KeyCode.S))
                 {
-                    movement.y -= pix * Time.deltaTime;
+                    movement.x -= pix * Time.deltaTime;
+                    movement.z -= pix * Time.deltaTime;
                 }
                 if (Input.GetKey(KeyCode.D) & transform.position.x < xBounds.y)
                 {
-                    movement.x += pix * Time.deltaTime;
+                    movement.x += pix/2 * Time.deltaTime;
+                    movement.z -= pix/2 * Time.deltaTime;
                 }
                 if (Input.GetKey(KeyCode.A))
                 {
-                    movement.x -= pix * Time.deltaTime;
+                    movement.x -= pix/2 * Time.deltaTime;
+                    movement.z += pix/2 * Time.deltaTime;
                 }
             }
 
@@ -113,23 +118,79 @@ namespace RedKite
             {
                 if (Input.GetKey(KeyCode.W))
                 {
-                    movement.y += pix * Time.deltaTime;
+                    movement.z -= pix * Time.deltaTime;
+                    movement.x += pix * Time.deltaTime;
                 }
                 if (Input.GetKey(KeyCode.S))
                 {
-                    movement.y -= pix * Time.deltaTime;
+
+                    movement.z += pix * Time.deltaTime;
+                    movement.x -= pix * Time.deltaTime;
                 }
                 if (Input.GetKey(KeyCode.D))
                 {
-                    movement.x -= pix * Time.deltaTime;
-                    movement.z += pix * Time.deltaTime;
+                    movement.z -= pix / 2 * Time.deltaTime;
+                    movement.x -= pix / 2 * Time.deltaTime;
                 }
                 if (Input.GetKey(KeyCode.A) )
                 {
-                    movement.x += (pix * Time.deltaTime);
-                    movement.z -= pix * Time.deltaTime;
+                    movement.z += pix / 2 * Time.deltaTime;
+                    movement.x += pix / 2 * Time.deltaTime; 
                 }
             }
+
+
+            if (facing == Facing.SW)
+            {
+                if (Input.GetKey(KeyCode.W))
+                {
+                    movement.z -= pix * Time.deltaTime;
+                    movement.x -= pix * Time.deltaTime;
+
+                }
+                if (Input.GetKey(KeyCode.S))
+                {
+                    movement.z += pix * Time.deltaTime;
+                    movement.x += pix * Time.deltaTime;
+                }
+                if (Input.GetKey(KeyCode.D))
+                {
+                    movement.z += pix/2 * Time.deltaTime;
+                    movement.x -= pix/2 * Time.deltaTime;
+
+                }
+                if (Input.GetKey(KeyCode.A))
+                {
+                    movement.z -= pix/2 * Time.deltaTime;
+                    movement.x += pix/2 * Time.deltaTime;
+                }
+            }
+
+            if (facing == Facing.SE)
+            {
+                if (Input.GetKey(KeyCode.W))
+                {
+                    movement.z += pix * Time.deltaTime;
+                    movement.x -= pix * Time.deltaTime;
+                }
+                if (Input.GetKey(KeyCode.S))
+                {
+                    movement.z -= pix * Time.deltaTime;
+                    movement.x += pix * Time.deltaTime;
+                }
+                if (Input.GetKey(KeyCode.D))
+                {
+                    movement.z += pix / 2 * Time.deltaTime;
+                    movement.x += pix / 2 * Time.deltaTime;
+
+                }
+                if (Input.GetKey(KeyCode.A))
+                {
+                    movement.z -= pix / 2 * Time.deltaTime;
+                    movement.x -= pix / 2 * Time.deltaTime;
+                }
+            }
+
 
             transform.position += movement;
 
