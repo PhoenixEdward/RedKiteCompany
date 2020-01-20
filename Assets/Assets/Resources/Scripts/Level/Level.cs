@@ -13,7 +13,7 @@ namespace RedKite
         // Start is called before the first frame update
         void Awake()
         {
-            TileMapper.Generate();
+            TileMapper.Instance.Generate();
 
             pathFinder = new PathFinder();
             pathFinder.GenerateGraph();
@@ -45,7 +45,7 @@ namespace RedKite
         {
             cam.enabled = false;
 
-            TileMapper.Generate();
+            TileMapper.Instance.Generate();
 
             modeler.Regen();
 

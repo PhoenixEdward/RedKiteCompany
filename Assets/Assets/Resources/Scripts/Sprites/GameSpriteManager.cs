@@ -7,25 +7,25 @@ namespace RedKite
 {
     public class GameSpriteManager : MonoBehaviour
     {
-        private static GameSpriteManager instance;
+        private static GameSpriteManager _instance;
 
         public static GameSpriteManager Instance
         {
             get
             {
-                if (instance == null)
+                if (_instance == null)
                 {
-                    instance = FindObjectOfType<GameSpriteManager>();
-                    if (instance == null)
+                    _instance = FindObjectOfType<GameSpriteManager>();
+                    if (_instance == null)
                     {
                         GameObject obj = new GameObject
                         {
                             name = typeof(GameSpriteManager).Name
                         };
-                        instance = obj.AddComponent<GameSpriteManager>();
+                        _instance = obj.AddComponent<GameSpriteManager>();
                     }
                 }
-                return instance;
+                return _instance;
             }
         }
 
@@ -35,9 +35,9 @@ namespace RedKite
 
         void Awake()
         {
-            if (instance == null)
+            if (_instance == null)
             {
-                instance = this;
+                _instance = this;
             }
             else
             {

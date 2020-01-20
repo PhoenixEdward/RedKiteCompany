@@ -8,8 +8,18 @@ using System.Linq;
 
 namespace RedKite
 {
-    public static class TileMapper
+    public class TileMapper
     {
+        static TileMapper _instance;
+
+        public static TileMapper Instance
+        {
+            get
+            {
+                return _instance ?? (_instance = new TileMapper());
+            }
+        }
+
         public static Cell[] tileTypes =
         {
             new Cell(Cell.Type.Empty),
@@ -17,42 +27,41 @@ namespace RedKite
             new Cell(Cell.Type.Wall)
         };
 
-        public static int H;
-        public static int W;
-        public static char[,] map;
+        public int H;
+        public int W;
+        public char[,] map;
 
-        static int areaCount;
-        public static Dictionary<int, Area> areas;
-        static int roomIndex = 0;
-        static int allRuns;
+        int areaCount;
+        public Dictionary<int, Area> areas;
+        int roomIndex = 0;
+        int allRuns;
 
-        static char TILE_VOID = ' ';
+        const char TILE_VOID = ' ';
         //static char TILE_FLOOR = '.';
-        static char TILE_WALL = '#';
-        static char TILE_CORNER = '!';
-        static char TILE_HALL = '+';
-        static char TILE_SPAWN = '@';
+        const char TILE_WALL = '#';
+        const char TILE_CORNER = '!';
+        const char TILE_HALL = '+';
+        const char TILE_SPAWN = '@';
         //static char TILE_ROOM_CORNER = '?';
         //static char TILE_VISITED = '$';
         //static char TILE_POPULAR = '&';
-        static char TILE_WALL_CORNER = '%';
-        static int failed;
-        static int failedDoors;
-        static int[] roomFailures = new int[16] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+        const char TILE_WALL_CORNER = '%';
+        int failedDoors;
+        int[] roomFailures = new int[16] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
 
         //everything below is unity related
-        public static List<Vector3Int>[] RoomTiles { get; private set; }
+        public List<Vector3Int>[] RoomTiles { get; private set; }
 
         static System.Random rndState = new System.Random();
         static int rnd(int x) => rndState.Next() % x;
 
-        public static Cell[,] tiles;
+        public Cell[,] tiles;
 
-        public static Vector3Int spawnPoint;
-        public static int index = 0;
+        public Vector3Int spawnPoint;
+        public int index = 0;
         //to delete below
 
-        public static void Generate()
+        public void Generate()
         {
 
 
@@ -185,7 +194,7 @@ namespace RedKite
 
         }
 
-        static void ClearMap()
+        void ClearMap()
         {
             //instantiate void cells
             for (int y = 0; y < map.GetLength(1); y++)
@@ -193,7 +202,7 @@ namespace RedKite
                     map[x, y] = TILE_VOID;
         }
 
-        static void AddSpawn(int maxWidth = 8, int maxHeight = 10)
+        void AddSpawn(int maxWidth = 8, int maxHeight = 10)
         {
             //room height and width including walls
             int h = (int)Mathf.Max(rnd(maxHeight) + 5, 8);
@@ -237,7 +246,7 @@ namespace RedKite
 
         }
 
-        static bool AddArea(int maxWidth = 10, int maxHeight = 10)
+        bool AddArea(int maxWidth = 10, int maxHeight = 10)
         {
 
 
@@ -247,7 +256,6 @@ namespace RedKite
 
             if (foundRoom == null)
             {
-                failed += 1;
                 return false;
             }
 
@@ -286,7 +294,7 @@ namespace RedKite
 
         }
 
-        static void SplitAllWalls()
+        void SplitAllWalls()
         {
             foreach (Area area in areas.Values)
                 foreach (Area.Wall wall in area.Walls)
@@ -295,7 +303,7 @@ namespace RedKite
                 }
         }
 
-        static void FindAllOverlaps()
+        void FindAllOverlaps()
         {
             foreach (Area area in areas.Values)
                 foreach (Area.Wall wall in area.Walls)
@@ -305,7 +313,7 @@ namespace RedKite
         }
 
         //SHOULD BE VOID
-        static int FindPaths(Area workingArea)
+        int FindPaths(Area workingArea)
         {
             //instantiate return variable which will let us know how many doors we found.
             //could technically be a bool but I might find use for knowing the number of doors.
@@ -448,7 +456,7 @@ namespace RedKite
             }
             return foundPaths;
         }
-        static Area FindArea()
+        Area FindArea()
         {
             List<int> allIndices = Enumerable.Range(0, areas.Count).ToList();
 

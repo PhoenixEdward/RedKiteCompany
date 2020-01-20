@@ -67,7 +67,7 @@ namespace RedKite
                 {
                     if (destination != null)
                     {
-                        if (TileMapper.tiles[destination.cell.x, destination.cell.y].IsWalkable == true & selectedHero.IsMoving == false)
+                        if (TileMapper.Instance.tiles[destination.cell.x, destination.cell.y].IsWalkable == true & selectedHero.IsMoving == false)
                             if (Utility.ManhattanDistance(new Vector3Int((int)selectedHero.Coordinate.x, (int)selectedHero.Coordinate.y,2), new Vector3Int(destination.cell.x, destination.cell.y,2)) <= selectedHero.movement)
                             {
                                 if (pathFinder.IsReachable(selectedHero, destination, BattleGrid.withinRange.ToArray()))

@@ -26,10 +26,10 @@ namespace RedKite
 
         void OnEnable()
         {
-            transform.position = TileMapper.spawnPoint;
+            transform.position = TileMapper.Instance.spawnPoint;
 
-            xBounds = new Vector2(0, TileMapper.W);
-            yBounds = new Vector2(0, TileMapper.H);
+            xBounds = new Vector2(0, TileMapper.Instance.W);
+            yBounds = new Vector2(0, TileMapper.Instance.H);
 
         }
 

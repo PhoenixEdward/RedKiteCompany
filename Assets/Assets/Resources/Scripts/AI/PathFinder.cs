@@ -194,7 +194,7 @@ namespace RedKite
                 foreach (Node v in u.neighbours)
                 {
                     if (Utility.ManhattanDistance(new Vector3Int((int)unit.Coordinate.x,(int)unit.Coordinate.y,2), new Vector3Int(v.cell.x, v.cell.y,2)) <= unit.movement & 
-                        Utility.WithinBounds(new Vector3(unit.Coordinate.x,2,unit.Coordinate.y),TileMapper.W,TileMapper.H))
+                        Utility.WithinBounds(new Vector3(unit.Coordinate.x,2,unit.Coordinate.y),TileMapper.Instance.W,TileMapper.Instance.H))
                     {
                         float alt = dist[u] + CostToEnterTile(v.cell.x, v.cell.y);
                         if (alt < dist[v] & alt < unit.movement)
@@ -223,7 +223,7 @@ namespace RedKite
 
         float CostToEnterTile(int x, int y)
         {
-            Cell tt = TileMapper.tiles[x, y];
+            Cell tt = TileMapper.Instance.tiles[x, y];
 
             return tt.movementCost;
         }
@@ -234,19 +234,19 @@ namespace RedKite
             // We could test the unit's walk/hover/fly type against various
             // terrain flags here to see if they are allowed to enter the tile.
 
-            return TileMapper.tiles[x, y].IsWalkable;
+            return TileMapper.Instance.tiles[x, y].IsWalkable;
         }
 
 
         public void GenerateGraph()
         {
             // Initialize the array
-            graph = new Node[TileMapper.W, TileMapper.H];
+            graph = new Node[TileMapper.Instance.W, TileMapper.Instance.H];
 
             // Initialize a Node for each spot in the array
-            for (int x = 0; x < TileMapper.W; x++)
+            for (int x = 0; x < TileMapper.Instance.W; x++)
             {
-                for (int y = 0; y < TileMapper.H; y++)
+                for (int y = 0; y < TileMapper.Instance.H; y++)
                 {
                     graph[x, y] = new Node
                     {
@@ -256,18 +256,18 @@ namespace RedKite
             }
 
             // Now that all the nodes exist, calculate their neighbours
-            for (int x = 0; x < TileMapper.W; x++)
+            for (int x = 0; x < TileMapper.Instance.W; x++)
             {
-                for (int y = 0; y < TileMapper.H; y++)
+                for (int y = 0; y < TileMapper.Instance.H; y++)
                 {
 
                     if (x > 0)
                         graph[x, y].neighbours.Add(graph[x - 1, y]);
-                    if (x < TileMapper.W - 1)
+                    if (x < TileMapper.Instance.W - 1)
                         graph[x, y].neighbours.Add(graph[x + 1, y]);
                     if (y > 0)
                         graph[x, y].neighbours.Add(graph[x, y - 1]);
-                    if (y < TileMapper.H - 1)
+                    if (y < TileMapper.Instance.H - 1)
                         graph[x, y].neighbours.Add(graph[x, y + 1]);
 
                 }

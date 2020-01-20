@@ -80,7 +80,7 @@ namespace RedKite
 
         void RenderWalls(MeshFilter meshFilter, MeshRenderer meshRenderer)
         {
-            foreach(KeyValuePair<int,Area> entry in TileMapper.areas)
+            foreach(KeyValuePair<int,Area> entry in TileMapper.Instance.areas)
             {
                 Area area = entry.Value;
 
@@ -128,7 +128,7 @@ namespace RedKite
 
         void RenderFloor(MeshFilter meshFilter, MeshRenderer meshRenderer)
         {
-            foreach (KeyValuePair<int, Area> entry in TileMapper.areas)
+            foreach (KeyValuePair<int, Area> entry in TileMapper.Instance.areas)
             {
                 Area area = entry.Value;
 

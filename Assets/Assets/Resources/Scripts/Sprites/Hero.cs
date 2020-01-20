@@ -32,13 +32,13 @@ namespace RedKite
 
             for (int i = 0; i < spawnOffset.Length; i++)
             {
-                if(Utility.WithinBounds(TileMapper.spawnPoint + spawnOffset[i], TileMapper.W,TileMapper.H))
-                    if (TileMapper.tiles[(int)(TileMapper.spawnPoint.x + spawnOffset[i].x), (int)(TileMapper.spawnPoint.z + spawnOffset[i].z)].IsWalkable)
+                if(Utility.WithinBounds(TileMapper.Instance.spawnPoint + spawnOffset[i], TileMapper.Instance.W,TileMapper.Instance.H))
+                    if (TileMapper.Instance.tiles[(int)(TileMapper.Instance.spawnPoint.x + spawnOffset[i].x), (int)(TileMapper.Instance.spawnPoint.z + spawnOffset[i].z)].IsWalkable)
                     {
                         //check if spawn is occupied. Will need to change later to account for non hero units and other objects spawning
                         if (!activeSpawns.Contains(spawnOffset[i]))
                         {
-                            transform.position = new Vector3(TileMapper.spawnPoint.x + spawnOffset[i].x, 2 ,TileMapper.spawnPoint.z + spawnOffset[i].z) + offset;
+                            transform.position = new Vector3(TileMapper.Instance.spawnPoint.x + spawnOffset[i].x, 2 ,TileMapper.Instance.spawnPoint.z + spawnOffset[i].z) + offset;
                             activeSpawns.Add(spawnOffset[i]);
                             break;
                         }

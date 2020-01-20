@@ -92,7 +92,7 @@ namespace RedKite
                             if (Utility.ManhattanDistance(new Vector3Int((int)reticle.selectedHero.Coordinate.x, (int)reticle.selectedHero.Coordinate.y,2), new Vector3Int(cell.x, cell.y,2)) <= reticle.selectedHero.movement)
                             {
 
-                                if (cell.x >= 0 & cell.x < TileMapper.W & cell.y >= 0 & cell.y < TileMapper.H)
+                                if (cell.x >= 0 & cell.x < TileMapper.Instance.W & cell.y >= 0 & cell.y < TileMapper.Instance.H)
                                 {
                                     withinRange.Add(PathFinder.graph[cell.x, cell.y]);
 

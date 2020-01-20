@@ -15,7 +15,7 @@ namespace RedKite
         public List<Wall> Walls;
         public List<int> ConnectedAreas = new List<int>();
 
-        static int[,] WallGraph = new int[TileMapper.W, TileMapper.H];
+        static int[,] WallGraph = new int[TileMapper.Instance.W, TileMapper.Instance.H];
 
         //to keep directions for the dropping and adding of floor dimensions.
         public Orient Orientation;

@@ -33,7 +33,8 @@ namespace RedKite
         protected SpriteRenderer sr;
         protected Vector2 FrameDimensions;
 
-        // Start is called before the first frame update
+        //This will be set by fog of war. Unsure about stipulations of set.
+        public bool IsVisible { get; set; }
 
 
         public virtual void Start()

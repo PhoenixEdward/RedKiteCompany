@@ -31,7 +31,7 @@ namespace RedKite
             {
                 isFirstRun = false;
                 
-                for(int i = 0; i < TileMapper.RoomTiles.Length; i++)
+                for(int i = 0; i < TileMapper.Instance.RoomTiles.Length; i++)
                 {
                     roomEnemyCount[i] = 0;
                 }
@@ -56,7 +56,7 @@ namespace RedKite
                     Debug.Log("spawn room: " + spawnRoom);
 
                     spawnTiles = new List<Vector3Int>();
-                    spawnTiles = TileMapper.RoomTiles[spawnRoom];
+                    spawnTiles = TileMapper.Instance.RoomTiles[spawnRoom];
                     spawnTiles.Shuffle<Vector3Int>();
 
                     spawnCenter = spawnTiles[0];
@@ -67,9 +67,9 @@ namespace RedKite
 
                     spawnTiles.RemoveAt(0);
 
-                    Debug.Log("max enemies: " + TileMapper.RoomTiles[spawnRoom].Count / 6);
+                    Debug.Log("max enemies: " + TileMapper.Instance.RoomTiles[spawnRoom].Count / 6);
 
-                    maxEnemies = Mathf.Min(TileMapper.RoomTiles[spawnRoom].Count / 10,5);
+                    maxEnemies = Mathf.Min(TileMapper.Instance.RoomTiles[spawnRoom].Count / 10,5);
                 }
                 else
                     failedSpawn = true;

@@ -19,7 +19,7 @@ namespace RedKite
         public Vector3 Scale;
         public float Height;
 
-        static int[,] space = new int[TileMapper.W,TileMapper.H];
+        static int[,] space = new int[TileMapper.Instance.W,TileMapper.Instance.H];
 
         public Segment(Orient _orientation, Vector3 _min, Vector3 _max, float _height, bool _isPath = false, bool _isRemoved = false, bool _isCorner = false)
         {
