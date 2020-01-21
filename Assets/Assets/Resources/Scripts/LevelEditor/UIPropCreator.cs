@@ -13,26 +13,25 @@ namespace RedKite
         Toggle propCreateToggle;
         public Dropdown propCreateDropDown;
         Button[] propCreateButtons;
-        public Vector3 position;
+        public Vector3Int position;
         public bool IsActive { get; private set; }
-        SpriteSelection spriteSelector;
+        public SpriteSelection spriteSelector;
 
         // Start is called before the first frame update
         void Start()
         {
-
-            propCreateDropDown = GetComponentInChildren<Dropdown>();
-            propCreateToggle = GetComponentInChildren<Toggle>();
-            propCreateButtons = GetComponentsInChildren<Button>();
+            propCreateDropDown = transform.parent.GetComponentInChildren<Dropdown>();
+            propCreateToggle = transform.parent.GetComponentInChildren<Toggle>();
+            spriteSelector = FindObjectOfType<SpriteSelection>();
         }
 
         // Update is called once per frame
         public void OnPointerClick(PointerEventData data)
         {
-            if(data.selectedObject.name == "Create")
-            {
-                spriteSelector.GetPorpTextures(propCreateDropDown.options[propCreateDropDown.value].text, position, propCreateToggle.isOn);
-            }
+            if (name == "Create")
+                StartCoroutine(spriteSelector.GetPropTextures(propCreateDropDown.options[propCreateDropDown.value].text, position, propCreateToggle.isOn));
+            else if (name == "Delete")
+                Level.Instance.RemoveProp(position);
         }
     }
 }

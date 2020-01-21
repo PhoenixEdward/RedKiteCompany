@@ -12,14 +12,28 @@ namespace RedKite
         {
             get
             {
-                return _instance ?? (_instance = new Level());
+                if (_instance == null)
+                {
+                    _instance = FindObjectOfType<Level>();
+                    if (_instance == null)
+                    {
+                        GameObject obj = new GameObject
+                        {
+                            name = typeof(Level).Name
+                        };
+                        _instance = obj.AddComponent<Level>();
+                    }
+                }
+                return _instance;
             }
         }
 
+        //perhaps it instantiates the grid?
+        public Grid grid;
         PathFinder pathFinder;
         Modeler modeler;
         List<GameObject> heroes;
-        public static List<GameObject> propInstances;
+        Dictionary<Vector3Int,GameObject> propInstances = new Dictionary<Vector3Int, GameObject>();
         CameraMovement cam;
         // Start is called before the first frame update
         void Awake()
@@ -29,10 +43,14 @@ namespace RedKite
             pathFinder = new PathFinder();
             pathFinder.GenerateGraph();
 
+            Vector3 offset = new Vector3(-0.35f, 0, -0.35f);
+
+            grid = FindObjectOfType<Grid>();
+
             modeler = new GameObject().AddComponent<Modeler>();
 
             heroes = new List<GameObject>();
-            propInstances = new List<GameObject>();
+            propInstances = new Dictionary<Vector3Int, GameObject>();
 
             GameObject hero1 = new GameObject();
             hero1.name = "SwordGal";
@@ -48,10 +66,10 @@ namespace RedKite
 
             QuestMapper.Instance.Generate();
 
-            foreach (KeyValuePair<Vector3, string> prop in QuestMapper.Instance.Props)
+            foreach (KeyValuePair<Vector3Int, string> prop in QuestMapper.Instance.Props)
             {
                 GameObject propInstance = new GameObject();
-                propInstances.Add(propInstance);
+                propInstances.Add(prop.Key, propInstance);
                 propInstance.name = prop.Value;
                 Prop entity = propInstance.AddComponent<Prop>();
                 entity.Coordinate = prop.Key;
@@ -99,22 +117,22 @@ namespace RedKite
             heroes.Add(hero1);
             heroes.Add(hero2);
 
-            for (int i = 0; i < propInstances.Count; i++)
+            foreach(Vector3Int key in propInstances.Keys)
             {
-                Destroy(propInstances[i]);
+                Destroy(propInstances[key]);
             }
 
 
             //need to cache data or find some way to save some of the modifications made by user.
             //not to keep them in the same place but keep the composition the same.
-            propInstances = new List<GameObject>();
+            propInstances = new Dictionary<Vector3Int, GameObject>();
 
             QuestMapper.Instance.Generate();
 
-            foreach (KeyValuePair<Vector3, string> prop in QuestMapper.Instance.Props)
+            foreach (KeyValuePair<Vector3Int, string> prop in QuestMapper.Instance.Props)
             {
                 GameObject propInstance = new GameObject();
-                propInstances.Add(propInstance);
+                propInstances.Add(prop.Key, propInstance);
                 propInstance.name = prop.Value;
                 Prop entity = propInstance.AddComponent<Prop>();
                 entity.Coordinate = prop.Key;
@@ -127,15 +145,21 @@ namespace RedKite
             cam.enabled = true;
         }
 
-        public void AddProp(Vector3 position, string name, Texture2D spriteSheet, bool _isIso)
+        public void AddProp(Vector3Int position, string name, Texture2D spriteSheet, bool _isIso)
         {
             if (QuestMapper.Instance.Props.ContainsKey(position))
                 QuestMapper.Instance.Props.Remove(position);
 
+            if (propInstances.ContainsKey(position))
+            { 
+                Destroy(propInstances[position]);
+                propInstances.Remove(position);
+            }
+
             QuestMapper.Instance.Props.Add(position, name);
 
             GameObject propInstance = new GameObject();
-            propInstances.Add(propInstance);
+            propInstances.Add(position, propInstance);
             Prop entity = propInstance.AddComponent<Prop>();
             entity.Coordinate = position;
             entity.isIso = _isIso;
@@ -143,10 +167,16 @@ namespace RedKite
             entity.spriteLoad = spriteSheet;
 
         }
-        public void RemoveProp(Vector3 position)
+        public void RemoveProp(Vector3Int position)
         {
             if (QuestMapper.Instance.Props.ContainsKey(position))
                 QuestMapper.Instance.Props.Remove(position);
+
+            if (propInstances.ContainsKey(position))
+            {
+                Destroy(propInstances[position]);
+                propInstances.Remove(position);
+            }
         }
     }
 }

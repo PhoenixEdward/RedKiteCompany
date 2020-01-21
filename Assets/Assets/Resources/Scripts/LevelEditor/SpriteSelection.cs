@@ -26,6 +26,8 @@ namespace RedKite
         Reticle reticle;
         Canvas canvas;
         float scaleFactor;
+        float timeSinceDeselect;
+        Grid grid;
         // Start is called before the first frame update
         void Start()
         {
@@ -37,6 +39,7 @@ namespace RedKite
             units = FindObjectsOfType<Hero>();
             dropdowns = dropdowns.OrderBy(x => Convert.ToInt32(x)).ToArray();
             reticle = FindObjectOfType<Reticle>();
+            grid = FindObjectOfType<Grid>();
         }
 
         // Update is called once per frame
@@ -133,7 +136,9 @@ namespace RedKite
 
             if (reticle.selectedHero == null)
             {
-                if (Input.GetMouseButtonDown(1))
+                timeSinceDeselect += Time.deltaTime;
+
+                if (Input.GetMouseButtonDown(1) & timeSinceDeselect > menuCoolDown)
                 {
                     if (!texturerActive & !isActive)
                     { 
@@ -165,13 +170,15 @@ namespace RedKite
 
                         foreach (string file in sprites)
                         {
-                            Debug.Log(file);
                             Dropdown.OptionData dat = new Dropdown.OptionData(file);
                             spriteOptions.Add(dat);
                         }
 
-                        UIPropCreator uIPropCreator = propCreateInstance.AddComponent<UIPropCreator>();
-                        uIPropCreator.position = reticle.highlight;
+                        UIPropCreator propCreate = propCreateInstance.transform.GetChild(2).gameObject.AddComponent<UIPropCreator>();
+                        propCreate.position = new Vector3Int(reticle.highlight.x, reticle.highlight.y, -1);
+
+                        UIPropCreator propDelete = propCreateInstance.transform.GetChild(1).gameObject.AddComponent<UIPropCreator>();
+                        propDelete.position = new Vector3Int(reticle.highlight.x, reticle.highlight.y, -1);
 
                         propCreateInstance.GetComponentInChildren<Dropdown>().AddOptions(spriteOptions);
 
@@ -184,6 +191,10 @@ namespace RedKite
                     }
                 }
 
+            }
+            else
+            {
+                timeSinceDeselect = 0;
             }
 
             timesSinceCoolDown += Time.deltaTime;
@@ -223,10 +234,11 @@ namespace RedKite
             }
         }
 
-        public IEnumerator GetPorpTextures(string textureName, Vector3 position, bool isIso)
+        public IEnumerator GetPropTextures(string textureName, Vector3Int position, bool isIso)
         {
             string path = "file:///" + Application.dataPath + "\\Sprites";
 
+            Debug.Log("Run");
 
             path += "\\PropSprites\\" + textureName;
 

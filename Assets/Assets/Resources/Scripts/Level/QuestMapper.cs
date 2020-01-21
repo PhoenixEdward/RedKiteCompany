@@ -15,12 +15,15 @@ namespace RedKite
         {
             get
             {
-                return _instance ?? (_instance = new QuestMapper());
+                _instance = _instance ?? (_instance = new QuestMapper());
+                grid = Level.Instance.grid;
+                return _instance;
             }
         }
 
+        static Grid grid;
         public List<Enemy> enemies = new List<Enemy>();
-        public Dictionary<Vector3, string> Props { get; private set; } = new Dictionary<Vector3, string>();
+        public Dictionary<Vector3Int, string> Props { get; private set; } = new Dictionary<Vector3Int, string>();
         int chestCount;
 
         Dictionary<int, int> distanceFromSpawn = new Dictionary<int, int>();
@@ -54,9 +57,9 @@ namespace RedKite
                         coords.Shuffle();
 
                         foreach(Vector3 coord in coords)
-                            if(!Props.ContainsKey(coord))
+                            if(!Props.ContainsKey(grid.WorldToCell(coord)))
                             { 
-                                Props.Add(coord + Vector3.up, "chest");
+                                Props.Add(grid.WorldToCell(coord), "chest");
                                 break;
                             }
 

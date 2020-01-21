@@ -12,16 +12,6 @@ namespace RedKite
             Prop
         }
 
-        public enum Setting
-        {
-            None,
-            JuneApartment,
-            FirstBlock,
-            JitterBean,
-            GrabNGo
-        }
-
-        protected static Level level;
         static bool isFirstSpawn = true;
         public SpriteType spriteType;
         public string spriteName;
@@ -32,7 +22,9 @@ namespace RedKite
         protected int VerticalRow { get; set; }
         protected int HorizontalRow { get; set; }
 
-        public Vector3 Coordinate = new Vector3(0, 0, -2);
+        public Vector3Int Coordinate = new Vector3Int(0, 0, -2);
+
+        static Grid grid;
 
         //thse will need to be switched to protected after level editor is done
         public Texture2D spriteLoad;
@@ -54,13 +46,10 @@ namespace RedKite
 
         public virtual void Start()
         {
-            //Vector2 can never be null so cannot be null coalesced
-
-            //find a way for only the first unit spawned will do this. You did it for spawn just do it again.
             if(isFirstSpawn)
-            { 
-                level = FindObjectOfType<Level>();
+            {
                 isFirstSpawn = false;
+                grid = FindObjectOfType<Grid>();
             }
 
             if(spriteLoad == null)
@@ -106,7 +95,7 @@ namespace RedKite
                 transform.rotation = Quaternion.Euler(0, 45f, 0);
 
                 if(isIso)
-                    transform.position = Coordinate;
+                    transform.position = grid.CellToWorld(Coordinate) + Vector3.up;
 
                 if (horizontalFrames > 3 & !IsMoving)
                     HorizontalRow = 3;
@@ -116,7 +105,7 @@ namespace RedKite
                 transform.rotation = Quaternion.Euler(0, 135f, 0);
 
                 if (isIso)
-                    transform.position = Coordinate + new Vector3(0,0,.65f);
+                    transform.position = grid.CellToWorld(Coordinate) + new Vector3(0,0,.65f) + Vector3.up;
 
                 if (horizontalFrames > 2 & !IsMoving)
                     HorizontalRow = 2;
@@ -126,7 +115,7 @@ namespace RedKite
                 transform.rotation = Quaternion.Euler(0, 225f, 0);
 
                 if (isIso)
-                    transform.position = Coordinate + new Vector3(.65f, 0, .65f);
+                    transform.position = grid.CellToWorld(Coordinate) + new Vector3(.65f, 0, .65f) + Vector3.up;
 
                 if (horizontalFrames > 1 & !IsMoving)
                     HorizontalRow = 1;
@@ -136,7 +125,7 @@ namespace RedKite
                 transform.rotation = Quaternion.Euler(0, 315f, 0);
 
                 if (isIso)
-                    transform.position = Coordinate + new Vector3(.65f, 0, 0);
+                    transform.position = grid.CellToWorld(Coordinate) + new Vector3(.65f, 0, 0) + Vector3.up;
 
                 if(!IsMoving)
                     HorizontalRow = 0;

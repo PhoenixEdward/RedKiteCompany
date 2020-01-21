@@ -35,8 +35,8 @@ namespace RedKite
                 }
             }
 
-            Coordinate.x = Mathf.Floor(transform.position.x);
-            Coordinate.y = Mathf.Floor(transform.position.z);
+            Coordinate.x = (int)Mathf.Floor(transform.position.x);
+            Coordinate.y = (int)Mathf.Floor(transform.position.z);
 
         }
 

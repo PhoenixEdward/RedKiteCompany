@@ -563,7 +563,7 @@ GameObject:
   - component: {fileID: 2715295382859922048}
   - component: {fileID: 2715295382859922049}
   m_Layer: 5
-  m_Name: Delete
+  m_Name: Create
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1178,7 +1178,7 @@ GameObject:
   - component: {fileID: 2715295383259742155}
   - component: {fileID: 2715295383259742152}
   m_Layer: 5
-  m_Name: Create
+  m_Name: Delete
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

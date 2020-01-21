@@ -8,17 +8,11 @@ using UnityEngine.UI;
 { 
     public class RegenLevel : MonoBehaviour, IPointerClickHandler
     { 
-        Level level;
-        // Start is called before the first frame update
-        void Start()
-        {
-            level = FindObjectOfType<Level>();
-        }
 
         public void OnPointerClick(PointerEventData data)
         {
-            if(name == "Regenerate")
-                level.Regen();
+            if (name == "Regenerate")
+                Level.Instance.Regen();
         }
     }
 }
