@@ -14,17 +14,14 @@ namespace RedKite
 
             base.Start();
 
-            offset = isIso ? Vector3.zero : offset;
-
-            transform.position = Coordinate + offset + Vector3.up;
-
-            sr.sprite = sprites[0, 0];
         }
 
         // Update is called once per frame
         public override void Update()
         {
             base.Update();
+
+            sr.sprite = sprites[HorizontalRow, VerticalRow];
         }
     }
 }

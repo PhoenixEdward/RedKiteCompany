@@ -55,13 +55,13 @@ namespace RedKite
             GameObject hero1 = new GameObject();
             hero1.name = "SwordGal";
             Hero unit1 = hero1.AddComponent<Hero>();
-            unit1.spriteName = "SwordGal";
+            unit1.spriteName = "Mage";
             heroes.Add(hero1);
 
             GameObject hero2 = new GameObject();
             hero2.name = "MageGuy";
             Hero unit2 = hero2.AddComponent<Hero>();
-            unit2.spriteName = "MageGuy";
+            unit2.spriteName = "Mage";
             heroes.Add(hero2);
 
             QuestMapper.Instance.Generate();

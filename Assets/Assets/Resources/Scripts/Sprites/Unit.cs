@@ -9,7 +9,7 @@ namespace RedKite
     public class Unit : GameSprite
     {
         //Should destination be here?
-        static Grid grid;
+        protected static Grid grid;
 
         PathFinder pathFinder = new PathFinder();
 
@@ -26,6 +26,9 @@ namespace RedKite
         protected readonly float charSecondsPerFrame = .125f;
         protected int Frame;
         protected Vector3 velocity = Vector3.zero;
+        public Vector3Int nextCell;
+
+        public Vector3 distanceFromCoord;
 
         public override void Start()
         {
@@ -42,47 +45,44 @@ namespace RedKite
 
         public override void Update()
         {
-            base.Update();
 
             if (currentPath != null)
             {
                 IsMoving = true;
 
-                Vector3 cellPos = grid.CellToWorld(currentPath[0].cell);
+                Vector3 currentPos = Coordinate + distanceFromCoord;
 
-                cellPos.y = transform.localPosition.y;
+                nextCell = currentPath[0].cell;
 
-                Vector3 currentPos = transform.localPosition - offset;
-
-                if (currentPos != cellPos)
+                if (currentPos != currentPath[0].cell)
                 {
 
-                    if (currentPos.x < cellPos.x)
+                    if (currentPos.x < currentPath[0].cell.x)
                     {
-                        currentPos.x += Mathf.Min(speed * Time.deltaTime, Mathf.Abs(currentPos.x - cellPos.x));
+                        distanceFromCoord.x += Mathf.Min(speed * Time.deltaTime, Mathf.Abs(currentPos.x - currentPath[0].cell.x));
 
                         velocity.x = 1;
 
                     }
-                    else if (currentPos.x > cellPos.x)
+                    else if (currentPos.x > currentPath[0].cell.x)
                     {
-                        currentPos.x -= Mathf.Min(speed * Time.deltaTime, Mathf.Abs(currentPos.x - cellPos.x));
+                        distanceFromCoord.x  -= Mathf.Min(speed * Time.deltaTime, Mathf.Abs(currentPos.x - currentPath[0].cell.x));
                         velocity.x = -1;
 
                     }
                     else
                         velocity.x = 0;
                     
-                    if (currentPos.z < cellPos.z)
+                    if (currentPos.y < currentPath[0].cell.y)
                     {
-                        currentPos.z += Mathf.Min(speed * Time.deltaTime, Mathf.Abs(currentPos.z - cellPos.z));
+                        distanceFromCoord.y += Mathf.Min(speed * Time.deltaTime, Mathf.Abs(currentPos.y - currentPath[0].cell.y));
 
                         velocity.z = 1;
 
                     }
-                    else if (currentPos.z > cellPos.z)
+                    else if (currentPos.y > currentPath[0].cell.y)
                     {
-                        currentPos.z -= Mathf.Min(speed * Time.deltaTime, Mathf.Abs(currentPos.z - cellPos.z));
+                        distanceFromCoord.y -= Mathf.Min(speed * Time.deltaTime, Mathf.Abs(currentPos.y - currentPath[0].cell.y));
 
                         velocity.z = -1;
                     }
@@ -90,7 +90,6 @@ namespace RedKite
                     else
                         velocity.z = 0;
 
-                    transform.localPosition = currentPos + offset;
                 }
                 else
                 { 
@@ -202,16 +201,15 @@ namespace RedKite
 
                 else
                 {
-                    if (VerticalRow == 1 & 1 <= horizontalFrames)
+                    if (VerticalRow == 1 & 2 <= horizontalFrames)
                         HorizontalRow = 2;
-                    else if (VerticalRow == 2 & 2 <= horizontalFrames)
+                    else if (VerticalRow == 2 & 1 <= horizontalFrames)
                         HorizontalRow = 1;
-                    else if (VerticalRow == 3 & 3 <= horizontalFrames)
+                    else if (VerticalRow == 3 & 0 <= horizontalFrames)
                         HorizontalRow = 0;
                     else if (VerticalRow == 0 & 4 <= horizontalFrames)
                         HorizontalRow = 3;
 
-                    VerticalRow = 4;
                 }
 
                 //could move this code under "is moving" and it would probably eliminate the need of the code above.
@@ -248,7 +246,7 @@ namespace RedKite
                 IsMoving = false;
             }
 
-            if (VerticalRow > verticalFrames | VerticalRow > verticalFrames)
+            if (VerticalRow > verticalFrames | HorizontalRow > horizontalFrames)
             {
                 VerticalRow = 0;
                 HorizontalRow = 0;
@@ -258,6 +256,9 @@ namespace RedKite
 
             sr.sprite = sprites[HorizontalRow, VerticalRow];
 
+            base.Update();
+
+            transform.localPosition += new Vector3(distanceFromCoord.x, 0, distanceFromCoord.y);
         }
 
         void MoveNextTile()
@@ -268,10 +269,9 @@ namespace RedKite
 
             //remove the old current/first node from the path
 
-            Debug.Log(currentPath.Count);
+            Coordinate = currentPath[0].cell;
 
-            Coordinate.x = currentPath[0].cell.x;
-            Coordinate.y = currentPath[0].cell.y;
+            distanceFromCoord = Vector3.zero;
 
             // Grab the new first node and move to that position
 

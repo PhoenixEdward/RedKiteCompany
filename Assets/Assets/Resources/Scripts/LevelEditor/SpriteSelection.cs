@@ -7,6 +7,8 @@ using System.Linq;
 using UnityEngine.UI;
 using System;
 using UnityEngine.Networking;
+using UnityEditor;
+
 namespace RedKite
 { 
     public class SpriteSelection : MonoBehaviour
@@ -45,6 +47,8 @@ namespace RedKite
         // Update is called once per frame
         void Update()
         {
+            canvas.transform.rotation = Camera.main.transform.rotation;
+
             if(Input.GetKeyDown(KeyCode.Space) & timesSinceCoolDown >= menuCoolDown & !propCreatorActive)
             {
                 timesSinceCoolDown = 0;
@@ -56,7 +60,7 @@ namespace RedKite
 
                     Debug.Log("Run");
 
-                    panel.localPosition += new Vector3(0, 1250, 0);
+                    panel.localPosition = new Vector3(0 + Screen.width/2, 0 + Screen.height/2, 0);
                     string path = Application.dataPath + "\\Sprites\\Tiles";
 
                     List<string> textures = Directory.GetFiles(path, "*.png").ToList<string>().Select(x => x.Substring(path.Length + 1)).ToList();
@@ -128,7 +132,7 @@ namespace RedKite
                 else if (isActive)
                 {
                     Debug.Log("Run");
-                    panel.localPosition -= new Vector3(0, 1250, 0);
+                    panel.localPosition = new Vector3(0 +                                                                                               Screen.width / 2, - Screen.height/2, 0);
                     isActive = false;
                     texturerActive = false;
                 }
@@ -145,20 +149,23 @@ namespace RedKite
                         isActive = true;
                         propCreatorActive = true;
 
-                        if(propCreateInstance == null)
-                        { 
-                            propCreateInstance = Instantiate(propCreator);
-                        }
-
-                        propCreateInstance.transform.SetParent(transform);
-                        propCreateInstance.transform.localScale = Vector3.one;
-                        propCreateInstance.transform.rotation = Camera.main.transform.rotation;
                         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+
                         RaycastHit hit;
                         if (Physics.Raycast(ray, out hit, Mathf.Infinity))
                         {
+                            Debug.Log(hit.point);
+                            if (propCreateInstance == null)
+                            {
+                                propCreateInstance = Instantiate(propCreator);
+                            }
+
+                            propCreateInstance.transform.SetParent(transform);
+                            propCreateInstance.transform.localScale = Vector3.one;
+                            propCreateInstance.transform.rotation = Camera.main.transform.rotation;
                             Vector3 pos = Camera.main.WorldToScreenPoint(hit.point);
-                            propCreateInstance.GetComponent<RectTransform>().anchoredPosition = new Vector2(pos.x / scaleFactor, pos.y/scaleFactor);
+                            pos = new Vector2(pos.x - Screen.width/2, pos.y - Screen.height/2);
+                            propCreateInstance.GetComponent<RectTransform>().localPosition = pos;
 
                         }
 

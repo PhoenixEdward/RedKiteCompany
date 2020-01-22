@@ -250,7 +250,7 @@ namespace RedKite
                 {
                     graph[x, y] = new Node
                     {
-                        cell = new Vector3Int(x, y, 0)
+                        cell = new Vector3Int(x, y, -1)
                     };
                 }
             }

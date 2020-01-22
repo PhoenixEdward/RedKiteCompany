@@ -45,10 +45,11 @@ namespace RedKite
             wallTextures = new Texture2D[6] { wallTex, wallTex, topWallTex, wallTex, wallTex, wallTex };
             floorTextures = new Texture2D[6] { floorTex, floorTex, floorTex, floorTex, floorTex, floorTex };
             walls = new GameObject();
-            walls.transform.position = new Vector3(.35f, 0, .35f);
+            walls.layer = 9;
+            walls.transform.position = new Vector3(0.5f, 0, .5f);
 
             floor = new GameObject();
-            floor.transform.position = new Vector3(.35f, 0, .35f);
+            floor.transform.position = new Vector3(0.5f, 0, 0.5f);
 
             wallFilter = walls.AddComponent<MeshFilter>();
             wallRenderer = walls.AddComponent<MeshRenderer>();
@@ -148,25 +149,6 @@ namespace RedKite
                 floorMesh.NewMakeMesh(area.Floor.TrueScale, area.Floor.Center);
 
                 floorMeshes.Add(floorMesh);
-
-                //should consider storing pathways somewhere else. In walls seems a little bizarre.
-                foreach (Area.Wall wall in area.Walls)
-                {
-                    if (wall.Overlaps.Count != 0)
-                    {
-                        foreach (Segment path in wall.Overlaps.Where(x => x.IsCorner == false).ToList())
-                        {
-                            if (path.IsRemoved == false)
-                            {
-                                MeshMaker pathMesh = new MeshMaker();
-
-                                pathMesh.NewMakeMesh(path.Scale, path.Center);
-
-                                floorMeshes.Add(pathMesh);
-                            }
-                        }
-                    }
-                }
             }
 
             floorMesh = MeshMaker.CombinePlanes(floorMeshes);

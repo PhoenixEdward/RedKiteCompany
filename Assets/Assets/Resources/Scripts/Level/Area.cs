@@ -143,7 +143,7 @@ namespace RedKite
             public Vector3 Center;
             public float Thickness = 1;
             public float length;
-            public float Height = 3;
+            public float Height = 1;
             public Vector3 Scale;
             public Dictionary<int, Door> Doors = new Dictionary<int, Door>();
 
@@ -153,12 +153,12 @@ namespace RedKite
 
                 Orientation = _orientation;
 
-                Vector3 cornerTopLeft = _floor.TrueNW + Vector3.forward + Vector3.left;
-                Vector3 cornerBottomRight = _floor.TrueSE + Vector3.back + Vector3.right;
+                Vector3 cornerTopLeft = _floor.TrueNW + Vector3.up;
+                Vector3 cornerBottomRight = _floor.TrueSE + Vector3.up;
 
 
-                Vector3 cornerBottomLeft = _floor.TrueSW + Vector3.back + Vector3.left;
-                Vector3 cornerTopRight = _floor.TrueNE + Vector3.forward + Vector3.right;
+                Vector3 cornerBottomLeft = _floor.TrueSW + Vector3.up;
+                Vector3 cornerTopRight = _floor.TrueNE + Vector3.up;
 
                 if(Orientation == Orient.North)
                 {

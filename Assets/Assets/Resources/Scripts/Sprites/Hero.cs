@@ -29,15 +29,11 @@ namespace RedKite
             {
                 if (!activeSpawns.Contains(spawnPoint))
                 {
-                    transform.position = spawnPoint + offset + Vector3.up;
+                    Coordinate = grid.WorldToCell(spawnPoint);
                     activeSpawns.Add(spawnPoint);
                     break;
                 }
             }
-
-            Coordinate.x = (int)Mathf.Floor(transform.position.x);
-            Coordinate.y = (int)Mathf.Floor(transform.position.z);
-
         }
 
         public static void ClearStatic()

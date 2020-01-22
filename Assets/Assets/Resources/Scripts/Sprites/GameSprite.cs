@@ -16,11 +16,11 @@ namespace RedKite
         public SpriteType spriteType;
         public string spriteName;
 
-        protected int verticalFrames;
-        protected int horizontalFrames;
+        public int verticalFrames; 
+        public int horizontalFrames;
 
-        protected int VerticalRow { get; set; }
-        protected int HorizontalRow { get; set; }
+        public int VerticalRow { get; set; }
+        public int HorizontalRow { get; set; }
 
         public Vector3Int Coordinate = new Vector3Int(0, 0, -2);
 
@@ -35,7 +35,9 @@ namespace RedKite
 
         static protected CameraMovement cam;
 
-        protected Vector3 offset = new Vector3(0.35f, 0, 0.35f);
+        static CameraMovement.Facing currentCamFacing;
+
+        protected Vector3 offset = new Vector3(0, 0, 0);
 
         //This will be set by fog of war. Unsure about stipulations of set.
         public bool IsVisible { get; set; }
@@ -64,7 +66,7 @@ namespace RedKite
 
             }
 
-            FrameDimensions = FrameDimensions == Vector2.zero ? new Vector2Int(100, 100) : FrameDimensions;
+            FrameDimensions = FrameDimensions == Vector2.zero ? new Vector2Int(150, 150) : FrameDimensions;
 
             verticalFrames = spriteLoad.height / FrameDimensions.y;
             horizontalFrames = spriteLoad.width / FrameDimensions.x;
@@ -75,7 +77,7 @@ namespace RedKite
             {
                 for (int x = 0; x < horizontalFrames; x++)
                 {
-                    Sprite sprite = Sprite.Create(spriteLoad, new Rect(new Vector2(x * FrameDimensions.x, y * FrameDimensions.y), FrameDimensions), new Vector2(0.5f, 0.5f));
+                    Sprite sprite = Sprite.Create(spriteLoad, new Rect(new Vector2(x * FrameDimensions.x, y * FrameDimensions.y), FrameDimensions), new Vector2(0.5f, 0f));
                     sprites[x, y] = sprite;
                 }
             }
@@ -90,22 +92,25 @@ namespace RedKite
 
         public virtual void Update()
         {
-            if(CameraMovement.facing == CameraMovement.Facing.NE)
+
+
+            if (CameraMovement.facing == CameraMovement.Facing.NE)
             {
                 transform.rotation = Quaternion.Euler(0, 45f, 0);
 
-                if(isIso)
-                    transform.position = grid.CellToWorld(Coordinate) + Vector3.up;
+                transform.localPosition = grid.CellToWorld(Coordinate) + new Vector3(0, 0.5f, 0);
 
                 if (horizontalFrames > 3 & !IsMoving)
                     HorizontalRow = 3;
             }
             else if (CameraMovement.facing == CameraMovement.Facing.NW)
             {
+
                 transform.rotation = Quaternion.Euler(0, 135f, 0);
 
-                if (isIso)
-                    transform.position = grid.CellToWorld(Coordinate) + new Vector3(0,0,.65f) + Vector3.up;
+                transform.localPosition = grid.CellToWorld(Coordinate) + new Vector3(0f, 0, 1f) + new Vector3(0, 0.5f, 0);
+
+                Debug.Log("Culprit");
 
                 if (horizontalFrames > 2 & !IsMoving)
                     HorizontalRow = 2;
@@ -114,8 +119,9 @@ namespace RedKite
             {
                 transform.rotation = Quaternion.Euler(0, 225f, 0);
 
-                if (isIso)
-                    transform.position = grid.CellToWorld(Coordinate) + new Vector3(.65f, 0, .65f) + Vector3.up;
+
+                transform.localPosition = grid.CellToWorld(Coordinate) + new Vector3(1f, 0, 1f) + new Vector3(0, 0.5f, 0);
+
 
                 if (horizontalFrames > 1 & !IsMoving)
                     HorizontalRow = 1;
@@ -124,10 +130,9 @@ namespace RedKite
             {
                 transform.rotation = Quaternion.Euler(0, 315f, 0);
 
-                if (isIso)
-                    transform.position = grid.CellToWorld(Coordinate) + new Vector3(.65f, 0, 0) + Vector3.up;
+                transform.localPosition = grid.CellToWorld(Coordinate) + new Vector3(1, 0, 0) + new Vector3(0, 0.5f, 0);
 
-                if(!IsMoving)
+                if (!IsMoving)
                     HorizontalRow = 0;
             }
         }
@@ -138,8 +143,10 @@ namespace RedKite
 
             spriteLoad = texture;
 
-            verticalFrames = spriteLoad.height / 100;
-            horizontalFrames = spriteLoad.width / 100;
+            FrameDimensions = FrameDimensions == Vector2.zero ? new Vector2Int(150, 150) : FrameDimensions;
+
+            verticalFrames = spriteLoad.height / FrameDimensions.y;
+            horizontalFrames = spriteLoad.width / FrameDimensions.x;
 
             sprites = new Sprite[horizontalFrames, verticalFrames];
 
@@ -147,7 +154,7 @@ namespace RedKite
             {
                 for (int x = 0; x < horizontalFrames; x++)
                 {
-                    Sprite sprite = Sprite.Create(spriteLoad, new Rect(new Vector2(x * 100, y * 100), new Vector2(100, 100)), new Vector2(0.5f, 0.5f));
+                    Sprite sprite = Sprite.Create(spriteLoad, new Rect(new Vector2(x * FrameDimensions.x, y * FrameDimensions.y), FrameDimensions), new Vector2(0.5f, 0f));
                     sprites[x, y] = sprite;
                 }
             }

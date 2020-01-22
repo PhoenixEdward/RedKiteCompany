@@ -31,7 +31,6 @@ namespace RedKite
         // Start is called before the first frame update
         void Start()
         {
-            Debug.Log(Application.dataPath);
 
             meshFilter = gameObject.GetComponent<MeshFilter>();
             meshRenderer = gameObject.GetComponent<MeshRenderer>();
@@ -39,13 +38,13 @@ namespace RedKite
             topWallTex = Resources.Load<Texture2D>("Tiles/BambooFloor");
             wallTex = Resources.Load<Texture2D>("Tiles/WoodFloor");
             MeshMaker meshMaker = new MeshMaker();
-            meshMaker.NewMakeMesh(new Vector3(4,4,4), new Vector3(0,0,0));
+            meshMaker.NewMakeMesh(new Vector3(1,1,1), new Vector3(0,0,0));
             MeshMaker meshMaker2 = new MeshMaker();
-            meshMaker2.NewMakeMesh(new Vector3(10, 5, 2), new Vector3(7.5f, 0, 0));
+            meshMaker2.NewMakeMesh(new Vector3(2, 1, 1), new Vector3(1.5f, 0, 0));
 
             GameObject cube = GameObject.CreatePrimitive(PrimitiveType.Cube);
 
-            cubeMesh = MeshMaker.CombinePlanes(new List<MeshMaker> { meshMaker });
+            cubeMesh = MeshMaker.CombinePlanes(new List<MeshMaker> { meshMaker, meshMaker2 });
 
             copyTris = cube.GetComponent<MeshFilter>().mesh.triangles;
             copyVerts = cube.GetComponent<MeshFilter>().mesh.vertices;

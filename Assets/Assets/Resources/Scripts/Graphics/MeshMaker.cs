@@ -680,9 +680,96 @@ namespace RedKite
         public static MeshMaker CombinePlanes(List<MeshMaker> meshMakers)
         {
             MeshMaker outMesh = new MeshMaker();
+            /*
+            for (int plane = 0; plane < 6; plane++)
+            {
+                for(int mesh = 0; mesh < meshMakers.Count - 1; mesh ++)
+                {
+                    List<int> vertRemoveIndices = new List<int>();
+                    List<int> triRemoveIndices = new List<int>();
 
+                    for (int vert = 0; vert <= meshMakers[mesh].SubMeshes[plane].vertexCount - 4; vert += 4)
+                    {
+                        Debug.Log("Run");
+                        List<Vector3> face = new List<Vector3> {meshMakers[mesh].SubMeshes[plane].vertices[vert] + meshMakers[mesh].position,
+                            meshMakers[mesh].SubMeshes[plane].vertices[vert + 1] + meshMakers[mesh].position,
+                            meshMakers[mesh].SubMeshes[plane].vertices[vert + 2] + meshMakers[mesh].position,
+                            meshMakers[mesh].SubMeshes[plane].vertices[vert + 3] + meshMakers[mesh].position};
+
+                        face = face.OrderBy(x => x.z).OrderBy(x => x.y).OrderBy(x => x.x).ToList();
+
+                        for (int nextMesh = mesh + 1; nextMesh < meshMakers.Count; nextMesh++)
+                        {
+                            Debug.Log("Run2");
+                            for (int oVert = 0; oVert <= meshMakers[nextMesh].SubMeshes[plane].vertexCount - 4; oVert += 4)
+                            {
+
+                                List<Vector3> oFace = new List<Vector3> {meshMakers[nextMesh].SubMeshes[plane].vertices[oVert] + meshMakers[nextMesh].position,
+                                meshMakers[nextMesh].SubMeshes[plane].vertices[oVert + 1] + meshMakers[nextMesh].position,
+                                meshMakers[nextMesh].SubMeshes[plane].vertices[oVert + 2] + meshMakers[nextMesh].position,
+                                meshMakers[nextMesh].SubMeshes[plane].vertices[oVert + 3] + meshMakers[nextMesh].position};
+
+                                oFace = oFace.OrderBy(x => x.z).OrderBy(x => x.y).OrderBy(x => x.x).ToList();
+
+                                bool match = Enumerable.SequenceEqual(face, oFace);
+
+                                if (match)
+                                {
+                                    Debug.Log(match);
+                                    vertRemoveIndices.AddRange(new List<int>
+                                    {
+                                        vert,
+                                        vert + 1,
+                                        vert + 2,
+                                        vert + 3
+                                    });
+
+                                    triRemoveIndices.AddRange(new List<int>
+                                    {
+                                        vert * 6,
+                                        (vert * 6) + 1,
+                                        (vert * 6) + 2,
+                                        (vert * 6) + 3,
+                                        (vert * 6) + 4,
+                                        (vert * 6) + 5,
+                                    });
+
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                    List<Vector3> newVerts = new List<Vector3>();
+                    List<Vector2> newUVs = new List<Vector2>();
+                    List<int>  newTris = new List<int>();
+
+                    for (int i = 0; i < meshMakers[mesh].SubMeshes[plane].vertices.Length; i++)
+                        if (vertRemoveIndices.Contains(i))
+                            continue;
+                        else
+                            newVerts.Add(meshMakers[mesh].SubMeshes[plane].vertices[i]);
+
+                    for (int i = 0; i < meshMakers[mesh].SubMeshes[plane].uv.Length; i++)
+                        if (vertRemoveIndices.Contains(i))
+                            continue;
+                        else
+                            newUVs.Add(meshMakers[mesh].SubMeshes[plane].uv[i]);
+
+                    for (int i = 0; i < meshMakers[mesh].SubMeshes[plane].triangles.Length; i++)
+                        if (triRemoveIndices.Contains(i))
+                            continue;
+                        else
+                            newTris.Add(meshMakers[mesh].SubMeshes[plane].triangles[i]);
+
+                    meshMakers[mesh].SubMeshes[plane].vertices = newVerts.ToArray();
+                    meshMakers[mesh].SubMeshes[plane].uv = newUVs.ToArray();
+                    meshMakers[mesh].SubMeshes[plane].triangles = newTris.ToArray();
+
+                }
+            }
+            */
             //combine planes of each individual meshmakers 6 sides to create one meshmaker with submeshes filled out by all the combined planes.
-            for(int plane = 0; plane < 6; plane++)
+            for (int plane = 0; plane < 6; plane++)
             { 
                 CombineInstance[] combine = new CombineInstance[meshMakers.Count];
 
