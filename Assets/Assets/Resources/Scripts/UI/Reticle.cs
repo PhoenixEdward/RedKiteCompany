@@ -86,7 +86,7 @@ namespace RedKite
 
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
             RaycastHit hit;
-            if (Physics.Raycast(ray, out hit, Mathf.Infinity))
+            if (Physics.Raycast(ray, out hit, Mathf.Infinity, (1 << 0)))
             {
                 highlight = grid.WorldToCell(hit.point);
             }

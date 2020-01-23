@@ -27,6 +27,11 @@ namespace RedKite
         protected int Frame;
         protected Vector3 velocity = Vector3.zero;
         public Vector3Int nextCell;
+        public GameObject mirror;
+        
+        public SpriteRenderer mirrorRender;
+
+        public BoxCollider collider;
 
         public Vector3 distanceFromCoord;
 
@@ -36,16 +41,24 @@ namespace RedKite
 
             //possibly shortcut in TileMapper code
             grid = FindObjectOfType<Grid>();
-
             //transform.parent = grid.transform;
             //level.tileMap = FindObjectOfType<TileMapper>();
 
             currentPath = null;
+
+            mirror = new GameObject();
+            mirrorRender = mirror.AddComponent<SpriteRenderer>();
+            mirrorRender.material.shader = Shader.Find("Unlit/GlowMask");
+
+            mirror.transform.SetParent(transform);
+            mirror.layer = 13;
+
+            collider = gameObject.AddComponent<BoxCollider>();
+            collider.center += new Vector3(0, 0.5f, 0);
         }
 
         public override void Update()
         {
-
             if (currentPath != null)
             {
                 IsMoving = true;
@@ -126,7 +139,7 @@ namespace RedKite
                             VerticalRow = 0;
                         }
                     }
-                    else if (CameraMovement.facing == CameraMovement.Facing.NW)
+                    else if (CameraMovement.facing == CameraMovement.Facing.SE)
                     {
                         if (velocity.z < 0)
                         {
@@ -254,11 +267,13 @@ namespace RedKite
 
             timeSinceLastFrame += Time.deltaTime;
 
-            sr.sprite = sprites[HorizontalRow, VerticalRow];
-
             base.Update();
 
+            sr.sprite = sprites[HorizontalRow, VerticalRow];
+            mirrorRender.sprite = sprites[HorizontalRow, VerticalRow];
+
             transform.localPosition += new Vector3(distanceFromCoord.x, 0, distanceFromCoord.y);
+
         }
 
         void MoveNextTile()

@@ -107,19 +107,24 @@ namespace RedKite
                 transform.localPosition = grid.CellToWorld(Coordinate) + new Vector3(0, 0.5f, 0);
 
                 if (horizontalFrames > 3 & !IsMoving)
+                {
+                    VerticalRow = verticalFrames - 1;
                     HorizontalRow = 3;
+                }
             }
-            else if (CameraMovement.facing == CameraMovement.Facing.NW)
+            else if (CameraMovement.facing == CameraMovement.Facing.SE)
             {
 
                 transform.rotation = Quaternion.Euler(0, 135f, 0);
 
                 transform.localPosition = grid.CellToWorld(Coordinate) + new Vector3(0f, 0, 1f) + new Vector3(0, 0.5f, 0);
 
-                Debug.Log("Culprit");
 
                 if (horizontalFrames > 2 & !IsMoving)
+                {
+                    VerticalRow = verticalFrames - 1;
                     HorizontalRow = 2;
+                }
             }
             else if (CameraMovement.facing == CameraMovement.Facing.SW)
             {
@@ -130,7 +135,10 @@ namespace RedKite
 
 
                 if (horizontalFrames > 1 & !IsMoving)
+                {
+                    VerticalRow = verticalFrames - 1;
                     HorizontalRow = 1;
+                }
             }
             else
             {
@@ -139,7 +147,10 @@ namespace RedKite
                 transform.localPosition = grid.CellToWorld(Coordinate) + new Vector3(1, 0, 0) + new Vector3(0, 0.5f, 0);
 
                 if (!IsMoving)
+                {
+                    VerticalRow = verticalFrames - 1;
                     HorizontalRow = 0;
+                }
             }
         }
 

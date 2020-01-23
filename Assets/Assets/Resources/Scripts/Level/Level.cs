@@ -57,7 +57,7 @@ namespace RedKite
             hero1.name = "SwordGal";
             hero1.layer = 8;
             Hero unit1 = hero1.AddComponent<Hero>();
-            unit1.spriteName = "Mage";
+            unit1.spriteName = "SwordGal";
             heroes.Add(hero1);
 
             GameObject hero2 = new GameObject();

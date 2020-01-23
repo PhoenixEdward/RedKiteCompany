@@ -20,9 +20,9 @@ namespace RedKite
         public enum Facing
         {
             NE,
-            NW,
+            SE,
             SW,
-            SE
+            NW
         }
 
         void OnEnable()
@@ -47,11 +47,11 @@ namespace RedKite
                     transform.RotateAround(hit.point, Vector3.up, 90f);
 
                     if (facing == Facing.NE)
-                        facing = Facing.NW;
-                    else if (facing == Facing.NW)
+                        facing = Facing.SE;
+                    else if (facing == Facing.SE)
                         facing = Facing.SW;
                     else if (facing == Facing.SW)
-                        facing = Facing.SE;
+                        facing = Facing.NW;
                     else
                         facing = Facing.NE;
                 }
@@ -67,11 +67,11 @@ namespace RedKite
                     transform.RotateAround(hit.point, Vector3.down, 90f);
 
                     if (facing == Facing.NE)
-                        facing = Facing.SE;
-                    else if (facing == Facing.SE)
+                        facing = Facing.NW;
+                    else if (facing == Facing.NW)
                         facing = Facing.SW;
                     else if (facing == Facing.SW)
-                        facing = Facing.NW;
+                        facing = Facing.SE;
                     else
                         facing = Facing.NE;
                 }
@@ -105,7 +105,7 @@ namespace RedKite
                 }
             }
 
-            if (facing == Facing.NW)
+            if (facing == Facing.SE)
             {
                 if (Input.GetKey(KeyCode.W))
                 {
@@ -157,7 +157,7 @@ namespace RedKite
                 }
             }
 
-            if (facing == Facing.SE)
+            if (facing == Facing.NW)
             {
                 if (Input.GetKey(KeyCode.W))
                 {

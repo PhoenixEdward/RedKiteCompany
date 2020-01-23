@@ -3,6 +3,7 @@
     Properties
     {
         _MainTex ("Texture", 2D) = "white" {}
+		_MainTex2("Texture2", 2D) = "White" {}
     }
     SubShader
     {

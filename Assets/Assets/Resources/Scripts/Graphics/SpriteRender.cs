@@ -2,30 +2,29 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class SpriteRender : MonoBehaviour
-{
-    public Camera cam;
-    RenderTexture wallRender;
-    public Shader UnitShader;
-    // Start is called before the first frame update
-    void OnEnable()
+namespace RedKite
+{ 
+    public class SpriteRender : MonoBehaviour
     {
-        cam = GetComponent<Camera>();
+        public Camera cam;
+        public RenderTexture unitRender;
+        Shader UnitShader;
+        List<GameObject> mirrors = new List<GameObject>();
+        // Start is called before the first frame update
+        void Start()
+        {
+            cam = GetComponent<Camera>();
 
-        //wallRender = new RenderTexture(Screen.width, Screen.height, 1);
+            unitRender = new RenderTexture(Screen.width, Screen.height, 1);
 
-        //cam.targetTexture = wallRender;
+            cam.targetTexture = unitRender;
 
-        cam.SetReplacementShader(UnitShader, "RenderType");
-    }
+            cam.SetReplacementShader(UnitShader, "RenderType");
+        }
 
-    private void OnDisable()
-    {
-        cam.ResetReplacementShader();
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
+        // Update is called once per frame
+        void Update()
+        {
+        }
     }
 }

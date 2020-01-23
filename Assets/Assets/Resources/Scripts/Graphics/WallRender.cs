@@ -28,9 +28,9 @@ namespace RedKite
             cam.cullingMask = (1 << southWall) | (1 << westWall) | (1 << northWall) | (1 << eastWall);
 
 
-            //wallRender = new RenderTexture(Screen.width, Screen.height, 1);
+            wallRender = new RenderTexture(Screen.width, Screen.height, 1);
 
-            //cam.targetTexture = wallRender;
+            cam.targetTexture = wallRender;
 
             cam.depthTextureMode = DepthTextureMode.Depth;
         }

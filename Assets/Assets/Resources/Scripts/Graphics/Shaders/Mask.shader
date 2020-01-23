@@ -5,6 +5,7 @@
         _MainTex ("Texture", 2D) = "white" {}
 		_MainTex2("Texture2", 2D) = "white" {}
 		_MainTex3("Texture3", 2D) = "white" {}
+		_Covered("IsCovered", int) = 0
     }
     SubShader
     {
@@ -50,6 +51,7 @@
 			sampler2D _MainTex2;
             sampler2D _MainTex;
             float4 _MainTex_ST;
+			int _Covered;
 
             v2f vert (appdata v)
             {
@@ -70,6 +72,7 @@
 				
 				if (wallCol.a != 0 & wallCol.b > 0.74f)
 				{
+					_Covered = 1;
 					return float4(0,0,0,0);
 				}
 				else
