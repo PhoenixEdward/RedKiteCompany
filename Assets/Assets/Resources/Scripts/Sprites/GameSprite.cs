@@ -37,6 +37,8 @@ namespace RedKite
 
         static CameraMovement.Facing currentCamFacing;
 
+        Material spriteMask;
+
         protected Vector3 offset = new Vector3(0, 0, 0);
 
         //This will be set by fog of war. Unsure about stipulations of set.
@@ -84,6 +86,10 @@ namespace RedKite
 
             sr = gameObject.AddComponent<SpriteRenderer>();
 
+            spriteMask = Resources.Load<Material>("RenderTargets/Materials/SpriteMat");
+
+            sr.material = spriteMask;
+
             sr.sortingLayerName = "Units";
 
             //transform.rotation = Quaternion.Euler(0, 45, 0);
@@ -92,7 +98,7 @@ namespace RedKite
 
         public virtual void Update()
         {
-
+            sr.material.SetTexture("_MainTex3", FindObjectOfType<WallRender>().wallRender);
 
             if (CameraMovement.facing == CameraMovement.Facing.NE)
             {

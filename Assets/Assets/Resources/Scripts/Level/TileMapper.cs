@@ -201,11 +201,11 @@ namespace RedKite
                     map[x, y] = TILE_VOID;
         }
 
-        void AddSpawn(int maxWidth = 10, int maxHeight = 12)
+        void AddSpawn(int maxWidth = 8, int maxHeight = 10)
         {
             //room height and width including walls
-            int h = (int)Mathf.Max(rnd(maxHeight) + 7, 8);
-            int w = (int)Mathf.Max(rnd(maxWidth) + 7, 8);
+            int h = (int)Mathf.Max(rnd(maxHeight) + 5, 8);
+            int w = (int)Mathf.Max(rnd(maxWidth) + 5, 8);
 
             //
             int ry = rndState.Next(1, H - h);
@@ -245,7 +245,7 @@ namespace RedKite
 
         }
 
-        bool AddArea()
+        bool AddArea(int maxWidth = 10, int maxHeight = 10)
         {
 
 
@@ -480,8 +480,8 @@ namespace RedKite
                             Areas[area].Floor.TrueNE.x - Areas[area].Floor.TrueSW.x ? true : false;
                     }
 
-                    int w = isLong ? rndState.Next(10, 12) : rndState.Next(12, 18);
-                    int h = isLong ? rndState.Next(12, 18) : rndState.Next(10, 12);
+                    int w = isLong ? rndState.Next(8, 10) : rndState.Next(10, 16);
+                    int h = isLong ? rndState.Next(10, 16) : rndState.Next(8, 10);
 
 
                     Vector3 roomDims = new Vector3(w - 2, 1, h - 2);
@@ -504,7 +504,7 @@ namespace RedKite
                         justify = rndState.Next(1,(int)roomDims.z - 1);
 
                     //move it out one space from the wall and select as corner of new floor.
-                    Vector3 startPoint = oldCoord + (wall.Orientation.Right * justify) + Vector3.down;
+                    Vector3 startPoint = oldCoord + wall.Orientation.Forward + (wall.Orientation.Right * justify);
 
                     roomFailures[roomIndex]++;
 
@@ -535,7 +535,8 @@ namespace RedKite
                     //make sure no floor tiles come in contact with any existing floor OR door tiles.
                     foreach (Vector3 tileCoord in allCoords)
                     {
-                        if (((int)map[(int)tileCoord.x, (int)tileCoord.z] >= 40))
+                        if (((int)map[(int)tileCoord.x, (int)tileCoord.z] >= 40 |
+                            map[(int)tileCoord.x, (int)tileCoord.z] == TILE_CORNER | map[(int)tileCoord.x, (int)tileCoord.z] == TILE_WALL_CORNER))
                         {
                             break;
                         }

@@ -153,12 +153,12 @@ namespace RedKite
 
                 Orientation = _orientation;
 
-                Vector3 cornerTopLeft = _floor.TrueNW + Vector3.up;
-                Vector3 cornerBottomRight = _floor.TrueSE + Vector3.up;
+                Vector3 cornerTopLeft = _floor.TrueNW + Vector3.forward + Vector3.left;
+                Vector3 cornerBottomRight = _floor.TrueSE + Vector3.back + Vector3.right;
 
 
-                Vector3 cornerBottomLeft = _floor.TrueSW + Vector3.up;
-                Vector3 cornerTopRight = _floor.TrueNE + Vector3.up;
+                Vector3 cornerBottomLeft = _floor.TrueSW + Vector3.back + Vector3.left;
+                Vector3 cornerTopRight = _floor.TrueNE + Vector3.forward + Vector3.right;
 
                 if(Orientation == Orient.North)
                 {

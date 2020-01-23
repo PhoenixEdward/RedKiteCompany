@@ -35,6 +35,7 @@ namespace RedKite
         List<GameObject> heroes;
         Dictionary<Vector3Int,GameObject> propInstances = new Dictionary<Vector3Int, GameObject>();
         CameraMovement cam;
+        public Material spriteMat;
         // Start is called before the first frame update
         void Awake()
         {
@@ -54,12 +55,14 @@ namespace RedKite
 
             GameObject hero1 = new GameObject();
             hero1.name = "SwordGal";
+            hero1.layer = 8;
             Hero unit1 = hero1.AddComponent<Hero>();
             unit1.spriteName = "Mage";
             heroes.Add(hero1);
 
             GameObject hero2 = new GameObject();
             hero2.name = "MageGuy";
+            hero2.layer = 8;
             Hero unit2 = hero2.AddComponent<Hero>();
             unit2.spriteName = "Mage";
             heroes.Add(hero2);
@@ -96,12 +99,13 @@ namespace RedKite
 
             GameObject hero1 = new GameObject();
             hero1.name = heroes[0].GetComponent<GameSprite>().spriteName;
+            hero1.layer = 8;
             Hero unit1 = hero1.AddComponent<Hero>();
             unit1.spriteType = GameSprite.SpriteType.Character;
             unit1.spriteLoad = heroes[0].GetComponent<GameSprite>().spriteLoad;
-
             GameObject hero2 = new GameObject();
             hero2.name = "Unit 2";
+            hero2.layer = 8;
             Hero unit2 = hero2.AddComponent<Hero>();
             unit2.spriteType = GameSprite.SpriteType.Character;
             unit2.spriteLoad = heroes[1].GetComponent<GameSprite>().spriteLoad;
