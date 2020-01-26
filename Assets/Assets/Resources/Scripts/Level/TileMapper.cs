@@ -29,7 +29,7 @@ namespace RedKite
 
         public int H;
         public int W;
-        protected char[,] map;
+        public char[,] map;
 
         public Dictionary<int, Area> Areas { get; private set; }
 
@@ -133,7 +133,7 @@ namespace RedKite
                         Vector3[] tiles = Utility.CoordRange(segment.Min, segment.Max);
                             foreach(Vector3 tile in tiles)
                             {
-                                map[(int)tile.x,(int)tile.z] = TILE_HALL;
+                                map[(int)tile.x,(int)tile.z] = (char)(area.RoomIndex + 48);
                             }
                     }
                 }

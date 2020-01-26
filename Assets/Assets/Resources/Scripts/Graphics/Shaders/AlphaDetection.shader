@@ -1,24 +1,19 @@
-﻿Shader "Unlit/Fog"
+﻿Shader "Unlit/AlphaDetection"
 {
     Properties
     {
         _MainTex ("Texture", 2D) = "white" {}
-		_MainTex2 ("Texture2", 2D) = "white" {}
-		_MainTex3("Texture3", 2D) = "white" {}
     }
     SubShader
     {
-        Tags { "RenderType"="Transparent" 
-				
-			"Queue"="Transparent"
-			}
+        Tags { "RenderType"="Transparent" }
         LOD 100
 
-			Cull Off
-			Lighting Off
-			ZWrite Off
+		Cull Off
+		Lighting Off
+		ZWrite Off
 
-			Blend SrcAlpha OneMinusSrcAlpha
+		Blend SrcAlpha OneMinusSrcAlpha
 
         Pass
         {
@@ -44,8 +39,6 @@
             };
 
             sampler2D _MainTex;
-			sampler2D _MainTex2;
-			sampler2D _MainTex3;
             float4 _MainTex_ST;
 
             v2f vert (appdata v)
@@ -57,39 +50,18 @@
                 return o;
             }
 
-			fixed4 frag(v2f i) : SV_Target
-			{
-				fixed4 primCol = tex2D(_MainTex, i.uv);
-				float2 texelSize = 1 / _ScreenParams.xy;
-				fixed4 wallCol = tex2D(_MainTex3, i.vertex * texelSize);
+            fixed4 frag (v2f i) : SV_Target
+            {
+                // sample the texture
+                fixed4 col = tex2D(_MainTex, i.uv);
+                // apply fog
 
-				if(primCol.a != 0 & (wallCol.b < .74f | wallCol.a == 0))
-				{
-					float offset = (_Time.y % 10)/10;
+			if (col.a != 0)
+				return float4(0,1,0,1);
+			else
+				return float4(0, 0, 0, 0);
 
-					float2 newUV = i.uv + float2(offset, offset);
-
-					if (newUV.x > 1)
-					{
-						newUV.x = newUV.x - 1;
-					}
-					if (newUV.y > 1)
-					{
-						newUV.y = newUV.y - 1;
-					}
-
-
-					// sample the texture
-					fixed4 col = tex2D(_MainTex2, newUV);
-
-					// apply fog
-					return float4(col.r, col.g, col.b, primCol.a/1.2);
-				}
-				else
-				{
-					return float4(0, 0, 0, 0);
-				}
-
+                UNITY_APPLY_FOG(i.fogCoord, col);
             }
             ENDCG
         }

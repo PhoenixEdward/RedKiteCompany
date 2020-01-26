@@ -54,7 +54,7 @@ namespace RedKite
                 Ray ray = new Ray(Camera.main.transform.position, direction);
                 RaycastHit hit;
                 Debug.DrawRay(Camera.main.transform.position, direction, Color.red);
-                if(Physics.Raycast(ray, out hit, Mathf.Infinity, (1 << 9) | (1 << 10) | (1 << 11) | (1 << 12)))
+                if(Physics.Raycast(ray, out hit, Mathf.Infinity, (1 << 9)))
                 {
                     if (Vector3.Distance(Camera.main.transform.position, hit.point) < Vector3.Distance(Camera.main.transform.position, point))
                         unit.mirrorRender.material.SetInt("_Covered", 1);

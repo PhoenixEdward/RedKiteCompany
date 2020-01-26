@@ -162,7 +162,6 @@ namespace RedKite
 
                             propCreateInstance.transform.SetParent(transform);
                             propCreateInstance.transform.localScale = Vector3.one;
-                            propCreateInstance.transform.rotation = Camera.main.transform.rotation;
                             Vector3 pos = Camera.main.WorldToScreenPoint(hit.point);
                             pos = new Vector2(pos.x - Screen.width/2, pos.y - Screen.height/2);
                             propCreateInstance.GetComponent<RectTransform>().localPosition = pos;

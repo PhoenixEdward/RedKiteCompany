@@ -36,6 +36,8 @@ namespace RedKite
             }
 
             mirrorRender.material.SetColor("_Color", Color.blue);
+
+            IsVisible = true;
         }
 
         public static void ClearStatic()

@@ -36,8 +36,8 @@ namespace RedKite
         public void Start()
         {
             floorTexName = floorTexName ?? "WoodFloor";
-            topWallTexName = topWallTexName ?? "BambooFloor";
-            wallTexName = wallTexName ?? "jFlower";
+            topWallTexName = topWallTexName ?? "DungeonFloor";
+            wallTexName = wallTexName ?? "DungeonFloor";
 
             floorTex = Resources.Load<Texture2D>("Tiles/" + floorTexName);
             topWallTex = Resources.Load<Texture2D>("Tiles/" + topWallTexName);
@@ -208,7 +208,7 @@ namespace RedKite
 
             floorMesh = MeshMaker.CombinePlanes(floorMeshes);
 
-            floorMesh.SetTextures(meshRenderer, floorTextures, new bool[] { false, false, false, false, false, false });
+            floorMesh.SetTextures(meshRenderer, floorTextures, new bool[] { true, true, true, true, true, true });
 
             floorMesh.MergeSides();
 

@@ -42,7 +42,7 @@ namespace RedKite
         protected Vector3 offset = new Vector3(0, 0, 0);
 
         //This will be set by fog of war. Unsure about stipulations of set.
-        public bool IsVisible { get; set; }
+        public bool IsVisible { get; set; } = false;
 
         public bool isIso;
 
@@ -92,12 +92,16 @@ namespace RedKite
 
             sr.sortingLayerName = "Units";
 
-            //transform.rotation = Quaternion.Euler(0, 45, 0);
-
         }
 
         public virtual void Update()
         {
+            if (!IsVisible)
+                sr.enabled = false;
+            else
+                sr.enabled = true;
+
+            sr.material.SetTexture("_MainTex2", GameObject.FindGameObjectWithTag("FogCam").GetComponent<Camera>().activeTexture);
             sr.material.SetTexture("_MainTex3", FindObjectOfType<WallRender>().wallRender);
 
             if (CameraMovement.facing == CameraMovement.Facing.NE)

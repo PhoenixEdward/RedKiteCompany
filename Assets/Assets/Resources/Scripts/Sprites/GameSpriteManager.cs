@@ -34,6 +34,8 @@ namespace RedKite
         public List<Enemy> Enemies { get; private set; } = new List<Enemy>();
         public List<Unit> Units { get; private set; } = new List<Unit>();
 
+        public List<Prop> Props { get; private set; } = new List<Prop>();
+
         void Awake()
         {
             if (_instance == null)
@@ -62,6 +64,8 @@ namespace RedKite
                     Heroes.Add((Hero)sprite);
                 else if (sprite is Enemy)
                     Enemies.Add((Enemy)sprite);
+                else if (sprite is Prop)
+                    Props.Add((Prop)sprite);
 
                 if (sprite is Unit)
                     Units.Add((Unit)sprite);

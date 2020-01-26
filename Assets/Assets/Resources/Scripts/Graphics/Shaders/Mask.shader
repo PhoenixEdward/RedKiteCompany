@@ -72,12 +72,16 @@
                 fixed4 col = tex2D(_MainTex, i.uv);
 				float2 texelSize = 1 / _ScreenParams.xy;
 				fixed4 wallCol = tex2D(_MainTex3, i.vertex * texelSize);
-				float4 spriteCol = tex2D(_MainTex2, i.vertex * texelSize);
+				float4 fogCol = tex2D(_MainTex2, i.vertex * texelSize);
 				
 				if (wallCol.a != 0 & wallCol.b > 0.74f)
 				{
 					_Covered = 1;
 					return float4(0,0,0,0);
+				}
+				else if (fogCol.a != 0)
+				{
+					return col * float4(0.6f, 0.345f, 0.196f, 1);
 				}
 				else
 				{
