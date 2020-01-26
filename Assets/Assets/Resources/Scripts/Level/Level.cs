@@ -36,6 +36,11 @@ namespace RedKite
         Dictionary<Vector3Int,GameObject> propInstances = new Dictionary<Vector3Int, GameObject>();
         CameraMovement cam;
         public Material spriteMat;
+        public Texture2D fogTexture;
+
+        Color fogColor;
+
+        public FOW fow;
         // Start is called before the first frame update
         void Awake()
         {
@@ -48,10 +53,17 @@ namespace RedKite
 
             grid = FindObjectOfType<Grid>();
 
+            fogColor = Colors.AeroBlue;
+
+            FindObjectOfType<FOW>().fogColor = fogColor;
+
+
             modeler = new GameObject().AddComponent<Modeler>();
 
             heroes = new List<GameObject>();
             propInstances = new Dictionary<Vector3Int, GameObject>();
+
+            GameSprite.fogTint = fogColor;
 
             GameObject hero1 = new GameObject();
             hero1.name = "SwordGal";
@@ -169,6 +181,7 @@ namespace RedKite
             entity.isIso = _isIso;
             entity.spriteName = name;
             entity.spriteLoad = spriteSheet;
+            entity.IsVisible = true;
 
         }
         public void RemoveProp(Vector3Int position)

@@ -30,6 +30,8 @@ namespace RedKite
         public Texture2D spriteLoad;
         public Sprite[,] sprites;
 
+        public static Color fogTint;
+
         protected SpriteRenderer sr;
         protected Vector2Int FrameDimensions;
 
@@ -47,6 +49,7 @@ namespace RedKite
         public bool isIso;
 
         public bool IsMoving;
+
 
         public virtual void Start()
         {
@@ -89,6 +92,7 @@ namespace RedKite
             spriteMask = Resources.Load<Material>("RenderTargets/Materials/SpriteMat");
 
             sr.material = spriteMask;
+            sr.material.SetColor("_FogColor", fogTint);
 
             sr.sortingLayerName = "Units";
 

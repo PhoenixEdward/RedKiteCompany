@@ -6,6 +6,7 @@
 		_MainTex2("Texture2", 2D) = "white" {}
 		_MainTex3("Texture3", 2D) = "white" {}
 		_Covered("IsCovered", int) = 0
+		_FogColor("FogColor", Color) = (0,0,0,0)
     }
     SubShader
     {
@@ -53,7 +54,8 @@
 			sampler2D _MainTex3;
 			sampler2D _MainTex2;
             sampler2D _MainTex;
-            float4 _MainTex_ST;
+			float4 _FogColor;
+			float4 _MainTex_ST;
 			int _Covered;
 
             v2f vert (appdata v)
@@ -81,7 +83,7 @@
 				}
 				else if (fogCol.a != 0)
 				{
-					return col * float4(0.6f, 0.345f, 0.196f, 1);
+					return col * (_FogColor * float4(.6f, .6f, .6f, 1));
 				}
 				else
 				{

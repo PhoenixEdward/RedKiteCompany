@@ -22,6 +22,7 @@ namespace RedKite
         char TILE_WALL = '#';
 
         public Shader fogShader;
+        public Texture2D fogTexture;
 
         List<Hero> heroes;
         List<Enemy> enemies;
@@ -36,12 +37,17 @@ namespace RedKite
         //hide immediately if first spawn
         bool firstSpawn = true;
 
+        public Color fogColor;
+
         // Start is called before the first frame update
         void Start()
         {
             cam = GameObject.FindGameObjectWithTag("FogCam").GetComponent<Camera>();
             cam.SetReplacementShader(spriteColorShader, "RenderType");
             cam.targetTexture = new RenderTexture(Screen.width, Screen.height, 1);
+
+            fogTexture = Level.Instance.fogTexture;
+            partMaterial.SetColor("_Color", fogColor);
 
             roomMap = TileMapper.Instance.map;
 
@@ -57,7 +63,8 @@ namespace RedKite
                     if(roomMap[x,y] != TILE_WALL)
                     { 
                         fogMap[x, y] = TILE_FOG;
-                        patches[x, y] = new Patch(rnd, new Vector3Int(x, 0, y), transform, partMaterial);
+                        patches[x, y] = new Patch(rnd, new Vector3Int(x, 0, y),6,new Vector3(1, 1.5f), transform, partMaterial, fogTexture);
+
                     }
                 }
             }
@@ -180,6 +187,8 @@ namespace RedKite
         class Patch
         {
             public GameObject[] puffs;
+            int puffCount;
+            float puffSize;
 
             Vector3 coordinate;
             Vector3[] offsets;
@@ -189,44 +198,38 @@ namespace RedKite
             public bool isHidden = false;
             public bool hasDissipated = false;
 
-            public Patch(System.Random rnd,Vector3Int _coordinate, Transform transform, Material partMaterial)
+            public Patch(System.Random rnd,Vector3Int _coordinate,int _puffCount, Vector3 _puffSizeRange, Transform parent, Material partMaterial, Texture2D fogTex)
             {
-                puffs = new GameObject[2];
-                offsets = new Vector3[2];
+                puffCount = _puffCount;
+                puffSize = 1 + (float)rnd.NextDouble() * (_puffSizeRange.y - _puffSizeRange.x);
 
+                puffs = new GameObject[puffCount];
+                offsets = new Vector3[puffCount];
                 coordinate = new Vector3(_coordinate.x, 2.5f, _coordinate.z);
 
-                puffs[0] = GameObject.CreatePrimitive(PrimitiveType.Quad);
-                puffs[0].transform.SetParent(transform);
-                puffs[0].transform.localScale = new Vector3(2f, 2f, 0);
+                for (int i = 0; i < puffCount; i++)
+                { 
+                    puffs[i] = GameObject.CreatePrimitive(PrimitiveType.Quad);
+                    puffs[i].transform.SetParent(parent);
+                    puffs[i].transform.localScale = new Vector3(puffSize, puffSize, 1);
 
-                //give position random offset. subtract half from intial point so range for tile becomes somewhere between what the tile coords would be face down
-                offsets[0] = new Vector3((float)rnd.NextDouble(), 0, (float)rnd.NextDouble());
-                puffs[0].transform.position = coordinate + offsets[0];
+                    //give position random offset. subtract half from intial point so range for tile becomes somewhere between what the tile coords would be face down
+                    offsets[i] = new Vector3((float)rnd.NextDouble(), ((float)rnd.NextDouble() * 0.25f), (float)rnd.NextDouble());
+                    puffs[i].transform.position = coordinate + offsets[i];
 
-                puffs[0].GetComponent<MeshRenderer>().material = partMaterial;
+                    puffs[i].GetComponent<MeshRenderer>().material = partMaterial;
 
-                puffs[0].layer = 10;
-
-
-                puffs[1] = GameObject.CreatePrimitive(PrimitiveType.Quad);
-                puffs[1].transform.SetParent(transform);
-                puffs[1].transform.localScale = new Vector3(1.5f, 1.5f, 0);
-
-                //give position random offset. subtract half from intial point so range for tile becomes somewhere between what the tile coords would be face down
-                offsets[1] = new Vector3((float)rnd.NextDouble(), 0, (float)rnd.NextDouble());
-                puffs[1].transform.position = coordinate + offsets[1];
-
-
-                puffs[1].GetComponent<MeshRenderer>().material = partMaterial;
-
-                puffs[1].layer = 10;
+                    puffs[i].layer = 10;
+                }
             }
 
             public void Hide(bool _hide)
             {
-                puffs[0].GetComponent<MeshRenderer>().enabled = !_hide;
-                puffs[1].GetComponent<MeshRenderer>().enabled = !_hide;
+
+                for (int i = 0; i < puffCount; i++)
+                {
+                    puffs[i].GetComponent<MeshRenderer>().enabled = !_hide;
+                }
 
                 if (_hide)
                     isHidden = true;
@@ -236,103 +239,72 @@ namespace RedKite
 
             public void Rotate()
             {
-                if (CameraMovement.facing == CameraMovement.Facing.NE)
+
+                for (int i = 0; i < puffCount; i++)
                 {
-                    puffs[0].transform.rotation = Quaternion.Euler(0, 45f, 0);
-                    puffs[1].transform.rotation = Quaternion.Euler(0, 45f, 0);
+                    if (CameraMovement.facing == CameraMovement.Facing.NE)
+                    {
+                        puffs[i].transform.rotation = Quaternion.Euler(0, 45f, 0);
+                    }
+                    else if (CameraMovement.facing == CameraMovement.Facing.SE)
+                    {
+                        puffs[i].transform.rotation = Quaternion.Euler(0, 135f, 0);
+                    }
+                    else if (CameraMovement.facing == CameraMovement.Facing.SW)
+                    {
+                        puffs[i].transform.rotation = Quaternion.Euler(0, 225f, 0);
 
-                    puffs[0].transform.position = coordinate + offsets[0];
-                    puffs[1].transform.position = coordinate + offsets[1];
+                    }
+                    else
+                    {
+                        puffs[i].transform.rotation = Quaternion.Euler(0, 315f, 0);
+                    }
                 }
-                else if (CameraMovement.facing == CameraMovement.Facing.SE)
-                {
-                    puffs[0].transform.rotation = Quaternion.Euler(0, 135f, 0);
-                    puffs[1].transform.rotation = Quaternion.Euler(0, 135f, 0);
-
-                    puffs[0].transform.position = coordinate + offsets[0] + new Vector3(0,0,1f);
-                    puffs[1].transform.position = coordinate + offsets[1] + new Vector3(0, 0, 1f);
-                }
-                else if (CameraMovement.facing == CameraMovement.Facing.SW)
-                {
-                    puffs[0].transform.rotation = Quaternion.Euler(0, 225f, 0);
-                    puffs[1].transform.rotation = Quaternion.Euler(0, 225f, 0);
-
-
-                    puffs[0].transform.position = coordinate + offsets[0] + new Vector3(1f, 0, 1f);
-                    puffs[1].transform.position = coordinate + offsets[1] + new Vector3(1f, 0, 1f);
-
-                }
-                else
-                {
-                    puffs[0].transform.rotation = Quaternion.Euler(0, 315f, 0);
-                    puffs[1].transform.rotation = Quaternion.Euler(0, 315f, 0);
-
-                    puffs[0].transform.position = coordinate + offsets[0] + new Vector3(1f, 0, 0);
-                    puffs[1].transform.position = coordinate + offsets[1] + new Vector3(1f, 0, 0);
-
-                }
-            }
-
-            public void Shrink(bool _isEdge)
-            {
-                if(_isEdge)
-                { 
-                    puffs[0].transform.localScale = new Vector3(1f, 1f, 1f);
-                    puffs[1].transform.localScale = new Vector3(1f, 1f, 1f);
-                }
-                else
-                {
-                    puffs[0].transform.localScale = new Vector3(2f, 2f, 1f);
-                    puffs[1].transform.localScale = new Vector3(2f, 2f, 1f);
-                }
-
-            }
-
-            public void UpdateShader(Texture renderTarget)
-            {
-                puffs[0].GetComponent<MeshRenderer>().material.SetTexture("_MainTex3",renderTarget);
-                puffs[1].GetComponent<MeshRenderer>().material.SetTexture("_MainTex3", renderTarget);
             }
 
             public void Dissipate(bool _dissipate)
             {
-                bool dis1 = false;
-                bool dis2 = false;
+                bool[] dis = new bool[puffCount];
 
-                if(_dissipate)
-                { 
-                    if (puffs[0].transform.localScale.x > 0 | puffs[0].transform.localScale.y > 0)
-                        puffs[0].transform.localScale -= dissapateScale;
-                    else
-                        dis1 = true;
 
-                    if (puffs[1].transform.localScale.x > 0 | puffs[1].transform.localScale.y > 0)
-                        puffs[1].transform.localScale -= dissapateScale;
-                    else
-                        dis2 = true;
+                for (int i = 0; i < puffCount; i++)
+                {
+                    dis[i] = false;
+                }
 
-                    if (dis1 & dis2)
+                    if (_dissipate)
+                {
+
+                    for (int i = 0; i < puffCount; i++)
+                    {
+                        if (puffs[i].transform.localScale.x > 0 | puffs[0].transform.localScale.y > 0)
+                            puffs[i].transform.localScale -= dissapateScale;
+                        else
+                            dis[i] = true;
+                    }
+
+                    if (dis.All(x=> x == true))
                         Hide(true);
 
-                    hasDissipated = dis1 == true & dis2 == true ? true : false;
+                    hasDissipated = dis.All(x => x == true) == true ? true : false;
                 }
                 else
                 {
                     Hide(false);
 
-                    if (puffs[0].transform.localScale.x < 2 | puffs[0].transform.localScale.y < 2)
-                        puffs[0].transform.localScale += dissapateScale;
-                    else
-                        dis1 = true;
 
-                    if (puffs[1].transform.localScale.x < 2 | puffs[1].transform.localScale.y < 2)
-                        puffs[1].transform.localScale += dissapateScale;
-                    else
-                        dis2 = true;  
+                    for (int i = 0; i < puffCount; i++)
+                    {
+                        if (puffs[i].transform.localScale.x < puffSize | puffs[0].transform.localScale.y < puffSize)
+                            puffs[i].transform.localScale += dissapateScale;
+                        else
+                            dis[i] = true;
+                    }
 
-                    hasDissipated = dis1 == true & dis2 == true ? false : true;
+                    hasDissipated = dis.All(x => x == true) == true ? false : true;
                 }
             }
         }
+        
     }
 }

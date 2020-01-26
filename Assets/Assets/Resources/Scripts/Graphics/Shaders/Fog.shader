@@ -5,6 +5,7 @@
         _MainTex ("Texture", 2D) = "white" {}
 		_MainTex2 ("Texture2", 2D) = "white" {}
 		_MainTex3("Texture3", 2D) = "white" {}
+		_Color("Color", Color) = (1,1,1,1)
     }
     SubShader
     {
@@ -46,6 +47,7 @@
             sampler2D _MainTex;
 			sampler2D _MainTex2;
 			sampler2D _MainTex3;
+			float4 _Color;
             float4 _MainTex_ST;
 
             v2f vert (appdata v)
@@ -83,7 +85,7 @@
 					fixed4 col = tex2D(_MainTex2, newUV);
 
 					// apply fog
-					return float4(col.r, col.g, col.b, primCol.a/1.2);
+					return float4(col.r, col.g, col.b, primCol.a) * _Color;
 				}
 				else
 				{
