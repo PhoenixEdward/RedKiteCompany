@@ -11,16 +11,25 @@ namespace RedKite
         RawImage img;
         List<Unit> units;
         Texture target;
-        SpriteRender spriteRender;
         WallRender wallRender;
+
+        Camera cam;
+        RenderTexture unitRender;
+        public Shader UnitShader;
         // Start is called before the first frame update
         void Start()
         {
-            img = GetComponent<RawImage>();
+            cam = GetComponent<Camera>();
+
+            unitRender = new RenderTexture(Screen.width, Screen.height, 1);
+            cam.targetTexture = unitRender;
+
+            cam.SetReplacementShader(UnitShader, "RenderType");
+
+            img = GetComponentInChildren<RawImage>();
+            img.rectTransform.sizeDelta = new Vector2(Screen.width, Screen.height);
+
             wallRender = FindObjectOfType<WallRender>();
-            //glowTex = Resources.Load<Material>("RenderTargets/Materials/GlowMat");
-            spriteRender = FindObjectOfType<SpriteRender>();
-            //img.material = glowTex;
 
             units = GameSpriteManager.Instance.Units;
         }
@@ -58,7 +67,7 @@ namespace RedKite
                     unit.mirrorRender.material.SetInt("_Covered", 0);
                 }
 
-                img.texture = spriteRender.unitRender;
+                img.texture = unitRender;
             }
         }
     }

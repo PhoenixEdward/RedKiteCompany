@@ -10,22 +10,17 @@ namespace RedKite
         public Camera cam;
         public RenderTexture wallRender;
         public Shader ReplacementShader;
-        int northWall;
-        int southWall;
-        int eastWall;
-        int westWall;
+        int walls;
+
         // Start is called before the first frame update
         void Start()
         {
             cam = GetComponent<Camera>();
             cam.SetReplacementShader(ReplacementShader, "RenderType");
 
-            northWall = LayerMask.NameToLayer("NorthWall");
-            southWall = LayerMask.NameToLayer("SouthWall");
-            eastWall = LayerMask.NameToLayer("EastWall");
-            westWall = LayerMask.NameToLayer("WestWall");
+            walls = LayerMask.NameToLayer("Walls");
 
-            cam.cullingMask = (1 << southWall) | (1 << westWall) | (1 << northWall) | (1 << eastWall);
+            cam.cullingMask = (1 << walls);
 
 
             wallRender = new RenderTexture(Screen.width, Screen.height, 1);

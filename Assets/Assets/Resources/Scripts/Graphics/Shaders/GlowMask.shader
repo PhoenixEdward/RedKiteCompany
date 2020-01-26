@@ -53,7 +53,7 @@ Shader "Unlit/GlowMask"
 				{
 				float2 texelSize = 1 / _ScreenParams.xy;
 				fixed4 wall = tex2D(_MainTex2, i.pos * texelSize);
-				 half4 c = tex2D(_MainTex, i.uv);
+					half4 c = tex2D(_MainTex, i.uv);
 					c.rgb *= c.a;
 					half4 outlineC = _Color;
 					//outlineC.a *= ceil(c.a);

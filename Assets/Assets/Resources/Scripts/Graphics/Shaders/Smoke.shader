@@ -1,4 +1,4 @@
-﻿Shader "Custom/Water"
+﻿Shader "Custom/Smoke"
 {
 	Properties{
 		_MainTex("Base (RGB)", 2D) = "white" {}
@@ -68,5 +68,5 @@
 			};
 			ENDCG
 		}
-	}
+		}
 }

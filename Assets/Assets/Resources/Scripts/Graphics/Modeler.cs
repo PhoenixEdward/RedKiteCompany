@@ -5,7 +5,7 @@ using System.Linq;
 using UnityEngine.Networking;
 
 namespace RedKite
-{ 
+{
     public class Modeler : MonoBehaviour
     {
         static Transform level;
@@ -14,28 +14,18 @@ namespace RedKite
         Texture2D floorTex;
         Texture2D[] wallTextures;
         Texture2D[] floorTextures;
-        List<MeshMaker>[] wallMeshes = new List<MeshMaker>[4];
+        List<MeshMaker> wallMeshes = new List<MeshMaker>();
         List<MeshMaker> floorMeshes = new List<MeshMaker>();
-        GameObject[] walls = new GameObject[4];
+        GameObject walls;
         GameObject floor;
 
-        MeshFilter wallFilter0;
-        MeshFilter wallFilter1;
-        MeshFilter wallFilter2;
-        MeshFilter wallFilter3;
+        MeshFilter wallFilter;
         MeshFilter floorFilter;
 
-        MeshRenderer wallRenderer0;
-        MeshRenderer wallRenderer1;
-        MeshRenderer wallRenderer2;
-        MeshRenderer wallRenderer3;
+        MeshRenderer wallRenderer;
         MeshRenderer floorRenderer;
 
-        MeshMaker northWallMesh;
-        MeshMaker southWallMesh;
-        MeshMaker eastWallMesh;
-        MeshMaker westWallMesh;
-
+        MeshMaker wallMesh;
         MeshMaker floorMesh;
 
         public string floorTexName;
@@ -54,97 +44,43 @@ namespace RedKite
             wallTex = Resources.Load<Texture2D>("Tiles/" + wallTexName);
             wallTextures = new Texture2D[6] { wallTex, wallTex, topWallTex, wallTex, wallTex, wallTex };
             floorTextures = new Texture2D[6] { floorTex, floorTex, floorTex, floorTex, floorTex, floorTex };
-
-            wallMeshes[0] = new List<MeshMaker>();
-            wallMeshes[1] = new List<MeshMaker>();
-            wallMeshes[2] = new List<MeshMaker>();
-            wallMeshes[3] = new List<MeshMaker>();
-
-
-            walls[0] = new GameObject();
-            walls[0].layer = 9;
-
-            walls[1] = new GameObject();
-            walls[1].layer = 10;
-
-            walls[2] = new GameObject();
-            walls[2].layer = 11;
-
-            walls[3] = new GameObject();
-            walls[3].layer = 9;
-
-            walls[0].transform.position = new Vector3(0.5f, 0, .5f);
-            walls[1].transform.position = new Vector3(0.5f, 0, .5f);
-            walls[2].transform.position = new Vector3(0.5f, 0, .5f);
-            walls[3].transform.position = new Vector3(0.5f, 0, .5f);
-
+            walls = new GameObject();
+            walls.layer = 9;
+            walls.transform.position = new Vector3(0.5f, 0, .5f);
 
             floor = new GameObject();
             floor.transform.position = new Vector3(0.5f, 0, 0.5f);
 
-            wallFilter0 = walls[0].AddComponent<MeshFilter>();
-            wallRenderer0 = walls[0].AddComponent<MeshRenderer>();
+            wallFilter = walls.AddComponent<MeshFilter>();
+            wallRenderer = walls.AddComponent<MeshRenderer>();
 
-            wallFilter1 = walls[1].AddComponent<MeshFilter>();
-            wallRenderer1 = walls[1].AddComponent<MeshRenderer>();
-
-            wallFilter2 = walls[2].AddComponent<MeshFilter>();
-            wallRenderer2 = walls[2].AddComponent<MeshRenderer>();
-
-            wallFilter3 = walls[3].AddComponent<MeshFilter>();
-            wallRenderer3 = walls[3].AddComponent<MeshRenderer>();
-
-            wallRenderer0.material.shader = Shader.Find("Custom/Terrain");
-            wallRenderer1.material.shader = Shader.Find("Custom/Terrain");
-            wallRenderer2.material.shader = Shader.Find("Custom/Terrain");
-            wallRenderer3.material.shader = Shader.Find("Custom/Terrain");
-
+            wallRenderer.material.shader = Shader.Find("Custom/Terrain");
 
             floorFilter = floor.AddComponent<MeshFilter>();
             floorRenderer = floor.AddComponent<MeshRenderer>();
 
             floorRenderer.material.shader = Shader.Find("Custom/Terrain");
 
-            RenderWalls(wallFilter0, wallRenderer0, northWallMesh, 0, Orient.North);
-            RenderWalls(wallFilter1, wallRenderer1, southWallMesh, 1, Orient.South);
-            RenderWalls(wallFilter2, wallRenderer2, eastWallMesh, 2, Orient.East);
-            RenderWalls(wallFilter3, wallRenderer3, westWallMesh, 3, Orient.West);
-
+            RenderWalls(wallFilter, wallRenderer);
             RenderFloor(floorFilter, floorRenderer);
 
-            walls[0].AddComponent<MeshCollider>();
-            walls[1].AddComponent<MeshCollider>();
-            walls[2].AddComponent<MeshCollider>();
-            walls[3].AddComponent<MeshCollider>();
-
+            walls.AddComponent<MeshCollider>();
             floor.AddComponent<MeshCollider>();
 
         }
 
         public void Regen()
         {
-            wallTextures = northWallMesh.SubMeshTextures;
+            wallTextures = wallMesh.SubMeshTextures;
             floorTextures = floorMesh.SubMeshTextures;
 
-            wallFilter0.mesh.Clear();
-            wallFilter1.mesh.Clear();
-            wallFilter2.mesh.Clear();
-            wallFilter3.mesh.Clear();
-
+            wallFilter.mesh.Clear();
             floorFilter.mesh.Clear();
 
-            wallMeshes[0].Clear();
-            wallMeshes[1].Clear();
-            wallMeshes[2].Clear();
-            wallMeshes[3].Clear();
-
+            wallMeshes.Clear();
             floorMeshes.Clear();
 
-            RenderWalls(wallFilter0, wallRenderer0, northWallMesh, 0, Orient.North);
-            RenderWalls(wallFilter1, wallRenderer1, southWallMesh, 1, Orient.South);
-            RenderWalls(wallFilter2, wallRenderer2, eastWallMesh, 2, Orient.East);
-            RenderWalls(wallFilter3, wallRenderer3, westWallMesh, 3, Orient.West);
-
+            RenderWalls(wallFilter, wallRenderer);
             RenderFloor(floorFilter, floorRenderer);
         }
 
@@ -154,32 +90,28 @@ namespace RedKite
 
         }
 
-        //can probably pass in a mesh rather than an int representing the side;
-        void RenderWalls(MeshFilter meshFilter, MeshRenderer meshRenderer, MeshMaker wallMesh, int side, Orient orienation)
+        void RenderWalls(MeshFilter meshFilter, MeshRenderer meshRenderer)
         {
-            foreach(KeyValuePair<int,Area> entry in TileMapper.Instance.Areas)
+            foreach (KeyValuePair<int, Area> entry in TileMapper.Instance.Areas)
             {
                 Area area = entry.Value;
 
                 foreach (Area.Wall wall in area.Walls)
                 {
-                    foreach(Segment seg in wall.Segments.Where(x=> x.Orientation == orienation))
+                    foreach (Segment seg in wall.Segments)
                     {
 
                         MeshMaker segMesh = new MeshMaker();
 
                         segMesh.NewMakeMesh(seg.Scale, seg.Center + Vector3.up);
 
-                        wallMeshes[side].Add(segMesh);
-
-
-
+                        wallMeshes.Add(segMesh);
 
 
                     }
                     if (wall.Overlaps.Count != 0)
                     {
-                        foreach (Segment path in wall.Overlaps.Where(x => x.IsCorner & x.Orientation == orienation).ToList())
+                        foreach (Segment path in wall.Overlaps.Where(x => x.IsCorner).ToList())
                         {
                             if (path.IsRemoved == false)
                             {
@@ -189,20 +121,18 @@ namespace RedKite
 
                                 cornerMesh.NewMakeMesh(path.Scale, path.Center + Vector3.up);
 
-                                wallMeshes[side].Add(cornerMesh);
-
+                                wallMeshes.Add(cornerMesh);
                             }
                         }
                     }
                 }
             }
 
-            wallMesh = MeshMaker.CombinePlanes(wallMeshes[side]);
+            wallMesh = MeshMaker.CombinePlanes(wallMeshes);
 
             wallMesh.SetTextures(meshRenderer, wallTextures, new bool[] { false, false, false, false, false, false });
 
             wallMesh.MergeSides();
-
 
             meshFilter.mesh = wallMesh.Mesh;
         }
@@ -285,54 +215,31 @@ namespace RedKite
             meshFilter.mesh = floorMesh.Mesh;
         }
 
+
         public void SetTopWallTexture(string texName, Texture2D myTexture, bool isMirrored)
         {
-            topWallTexName = texName;    
+            topWallTexName = texName;
 
-            wallFilter0.mesh.Clear();
-            wallFilter1.mesh.Clear();
-            wallFilter2.mesh.Clear();
-            wallFilter3.mesh.Clear();
+            wallFilter.mesh.Clear();
 
+            wallMesh.UpdateOneTexture(wallRenderer, myTexture, 2, isMirrored);
 
-            northWallMesh.UpdateOneTexture(wallRenderer0, myTexture, 2, isMirrored);
-            northWallMesh.UpdateOneTexture(wallRenderer1, myTexture, 2, isMirrored);
-            northWallMesh.UpdateOneTexture(wallRenderer2, myTexture, 2, isMirrored);
-            northWallMesh.UpdateOneTexture(wallRenderer3, myTexture, 2, isMirrored);
+            wallMesh.MergeSides();
 
-
-            northWallMesh.MergeSides();
-
-            wallFilter0.mesh = northWallMesh.Mesh;
-            wallFilter1.mesh = northWallMesh.Mesh;
-            wallFilter2.mesh = northWallMesh.Mesh;
-            wallFilter3.mesh = northWallMesh.Mesh;
-
+            wallFilter.mesh = wallMesh.Mesh;
         }
 
         public void SetSideWallTextures(string texName, Texture2D myTexture, bool isMirrored)
         {
             wallTexName = texName;
 
-            wallFilter0.mesh.Clear();
-            wallFilter1.mesh.Clear();
-            wallFilter2.mesh.Clear();
-            wallFilter3.mesh.Clear();
+            wallFilter.mesh.Clear();
 
+            wallMesh.UpdateSideTextures(wallRenderer, myTexture, isMirrored);
 
-            northWallMesh.UpdateSideTextures(wallRenderer0, myTexture, isMirrored);
-            northWallMesh.UpdateSideTextures(wallRenderer1, myTexture, isMirrored);
-            northWallMesh.UpdateSideTextures(wallRenderer2, myTexture, isMirrored);
-            northWallMesh.UpdateSideTextures(wallRenderer3, myTexture, isMirrored);
+            wallMesh.MergeSides();
 
-
-            northWallMesh.MergeSides();
-
-            wallFilter0.mesh = northWallMesh.Mesh;
-            wallFilter1.mesh = northWallMesh.Mesh;
-            wallFilter2.mesh = northWallMesh.Mesh;
-            wallFilter3.mesh = northWallMesh.Mesh;
-
+            wallFilter.mesh = wallMesh.Mesh;
         }
         public void SetFloorTexture(string texName, Texture2D myTexture, bool isMirrored)
         {
