@@ -147,8 +147,17 @@ namespace RedKite
             public Vector3 Scale;
             public Dictionary<int, Door> Doors = new Dictionary<int, Door>();
 
+            static char[,] cornerGraph;
+            static readonly char TILE_CORNER = 'C';
+            
+
             public Wall(int _roomIndex,Orient _roomOrientation, Orient _orientation, Stage _floor)
             {
+                if(cornerGraph == null)
+                {
+                    cornerGraph = new char[TileMapper.Instance.W, TileMapper.Instance.H];
+                }
+
                 RoomIndex = _roomIndex;
 
                 Orientation = _orientation;
@@ -201,27 +210,27 @@ namespace RedKite
                 //remove corners on connected walls
                 foreach (Wall oldWall in ConnectedWalls)
                 {
-                    if (Utility.DirectedDist(newWall.Min, oldWall.Min) <= 0 & Utility.DirectedDist(newWall.Max, oldWall.Min) >= 0)
+                    if (Utility.DirectedDist(newWall.Min, oldWall.Min) >= 0 & Utility.DirectedDist(newWall.Max, oldWall.Min) <= 0)
                     {
-                        newWall.Overlaps.Add(new Segment(newWall.Orientation, oldWall.Min, oldWall.Min, 2, _isRemoved: true , _isCorner: true));
+                        newWall.Overlaps.Add(new Segment(newWall.Orientation, oldWall.Min, oldWall.Min, 1, _isRemoved: true , _isCorner: true));
                     }
-                    if (Utility.DirectedDist(oldWall.Min, newWall.Min) <= 0 & Utility.DirectedDist(oldWall.Max, newWall.Min) >= 0)
+                    if (Utility.DirectedDist(oldWall.Min, newWall.Min) >= 0 & Utility.DirectedDist(oldWall.Max, newWall.Min) <= 0)
                     {
-                        oldWall.Overlaps.Add(new Segment(oldWall.Orientation, newWall.Min, newWall.Min, 2, _isRemoved: true, _isCorner: true));
+                        oldWall.Overlaps.Add(new Segment(oldWall.Orientation, newWall.Min, newWall.Min, 1, _isRemoved: true, _isCorner: true));
                     }
-                    if (Utility.DirectedDist(newWall.Max, oldWall.Max) >= 0 & (Utility.DirectedDist(newWall.Min, oldWall.Max) <= 0))
+                    if (Utility.DirectedDist(newWall.Max, oldWall.Max) <= 0 & (Utility.DirectedDist(newWall.Min, oldWall.Max) >= 0))
                     {
-                        newWall.Overlaps.Add(new Segment(newWall.Orientation, oldWall.Max, oldWall.Max, 2, _isRemoved: true, _isCorner: true));
+                        newWall.Overlaps.Add(new Segment(newWall.Orientation, oldWall.Max, oldWall.Max, 1, _isRemoved: true, _isCorner: true));
                     }
-                    if (Utility.DirectedDist(oldWall.Max, newWall.Max) >= 0 & (Utility.DirectedDist(oldWall.Min, newWall.Max)<= 0))
+                    if (Utility.DirectedDist(oldWall.Max, newWall.Max) <= 0 & (Utility.DirectedDist(oldWall.Min, newWall.Max) >= 0))
                     {
-                        oldWall.Overlaps.Add(new Segment(oldWall.Orientation, newWall.Max, newWall.Max, 2, _isRemoved: true, _isCorner: true));
+                        oldWall.Overlaps.Add(new Segment(oldWall.Orientation, newWall.Max, newWall.Max, 1, _isRemoved: true, _isCorner: true));
                     }
 
 
                     //find maxiest min
                     float diff2 = Utility.DirectedDist(newWall.Min, oldWall.Min);
-                    Vector3 startCorner = diff2 <= 0 ? oldWall.Min :
+                    Vector3 startCorner = diff2 >= 0 ? oldWall.Min :
                         newWall.Min;
 
                     Vector3 startCoord = startCorner + up;
@@ -229,7 +238,7 @@ namespace RedKite
 
                     //find minniest max
                     float diff3 = Utility.DirectedDist(newWall.Max, oldWall.Max);
-                    Vector3 endCorner = diff3 >= 0 ? oldWall.Max :
+                    Vector3 endCorner = diff3 <= 0 ? oldWall.Max :
                         newWall.Max;
 
                     Vector3 endCoord = endCorner + down;
@@ -240,8 +249,17 @@ namespace RedKite
 
                     if (Doors.Keys.Contains(oldWall.RoomIndex))
                     {
-                       Door door = Doors[oldWall.RoomIndex];
-                       newWall.Overlaps.Add(new Segment(newWall.Orientation,door.Min,door.Max, 1, _isPath: true));
+                        Door door = Doors[oldWall.RoomIndex];
+                        newWall.Overlaps.Add(new Segment(newWall.Orientation,door.Min,door.Max, 1, _isPath: true));
+
+                        if(Vector3.Distance(startCoord, door.Min) > 0)
+                            newWall.Overlaps.Add(new Segment(newWall.Orientation, startCoord, door.Min + down, 1));
+                        if(Vector3.Distance(door.Max, endCoord) > 0)
+                            newWall.Overlaps.Add(new Segment(newWall.Orientation, door.Max + up, endCoord, 1));
+                    }
+                    else
+                    {
+                        newWall.Overlaps.Add(new Segment(newWall.Orientation, startCoord, endCoord, 1));
                     }
                 }
             }
@@ -252,11 +270,30 @@ namespace RedKite
                 Vector3 up = Orientation == Orient.North | Orientation == Orient.South ? new Vector3(1, 0, 0) : new Vector3(0, 0, 1);
                 Vector3 down = up == new Vector3(0, 0, 1) ? new Vector3(0, 0, -1) : new Vector3(-1, 0, 0);
 
+
+                //When corners meet exactly on paired walls there is a fuck up
+                if (cornerGraph[(int)Min.x, (int)Min.z] != TILE_CORNER)
+                {
+                    Overlaps.Add(new Segment(Orientation, Min, Min, 1, _isCorner: true));
+                    cornerGraph[(int)Min.x, (int)Min.z] = TILE_CORNER;
+                }
+                else
+                {
+                    Overlaps.Add(new Segment(Orientation, Min, Min, 1, _isRemoved: true, _isCorner: true));
+                }
+
+                if (cornerGraph[(int)Max.x, (int)Max.z] != TILE_CORNER)
+                {
+                    Overlaps.Add(new Segment(Orientation, Max, Max, 1, _isCorner: true));
+                    cornerGraph[(int)Max.x, (int)Max.z] = TILE_CORNER;
+                }
+                else
+                {
+                    Overlaps.Add(new Segment(Orientation, Max, Max, 1, _isRemoved: true, _isCorner: true));
+                }
+
                 //every wall needs a minumum of one segment.
                 List<Segment> segments = new List<Segment>();
-
-                Overlaps.Add(new Segment(Orientation, Min, Min, Height, _isCorner: true));
-                Overlaps.Add(new Segment(Orientation, Max, Max, Height, _isCorner: true));
 
                 //this step is important for the look behind featured in the loop as order is important.
                 if (Orientation == Orient.North | Orientation == Orient.South)
@@ -266,29 +303,34 @@ namespace RedKite
 
                 Overlaps = Overlaps.DistinctBy(x => new { x.Min, x.Max }).ToList();
 
-                    //note <= for look behind. This also means I no longer have to have a seperate structure for those with 0 paths.
-                    for (int i = 0; i < Overlaps.Count - 1; i++)
-                    {
-                        //instantiate start and end of segment
-                        Vector3 segMax;
-                        Vector3 segMin;
+                //note <= for look behind. This also means I no longer have to have a seperate structure for those with 0 paths.
+                for (int i = 0; i < Overlaps.Count; i++)
+                {
+                    //instantiate start and end of segment                        
+                    if (Overlaps[i].IsRemoved == true | Overlaps[i].IsPath == true)
+                        continue;
+                    else
+                        segments.Add(Overlaps[i]);
+                }
 
- 
+                for (int i = 0; i < Overlaps.Count - 1; i++)
+                {
+                    //instantiate start and end of segment
+                    Vector3 segMax;
+                    Vector3 segMin;
+
                     //finally we have our standard in between case. We ensure a minimum length of 1 then use the tile after the previous path max and 
                     //compare it to the tile before the current path min.
-
-                    //Debug.Log("Room:" + RoomIndex + "Wall" + Orientation.Name + " " + Overlaps[i].Max + up + " " + Overlaps[i + 1].Max + down);
-
-                        if (Utility.DirectedDist(Overlaps[i].Max + up, Overlaps[i + 1].Min + down) > 0)
-                            continue;
-                        else
-                        {
-                            segMin = Overlaps[i].Max + up;
-                            segMax = Overlaps[i + 1].Max + down;
-                        }
-
-                     segments.Add(new Segment(Orientation, segMin, segMax, Height));
+                    if (Utility.DirectedDist(Overlaps[i].Max + up, Overlaps[i + 1].Min + down) < 0)
+                        continue;
+                    else
+                    {
+                        segMin = Overlaps[i].Max + up;
+                        segMax = Overlaps[i + 1].Max + down;
                     }
+
+                    segments.Add(new Segment(Orientation, segMin, segMax, Height));
+                }
 
                 Segments = segments;
                 

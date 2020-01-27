@@ -107,23 +107,6 @@ namespace RedKite
 
                         wallMeshes.Add(segMesh);
 
-
-                    }
-                    if (wall.Overlaps.Count != 0)
-                    {
-                        foreach (Segment path in wall.Overlaps.Where(x => x.IsCorner).ToList())
-                        {
-                            if (path.IsRemoved == false)
-                            {
-                                //skip over north and south corners to avoid duplication.
-
-                                MeshMaker cornerMesh = new MeshMaker();
-
-                                cornerMesh.NewMakeMesh(path.Scale, path.Center + Vector3.up);
-
-                                wallMeshes.Add(cornerMesh);
-                            }
-                        }
                     }
                 }
             }
@@ -155,16 +138,14 @@ namespace RedKite
                 {
                     if (wall.Overlaps.Count != 0)
                     {
-                        foreach (Segment path in wall.Overlaps.Where(x => x.IsCorner == false).ToList())
+                        foreach (Segment path in wall.Overlaps.Where(x => x.IsPath == true & x.IsRemoved == false).ToList())
                         {
-                            if (path.IsRemoved == false)
-                            {
-                                MeshMaker pathMesh = new MeshMaker();
 
-                                pathMesh.NewMakeMesh(path.Scale, path.Center);
+                            MeshMaker pathMesh = new MeshMaker();
 
-                                floorMeshes.Add(pathMesh);
-                            }
+                            pathMesh.NewMakeMesh(path.Scale, path.Center);
+
+                            floorMeshes.Add(pathMesh);
                         }
                     }
                 }

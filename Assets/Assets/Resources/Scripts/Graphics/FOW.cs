@@ -194,7 +194,6 @@ namespace RedKite
             Vector3 coordinate;
             Vector3[] offsets;
 
-            Vector3 dissapateScale = new Vector3(0.05f, 0.05f, 0);
             float dissipateAlphaRate = 0.075f;
             float[] currentDissipation;
 
@@ -310,7 +309,6 @@ namespace RedKite
                         if (currentDissipation[i] < 0.65f)
                         {
                             currentDissipation[i] += dissipateAlphaRate;
-                            //puffs[i].transform.localScale -= dissapateScale;
                             puffs[i].GetComponent<MeshRenderer>().material.SetFloat("_DissipateAlpha", currentDissipation[i]);
                         }
                         else
@@ -334,7 +332,6 @@ namespace RedKite
                         if (currentDissipation[i] > 0)
                         {
                             currentDissipation[i] -= dissipateAlphaRate;
-                            //puffs[i].transform.localScale += dissapateScale;
                             puffs[i].GetComponent<MeshRenderer>().material.SetFloat("_DissipateAlpha", currentDissipation[i]);
                         }
                         else

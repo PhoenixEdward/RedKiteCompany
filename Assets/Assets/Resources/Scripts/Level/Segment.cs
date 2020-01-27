@@ -73,37 +73,5 @@ namespace RedKite
 
             return matchMin & matchMax;
         }
-
-        public void Instantiate(Segment segment)
-        {
-            IsPath = segment.IsPath;
-            IsRemoved = segment.IsRemoved;
-            Orientation = segment.Orientation;
-
-            Min = segment.Min;
-            Max = segment.Max;
-
-
-            if (segment.Orientation == Orient.North | segment.Orientation == Orient.South)
-            {
-                Scale = new Vector3(Max.x - Min.x + 1, segment.Height, 1);
-                Center = Min + Vector3.Scale(((Max - Min) / 2), Vector3.right);
-            }
-            else
-            {
-                Scale = new Vector3(1, segment.Height, Max.z - Min.z + 1);
-                Center = Min + Vector3.Scale(((Max - Min) / 2), Vector3.forward);
-            }
-            Height = segment.Height;
-
-            //transform.localPosition = segment.Center;
-
-            //now for scaling to 3D based on wall orientation
-
-            //transform.localScale = segment.Scale;
-
-
-
-        }
     }
 }

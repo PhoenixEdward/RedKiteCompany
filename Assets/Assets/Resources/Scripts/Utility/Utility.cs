@@ -79,7 +79,7 @@ namespace RedKite
         {
             float outDist = 0;
 
-            if (end.x > start.x | end.z > start.z)
+            if (end.x < start.x | end.z < start.z)
                 outDist = -Vector3.Distance(start, end);
             else
                 outDist = Vector3.Distance(start, end);
@@ -96,14 +96,7 @@ namespace RedKite
 
             for (int i = 0; i < Vector3.Distance(first, second); i++)
             {
-                if (first.x < second.x)
-                    outVectors.Add(Vector3.Lerp(first + (Vector3.right * i), second, 1 / Vector3.Distance(first + (Vector3.right * i), second)));
-                else if (second.x < first.x)
-                    outVectors.Add(Vector3.Lerp(first + (Vector3.left * i), second, 1 / Vector3.Distance(first + (Vector3.left * i), second)));
-                else if (first.z < second.z)
-                    outVectors.Add(Vector3.Lerp(first + (Vector3.forward * i), second, 1 / Vector3.Distance(first + (Vector3.forward * i), second)));
-                else if (second.z < first.z)
-                    outVectors.Add(Vector3.Lerp(first + (Vector3.back * i), second, 1 / Vector3.Distance(first + (Vector3.back * i), second)));
+                outVectors.Add(Vector3.Lerp(first, second, (Vector3.Distance(first, second) - i) / Vector3.Distance(first, second)));
 
             }
 

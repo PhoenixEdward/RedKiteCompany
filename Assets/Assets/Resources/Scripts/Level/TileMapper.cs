@@ -57,7 +57,6 @@ namespace RedKite
 
         public Cell[,] Tiles { get; protected set; }
 
-        Vector3Int spawnPoint;
         public int index = 0;
         //to delete below
 
@@ -106,7 +105,6 @@ namespace RedKite
                         break;
                     if (j == 499)
                     {
-                        Debug.Log("Run Again");
                         roomIndex = 0;
                         Areas.Clear();
                         ClearMap();
@@ -128,13 +126,13 @@ namespace RedKite
             {
                 foreach(Area.Wall wall in area.Walls)
                 {
-                    foreach (Segment segment in wall.Overlaps.Where(x => x.IsRemoved == false))
+                    foreach (Segment segment in wall.Overlaps.Where(x => x.IsPath == true & x.IsRemoved == false))
                     {
                         Vector3[] tiles = Utility.CoordRange(segment.Min, segment.Max);
-                            foreach(Vector3 tile in tiles)
-                            {
-                                map[(int)tile.x,(int)tile.z] = (char)(area.RoomIndex + 48);
-                            }
+                        foreach(Vector3 tile in tiles)
+                        {
+                            map[(int)tile.x,(int)tile.z] = (char)(area.RoomIndex + 48);
+                        }
                     }
                 }
 
@@ -170,7 +168,6 @@ namespace RedKite
                         if(c==TILE_SPAWN)
                         { 
                             RoomTiles[0].Add(new Vector3Int(x, y, 1));
-                            spawnPoint = Vector3Int.RoundToInt(new Vector3(x,2,y));
                         }
                         if ((int)c >= 48 & (int)c <= 57)
                         { 
@@ -279,7 +276,7 @@ namespace RedKite
 
             foreach (Vector3 coord in wallCoords)
                 if (map[(int)coord.x, (int)coord.z] != TILE_WALL_CORNER)
-                    map[(int)coord.x, (int)coord.z] = TILE_CORNER;
+                    map[(int)coord.x, (int)coord.z] = TILE_WALL;
 
             foreach (Area.Wall wall in foundRoom.Walls)
             {
@@ -349,14 +346,14 @@ namespace RedKite
                                 float diff1 = Utility.DirectedDist(newWall.Max, oldWall.Min);
 
 
-                                if (diff0 <= 0 & diff1 >= 0)
+                                if (diff0 >= 0 & diff1 <= 0)
                                 {
                                     //These walls are now deemed connected. If the room finds a door it will be passed on to all connected walls in it's list.
                                     newWall.ConnectedWalls.Add(oldWall);
 
                                     //find maxiest min
                                     float diff2 = Utility.DirectedDist(newWall.Min, oldWall.Min);
-                                    Vector3 startCorner = diff2 <= 0 ? oldWall.Min :
+                                    Vector3 startCorner = diff2 >= 0 ? oldWall.Min :
                                         newWall.Min;
 
                                     Vector3 startCoord = startCorner + up;
@@ -364,7 +361,7 @@ namespace RedKite
 
                                     //find minniest max
                                     float diff3 = Utility.DirectedDist(newWall.Max, oldWall.Max);
-                                    Vector3 endCorner = diff3 >= 0 ? oldWall.Max :
+                                    Vector3 endCorner = diff3 <= 0 ? oldWall.Max :
                                         newWall.Max;
 
                                     Vector3 endCoord = endCorner + down;
