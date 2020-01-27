@@ -53,7 +53,7 @@ namespace RedKite
 
             grid = FindObjectOfType<Grid>();
 
-            fogColor = Colors.AeroBlue;
+            fogColor = Color.white;
 
             FindObjectOfType<FOW>().fogColor = fogColor;
 

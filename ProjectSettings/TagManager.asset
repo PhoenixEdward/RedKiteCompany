@@ -8,6 +8,7 @@ TagManager:
   - RenderTarget
   - Level
   - SpriteSelect
+  - FogCam
   layers:
   - Default
   - TransparentFX
@@ -19,10 +20,10 @@ TagManager:
   - 
   - Units
   - Walls
+  - FOW
   - 
   - 
-  - 
-  - 
+  - Mirrors
   - 
   - 
   - 
@@ -53,6 +54,9 @@ TagManager:
     locked: 0
   - name: Units
     uniqueID: 3184934743
+    locked: 0
+  - name: FOW
+    uniqueID: 2124626219
     locked: 0
   - name: UI
     uniqueID: 2337280619

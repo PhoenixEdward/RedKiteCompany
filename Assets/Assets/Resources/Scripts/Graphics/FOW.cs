@@ -20,6 +20,7 @@ namespace RedKite
         char TILE_CLEAR = 'C';
         char TILE_EDGE = 'E';
         char TILE_WALL = '#';
+        char TILE_VOID = ' ';
 
         public Shader fogShader;
         public Texture2D fogTexture;
@@ -60,10 +61,10 @@ namespace RedKite
             { 
                 for (int x = 0; x < TileMapper.Instance.W; x++)
                 {
-                    if(roomMap[x,y] != TILE_WALL)
+                    if(roomMap[x,y] != TILE_WALL & roomMap[x, y] != TILE_VOID)
                     { 
                         fogMap[x, y] = TILE_FOG;
-                        patches[x, y] = new Patch(rnd, new Vector3Int(x, 0, y),6,new Vector3(1, 1.5f), transform, partMaterial, fogTexture);
+                        patches[x, y] = new Patch(rnd, new Vector3Int(x, 0, y),new Vector3Int(3,2,3),new Vector3(0.5f, 0.75f), transform, partMaterial, fogTexture);
 
                     }
                 }
@@ -188,36 +189,65 @@ namespace RedKite
         {
             public GameObject[] puffs;
             int puffCount;
-            float puffSize;
+            float[] puffSize;
 
             Vector3 coordinate;
             Vector3[] offsets;
 
             Vector3 dissapateScale = new Vector3(0.05f, 0.05f, 0);
+            float dissipateAlphaRate = 0.075f;
+            float[] currentDissipation;
 
             public bool isHidden = false;
             public bool hasDissipated = false;
 
-            public Patch(System.Random rnd,Vector3Int _coordinate,int _puffCount, Vector3 _puffSizeRange, Transform parent, Material partMaterial, Texture2D fogTex)
+            public Patch(System.Random rnd,Vector3Int _coordinate,Vector3Int _fogDimensions, Vector3 _puffSizeRange, Transform parent, Material partMaterial, Texture2D fogTex)
             {
-                puffCount = _puffCount;
-                puffSize = 1 + (float)rnd.NextDouble() * (_puffSizeRange.y - _puffSizeRange.x);
+                //get the square root to get the dimensions of the spacing for the offsets.
+
+                puffCount = _fogDimensions.x * _fogDimensions.y * _fogDimensions.z;
+                
 
                 puffs = new GameObject[puffCount];
                 offsets = new Vector3[puffCount];
-                coordinate = new Vector3(_coordinate.x, 2.5f, _coordinate.z);
+                currentDissipation = new float[puffCount];
+                puffSize = new float[puffCount];
+                coordinate = new Vector3(_coordinate.x, 1.5f, _coordinate.z);
+
+                //index for offsets to loop through.
+                int offsetIndex = 0;
+
+                for(int y = 0; y< _fogDimensions.y; y++)
+                {
+                    float yOffset = (float)(_fogDimensions.y - y) / _fogDimensions.y;
+                    for (int z = 0; z < _fogDimensions.z; z++)
+                    {
+                        float zOffset = (float)(_fogDimensions.z - z)/ _fogDimensions.z;
+                        for (int x = 0; x < _fogDimensions.x; x++)
+                        {
+                            if (offsetIndex < puffCount)
+                            {
+                               offsets[offsetIndex] = Vector3.Lerp(Vector3.zero, new Vector3(1, 0, 0), (float)(_fogDimensions.x - x)/_fogDimensions.x) + new Vector3(0,yOffset,zOffset);
+
+                                offsetIndex++;
+                            }
+                        }
+                    }
+                }
 
                 for (int i = 0; i < puffCount; i++)
                 { 
                     puffs[i] = GameObject.CreatePrimitive(PrimitiveType.Quad);
                     puffs[i].transform.SetParent(parent);
-                    puffs[i].transform.localScale = new Vector3(puffSize, puffSize, 1);
 
+                    puffSize[i] = _puffSizeRange.x + (float)rnd.NextDouble() * (_puffSizeRange.y - _puffSizeRange.x);
+                    puffs[i].transform.localScale = new Vector3(puffSize[i], puffSize[i], 1);
                     //give position random offset. subtract half from intial point so range for tile becomes somewhere between what the tile coords would be face down
-                    offsets[i] = new Vector3((float)rnd.NextDouble(), ((float)rnd.NextDouble() * 0.25f), (float)rnd.NextDouble());
                     puffs[i].transform.position = coordinate + offsets[i];
 
                     puffs[i].GetComponent<MeshRenderer>().material = partMaterial;
+                    puffs[i].GetComponent<MeshRenderer>().material.SetFloat("_TexDimensions", puffSize[i]);
+
 
                     puffs[i].layer = 10;
                 }
@@ -277,10 +307,16 @@ namespace RedKite
 
                     for (int i = 0; i < puffCount; i++)
                     {
-                        if (puffs[i].transform.localScale.x > 0 | puffs[0].transform.localScale.y > 0)
-                            puffs[i].transform.localScale -= dissapateScale;
+                        if (currentDissipation[i] < 0.65f)
+                        {
+                            currentDissipation[i] += dissipateAlphaRate;
+                            //puffs[i].transform.localScale -= dissapateScale;
+                            puffs[i].GetComponent<MeshRenderer>().material.SetFloat("_DissipateAlpha", currentDissipation[i]);
+                        }
                         else
+                        {
                             dis[i] = true;
+                        }
                     }
 
                     if (dis.All(x=> x == true))
@@ -295,10 +331,18 @@ namespace RedKite
 
                     for (int i = 0; i < puffCount; i++)
                     {
-                        if (puffs[i].transform.localScale.x < puffSize | puffs[0].transform.localScale.y < puffSize)
-                            puffs[i].transform.localScale += dissapateScale;
+                        if (currentDissipation[i] > 0)
+                        {
+                            currentDissipation[i] -= dissipateAlphaRate;
+                            //puffs[i].transform.localScale += dissapateScale;
+                            puffs[i].GetComponent<MeshRenderer>().material.SetFloat("_DissipateAlpha", currentDissipation[i]);
+                        }
                         else
+                        {
+                            currentDissipation[i] = 0;
+                            puffs[i].GetComponent<MeshRenderer>().material.SetFloat("_DissipateAlpha", currentDissipation[i]);
                             dis[i] = true;
+                        }
                     }
 
                     hasDissipated = dis.All(x => x == true) == true ? false : true;

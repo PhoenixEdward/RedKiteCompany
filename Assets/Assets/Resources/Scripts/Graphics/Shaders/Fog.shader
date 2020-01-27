@@ -6,6 +6,8 @@
 		_MainTex2 ("Texture2", 2D) = "white" {}
 		_MainTex3("Texture3", 2D) = "white" {}
 		_Color("Color", Color) = (1,1,1,1)
+		_DissipateAlpha("DissipateRate", float) = 0
+		_TexDimensions("TextureDimensions", float) = 1
     }
     SubShader
     {
@@ -49,6 +51,8 @@
 			sampler2D _MainTex3;
 			float4 _Color;
             float4 _MainTex_ST;
+			float _DissipateAlpha;
+			float _TexDimensions;
 
             v2f vert (appdata v)
             {
@@ -62,14 +66,14 @@
 			fixed4 frag(v2f i) : SV_Target
 			{
 				fixed4 primCol = tex2D(_MainTex, i.uv);
-				float2 texelSize = 1 / _ScreenParams.xy;
-				fixed4 wallCol = tex2D(_MainTex3, i.vertex * texelSize);
 
-				if(primCol.a != 0 & (wallCol.b < .74f | wallCol.a == 0))
+				float2 texelSize = _TexDimensions / 1;
+
+				if(primCol.a != 0)
 				{
 					float offset = (_Time.y % 10)/10;
 
-					float2 newUV = i.uv + float2(offset, offset);
+					float2 newUV = (i.uv * texelSize) + float2(offset, offset);
 
 					if (newUV.x > 1)
 					{
@@ -84,8 +88,9 @@
 					// sample the texture
 					fixed4 col = tex2D(_MainTex2, newUV);
 
+					float alphaReduction = _DissipateAlpha <= 0.65f ? _DissipateAlpha : 0.65f;
 					// apply fog
-					return float4(col.r, col.g, col.b, primCol.a) * _Color;
+					return float4(col.r, col.g, col.b, primCol.a * (.65f - alphaReduction)) * _Color;
 				}
 				else
 				{
