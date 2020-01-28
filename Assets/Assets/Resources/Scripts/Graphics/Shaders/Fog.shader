@@ -66,37 +66,45 @@
 			fixed4 frag(v2f i) : SV_Target
 			{
 				fixed4 primCol = tex2D(_MainTex, i.uv);
-
 				float2 texelSize = _TexDimensions / 1;
+				float2 texelSize2 = 1 / _ScreenParams.xy;
+				fixed4 wallCol = tex2D(_MainTex3, i.vertex * texelSize2);
 
-				if(primCol.a != 0)
-				{
-					float offset = (_Time.y % 10)/10;
-
-					float2 newUV = (i.uv * texelSize) + float2(offset, offset);
-
-					if (newUV.x > 1)
-					{
-						newUV.x = newUV.x - 1;
-					}
-					if (newUV.y > 1)
-					{
-						newUV.y = newUV.y - 1;
-					}
-
-
-					// sample the texture
-					fixed4 col = tex2D(_MainTex2, newUV);
-
-					float alphaReduction = _DissipateAlpha <= 0.65f ? _DissipateAlpha : 0.65f;
-					// apply fog
-					return float4(col.r, col.g, col.b, primCol.a * (.65f - alphaReduction)) * _Color;
-				}
-				else
+				if (wallCol.a != 0 & wallCol.b > 0.74f)
 				{
 					return float4(0, 0, 0, 0);
 				}
+				else
+				{
+					if (primCol.a != 0)
+					{
+						float offset = (_Time.y % 10) / 10;
 
+						float2 newUV = (i.uv * texelSize) + float2(offset, offset);
+
+						if (newUV.x > 1)
+						{
+							newUV.x = newUV.x - 1;
+						}
+						if (newUV.y > 1)
+						{
+							newUV.y = newUV.y - 1;
+						}
+
+
+						// sample the texture
+						fixed4 col = tex2D(_MainTex2, newUV);
+
+						float alphaReduction = _DissipateAlpha <= 0.65f ? _DissipateAlpha : 0.65f;
+						// apply fog
+						return float4(col.r, col.g, col.b, primCol.a * (.65f - alphaReduction)) * _Color;
+					}
+					else
+					{
+						return float4(0, 0, 0, 0);
+					}
+				
+				}
             }
             ENDCG
         }

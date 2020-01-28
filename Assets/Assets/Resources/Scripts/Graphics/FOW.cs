@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 using System.Linq;
+using UnityEngine.UI;
 
 namespace RedKite
 { 
@@ -40,6 +41,10 @@ namespace RedKite
 
         public Color fogColor;
 
+        public Texture wallTarget;
+
+        Slider[] colorSliders;
+
         // Start is called before the first frame update
         void Start()
         {
@@ -49,6 +54,7 @@ namespace RedKite
 
             fogTexture = Level.Instance.fogTexture;
             partMaterial.SetColor("_Color", fogColor);
+            partMaterial.SetFloat("_TexDimensions", .75f);
 
             roomMap = TileMapper.Instance.map;
 
@@ -64,30 +70,37 @@ namespace RedKite
                     if(roomMap[x,y] != TILE_WALL & roomMap[x, y] != TILE_VOID)
                     { 
                         fogMap[x, y] = TILE_FOG;
-                        patches[x, y] = new Patch(rnd, new Vector3Int(x, 0, y),new Vector3Int(3,2,3),new Vector3(0.5f, 0.75f), transform, partMaterial, fogTexture);
+                        patches[x, y] = new Patch(rnd, new Vector3Int(x, 0, y),new Vector3Int(3,2,3),new Vector3(0.75f, 0.75f), transform, partMaterial, fogTexture);
 
                     }
                 }
             }
 
-
+            wallTarget = FindObjectOfType<WallRender>().wallRender;
 
             heroes = GameSpriteManager.Instance.Heroes;
             enemies = GameSpriteManager.Instance.Enemies;
             props = GameSpriteManager.Instance.Props;
 
             activeRooms = new List<int>();
-            
+
+            colorSliders = GameObject.FindGameObjectWithTag("SpriteSelect").GetComponentsInChildren<Slider>();
+
             //place inital fog tiles on tilemap
         }
 
         // Update is called once per frame
         void Update()
         {
+            partMaterial.SetTexture("_MainTex3", wallTarget);
+            Color col = new Color(colorSliders[0].value, colorSliders[1].value, colorSliders[2].value);
+            partMaterial.SetColor("_Color", col);
+            GameSprite.fogTint = col;
+
             foreach(Patch patch in patches)
             {
                 if(patch != null)
-                { 
+                {
                     patch.Rotate();
 
                     if (patch.isHidden & !patch.hasDissipated)
@@ -191,6 +204,10 @@ namespace RedKite
             int puffCount;
             float[] puffSize;
 
+            static Material partMaterial;
+
+            MeshRenderer[] meshRenderers;
+
             Vector3 coordinate;
             Vector3[] offsets;
 
@@ -200,17 +217,24 @@ namespace RedKite
             public bool isHidden = false;
             public bool hasDissipated = false;
 
-            public Patch(System.Random rnd,Vector3Int _coordinate,Vector3Int _fogDimensions, Vector3 _puffSizeRange, Transform parent, Material partMaterial, Texture2D fogTex)
+            Color[] meshAlpha;
+            Color colorFade = new Color(0, 0, 0, .075f);
+
+            public Patch(System.Random rnd,Vector3Int _coordinate,Vector3Int _fogDimensions, Vector3 _puffSizeRange, Transform parent, Material _partMaterial, Texture2D fogTex)
             {
                 //get the square root to get the dimensions of the spacing for the offsets.
 
                 puffCount = _fogDimensions.x * _fogDimensions.y * _fogDimensions.z;
-                
+
+                if (partMaterial == null)
+                    partMaterial = _partMaterial;
 
                 puffs = new GameObject[puffCount];
                 offsets = new Vector3[puffCount];
                 currentDissipation = new float[puffCount];
+                meshRenderers = new MeshRenderer[puffCount];
                 puffSize = new float[puffCount];
+                meshAlpha = new Color[puffCount];
                 coordinate = new Vector3(_coordinate.x, 1.5f, _coordinate.z);
 
                 //index for offsets to loop through.
@@ -244,9 +268,9 @@ namespace RedKite
                     //give position random offset. subtract half from intial point so range for tile becomes somewhere between what the tile coords would be face down
                     puffs[i].transform.position = coordinate + offsets[i];
 
-                    puffs[i].GetComponent<MeshRenderer>().material = partMaterial;
-                    puffs[i].GetComponent<MeshRenderer>().material.SetFloat("_TexDimensions", puffSize[i]);
+                    meshRenderers[i] = puffs[i].GetComponent<MeshRenderer>();
 
+                    meshRenderers[i].material = partMaterial;
 
                     puffs[i].layer = 10;
                 }
@@ -257,7 +281,7 @@ namespace RedKite
 
                 for (int i = 0; i < puffCount; i++)
                 {
-                    puffs[i].GetComponent<MeshRenderer>().enabled = !_hide;
+                    meshRenderers[i].enabled = !_hide;
                 }
 
                 if (_hide)
@@ -306,10 +330,10 @@ namespace RedKite
 
                     for (int i = 0; i < puffCount; i++)
                     {
-                        if (currentDissipation[i] < 0.65f)
+                        if (meshRenderers[i].material.color.a > 0)
                         {
-                            currentDissipation[i] += dissipateAlphaRate;
-                            puffs[i].GetComponent<MeshRenderer>().material.SetFloat("_DissipateAlpha", currentDissipation[i]);
+                            meshAlpha[i] -= colorFade;
+                            meshRenderers[i].material.color = partMaterial.color + meshAlpha[i];
                         }
                         else
                         {
@@ -329,15 +353,14 @@ namespace RedKite
 
                     for (int i = 0; i < puffCount; i++)
                     {
-                        if (currentDissipation[i] > 0)
+                        if (meshRenderers[i].material.color.a < partMaterial.color.a)
                         {
-                            currentDissipation[i] -= dissipateAlphaRate;
-                            puffs[i].GetComponent<MeshRenderer>().material.SetFloat("_DissipateAlpha", currentDissipation[i]);
+                            meshAlpha[i] += colorFade;
+                            meshRenderers[i].material.color = partMaterial.color + meshAlpha[i];
                         }
                         else
                         {
-                            currentDissipation[i] = 0;
-                            puffs[i].GetComponent<MeshRenderer>().material.SetFloat("_DissipateAlpha", currentDissipation[i]);
+                            meshRenderers[i].material = partMaterial;
                             dis[i] = true;
                         }
                     }

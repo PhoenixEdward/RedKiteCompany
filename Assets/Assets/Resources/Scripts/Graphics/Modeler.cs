@@ -100,7 +100,6 @@ namespace RedKite
                 {
                     foreach (Segment seg in wall.Segments)
                     {
-
                         MeshMaker segMesh = new MeshMaker();
 
                         segMesh.NewMakeMesh(seg.Scale, seg.Center + Vector3.up);
