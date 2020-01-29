@@ -31,14 +31,14 @@ namespace RedKite
         float timeSinceDeselect;
         Grid grid;
         // Start is called before the first frame update
-        void Start()
+        void OnEnable()
         {
             canvas = FindObjectOfType<Canvas>();
             scaleFactor = canvas.scaleFactor;
 
             dropdowns = GetComponentsInChildren<Dropdown>();
             modeler = FindObjectOfType<Modeler>();
-            units = FindObjectsOfType<Hero>();
+            units = GameSpriteManager.Instance.Heroes.ToArray();
             dropdowns = dropdowns.OrderBy(x => Convert.ToInt32(x)).ToArray();
             reticle = FindObjectOfType<Reticle>();
             grid = FindObjectOfType<Grid>();
@@ -74,8 +74,6 @@ namespace RedKite
                     }
 
                     options = options.OrderBy(x => x.text).ToList();
-
-                    Debug.Log(options.Count);
 
                     dropdowns[0].ClearOptions();
                     dropdowns[1].ClearOptions();

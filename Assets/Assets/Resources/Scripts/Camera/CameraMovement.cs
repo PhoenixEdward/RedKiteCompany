@@ -34,6 +34,10 @@ namespace RedKite
             xBounds = new Vector2(0, TileMapper.Instance.W);
             yBounds = new Vector2(0, TileMapper.Instance.H);
 
+            Camera.main.transform.rotation = Quaternion.Euler(30, 45, 0);
+
+            CameraMovement.facing = Facing.NE;
+
         }
 
         void Update()

@@ -12,7 +12,6 @@ namespace RedKite
             Prop
         }
 
-        static bool isFirstSpawn = true;
         public SpriteType spriteType;
         public string spriteName;
 
@@ -39,7 +38,7 @@ namespace RedKite
 
         static CameraMovement.Facing currentCamFacing;
 
-        Material spriteMask;
+        static Material spriteMask;
 
         protected Vector3 offset = new Vector3(0, 0, 0);
 
@@ -53,13 +52,19 @@ namespace RedKite
 
         public virtual void Start()
         {
-            if(isFirstSpawn)
+            //load static variables if null
+            if(grid == null)
             {
-                isFirstSpawn = false;
                 grid = FindObjectOfType<Grid>();
             }
 
-            if(spriteLoad == null)
+            if (spriteMask == null)
+            {
+                spriteMask = Resources.Load<Material>("RenderTargets/Materials/SpriteMat");
+                spriteMask.SetTexture("_MainTex2", GameObject.FindGameObjectWithTag("FogCam").GetComponent<Camera>().activeTexture);
+                spriteMask.SetTexture("_MainTex3", FindObjectOfType<WallRender>().wallRender);
+            }
+            if (spriteLoad == null)
             { 
 
                 if (spriteType == SpriteType.Character)
@@ -89,13 +94,18 @@ namespace RedKite
 
             sr = gameObject.AddComponent<SpriteRenderer>();
 
-            spriteMask = Resources.Load<Material>("RenderTargets/Materials/SpriteMat");
-
             sr.material = spriteMask;
-            sr.material.SetColor("_FogColor", fogTint);
 
             sr.sortingLayerName = "Units";
 
+        }
+
+        //needs to be updated to cache some of these variables.
+        public static void UpdateAllSprites()
+        {
+            spriteMask.SetTexture("_MainTex2", GameObject.FindGameObjectWithTag("FogCam").GetComponent<Camera>().activeTexture);
+            spriteMask.SetTexture("_MainTex3", FindObjectOfType<WallRender>().wallRender);
+            spriteMask.SetColor("_FogColor", GameObject.FindObjectOfType<FOW>().fogColor);
         }
 
         public virtual void Update()
@@ -104,9 +114,6 @@ namespace RedKite
                 sr.enabled = false;
             else
                 sr.enabled = true;
-
-            sr.material.SetTexture("_MainTex2", GameObject.FindGameObjectWithTag("FogCam").GetComponent<Camera>().activeTexture);
-            sr.material.SetTexture("_MainTex3", FindObjectOfType<WallRender>().wallRender);
 
             if (CameraMovement.facing == CameraMovement.Facing.NE)
             {

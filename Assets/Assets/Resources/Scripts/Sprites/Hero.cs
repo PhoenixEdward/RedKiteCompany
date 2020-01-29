@@ -21,7 +21,7 @@ namespace RedKite
 
             if(firstSpawn)
             {
-                spawnPoints = TileMapper.Instance.GetSpawnPoints(unitCount);
+                spawnPoints = TileMapper.Instance.GetSpawnPoints();
                 firstSpawn = false;
             }
 

@@ -44,11 +44,14 @@ namespace RedKite
             wallTex = Resources.Load<Texture2D>("Tiles/" + wallTexName);
             wallTextures = new Texture2D[6] { wallTex, wallTex, topWallTex, wallTex, wallTex, wallTex };
             floorTextures = new Texture2D[6] { floorTex, floorTex, floorTex, floorTex, floorTex, floorTex };
+
             walls = new GameObject();
+            walls.name = "Walls"; 
             walls.layer = 9;
             walls.transform.position = new Vector3(0.5f, 0, .5f);
 
             floor = new GameObject();
+            floor.name = "Floor";
             floor.transform.position = new Vector3(0.5f, 0, 0.5f);
 
             wallFilter = walls.AddComponent<MeshFilter>();
@@ -61,12 +64,11 @@ namespace RedKite
 
             floorRenderer.material.shader = Shader.Find("Custom/Terrain");
 
-            RenderWalls(wallFilter, wallRenderer);
-            RenderFloor(floorFilter, floorRenderer);
+            RenderWalls(walls, wallFilter, wallRenderer);
+            RenderFloor(floor, floorFilter, floorRenderer);
 
-            walls.AddComponent<MeshCollider>();
-            floor.AddComponent<MeshCollider>();
-
+            walls.transform.SetParent(transform);
+            floor.transform.SetParent(transform);
         }
 
         public void Regen()
@@ -80,8 +82,8 @@ namespace RedKite
             wallMeshes.Clear();
             floorMeshes.Clear();
 
-            RenderWalls(wallFilter, wallRenderer);
-            RenderFloor(floorFilter, floorRenderer);
+            RenderWalls(walls, wallFilter, wallRenderer);
+            RenderFloor(floor, floorFilter, floorRenderer);
         }
 
         // Update is called once per frame
@@ -90,7 +92,7 @@ namespace RedKite
 
         }
 
-        void RenderWalls(MeshFilter meshFilter, MeshRenderer meshRenderer)
+        void RenderWalls(GameObject go, MeshFilter meshFilter, MeshRenderer meshRenderer)
         {
             foreach (KeyValuePair<int, Area> entry in TileMapper.Instance.Areas)
             {
@@ -101,6 +103,9 @@ namespace RedKite
                     foreach (Segment seg in wall.Segments)
                     {
                         MeshMaker segMesh = new MeshMaker();
+
+                        if (seg.Scale.x < 0 | seg.Scale.y < 0 | seg.Scale.z < 0)
+                            Debug.Log(seg.Min + " " + seg.Max);
 
                         segMesh.NewMakeMesh(seg.Scale, seg.Center + Vector3.up);
 
@@ -117,10 +122,17 @@ namespace RedKite
             wallMesh.MergeSides();
 
             meshFilter.mesh = wallMesh.Mesh;
+
+            MeshCollider meshCollider;
+
+            if (go.TryGetComponent<MeshCollider>(out meshCollider))
+                meshCollider.sharedMesh = meshFilter.mesh;
+            else
+                go.AddComponent<MeshCollider>();
         }
 
 
-        void RenderFloor(MeshFilter meshFilter, MeshRenderer meshRenderer)
+        void RenderFloor(GameObject go, MeshFilter meshFilter, MeshRenderer meshRenderer)
         {
             foreach (KeyValuePair<int, Area> entry in TileMapper.Instance.Areas)
             {
@@ -193,6 +205,13 @@ namespace RedKite
             floorMesh.MergeSides();
 
             meshFilter.mesh = floorMesh.Mesh;
+
+            MeshCollider meshCollider;
+
+            if (go.TryGetComponent<MeshCollider>(out meshCollider))
+                meshCollider.sharedMesh = meshFilter.mesh;
+            else
+                go.AddComponent<MeshCollider>();
         }
 
 

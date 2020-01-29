@@ -53,8 +53,41 @@ namespace RedKite
             cam.targetTexture = new RenderTexture(Screen.width, Screen.height, 1);
 
             fogTexture = Level.Instance.fogTexture;
-            partMaterial.SetColor("_Color", fogColor);
             partMaterial.SetFloat("_TexDimensions", .75f);
+
+            wallTarget = FindObjectOfType<WallRender>().wallRender;
+
+            colorSliders = GameObject.FindGameObjectWithTag("SpriteSelect").GetComponentsInChildren<Slider>();
+
+            GenerateFog();
+            //place inital fog tiles on tilemap
+        }
+
+        public void GenerateFog()
+        {
+            if(patches != null)
+            {
+                //need to make sure these dims are correct.
+                for(int y = 0; y < patches.GetLength(1); y++)
+                {
+                   for(int x = 0; x < patches.GetLength(0); x++)
+                    { 
+                        if(patches[x, y] != null)
+                        { 
+                            for (int j = 0; j < patches[x, y].puffs.Length; j++)
+                                Destroy(patches[x, y].puffs[j].gameObject);
+                        }
+                    }
+                }
+            }
+
+            firstSpawn = true;
+
+            activeRooms = new List<int>();
+
+            heroes = GameSpriteManager.Instance.Heroes;
+            enemies = GameSpriteManager.Instance.Enemies;
+            props = GameSpriteManager.Instance.Props;
 
             roomMap = TileMapper.Instance.map;
 
@@ -64,38 +97,25 @@ namespace RedKite
 
             //instantiate the grid with fog cells and place them on tilemap
             for (int y = 0; y < TileMapper.Instance.H; y++)
-            { 
+            {
                 for (int x = 0; x < TileMapper.Instance.W; x++)
                 {
-                    if(roomMap[x,y] != TILE_WALL & roomMap[x, y] != TILE_VOID)
-                    { 
+                    if (roomMap[x, y] != TILE_WALL & roomMap[x, y] != TILE_VOID)
+                    {
                         fogMap[x, y] = TILE_FOG;
-                        patches[x, y] = new Patch(rnd, new Vector3Int(x, 0, y),new Vector3Int(3,2,3),new Vector3(0.75f, 0.75f), transform, partMaterial, fogTexture);
+                        patches[x, y] = new Patch(rnd, new Vector3Int(x, 0, y), new Vector3Int(3, 2, 3), new Vector3(0.75f, 0.75f), transform, partMaterial, fogTexture);
 
                     }
                 }
             }
-
-            wallTarget = FindObjectOfType<WallRender>().wallRender;
-
-            heroes = GameSpriteManager.Instance.Heroes;
-            enemies = GameSpriteManager.Instance.Enemies;
-            props = GameSpriteManager.Instance.Props;
-
-            activeRooms = new List<int>();
-
-            colorSliders = GameObject.FindGameObjectWithTag("SpriteSelect").GetComponentsInChildren<Slider>();
-
-            //place inital fog tiles on tilemap
         }
 
         // Update is called once per frame
         void Update()
         {
             partMaterial.SetTexture("_MainTex3", wallTarget);
-            Color col = new Color(colorSliders[0].value, colorSliders[1].value, colorSliders[2].value);
-            partMaterial.SetColor("_Color", col);
-            GameSprite.fogTint = col;
+            fogColor = new Color(colorSliders[0].value, colorSliders[1].value, colorSliders[2].value);
+            partMaterial.SetColor("_Color", fogColor);
 
             foreach(Patch patch in patches)
             {

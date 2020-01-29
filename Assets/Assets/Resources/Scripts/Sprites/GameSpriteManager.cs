@@ -57,6 +57,8 @@ namespace RedKite
 
             Heroes.Clear();
             Enemies.Clear();
+            Props.Clear();
+            Units.Clear();
 
             foreach (GameSprite sprite in Sprites)
             {

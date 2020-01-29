@@ -37,10 +37,13 @@ namespace RedKite
         CameraMovement cam;
         public Material spriteMat;
         public Texture2D fogTexture;
+        Reticle reticle;
+        SpriteSelection spriteSelection;
 
         Color fogColor;
 
         public FOW fow;
+        Glow glow;
         // Start is called before the first frame update
         void Awake()
         {
@@ -53,12 +56,14 @@ namespace RedKite
 
             grid = FindObjectOfType<Grid>();
 
-            fogColor = Color.white;
+            fow = FindObjectOfType<FOW>();
 
-            FindObjectOfType<FOW>().fogColor = fogColor;
+            reticle = FindObjectOfType<Reticle>();
 
+            spriteSelection = FindObjectOfType<SpriteSelection>();
 
             modeler = new GameObject().AddComponent<Modeler>();
+            modeler.name = "Modeler";
 
             heroes = new List<GameObject>();
             propInstances = new Dictionary<Vector3Int, GameObject>();
@@ -92,13 +97,22 @@ namespace RedKite
                 entity.spriteName = prop.Value;
             }
 
+            glow = FindObjectOfType<Glow>();
+
             cam = FindObjectOfType<CameraMovement>();
 
             cam.enabled = true;
         }
 
+        private void Update()
+        {
+            GameSprite.UpdateAllSprites();
+        }
+
         public void Regen()
         {
+            spriteSelection.enabled = false;
+
             cam.enabled = false;
 
             TileMapper.Instance.Generate();
@@ -115,6 +129,7 @@ namespace RedKite
             Hero unit1 = hero1.AddComponent<Hero>();
             unit1.spriteType = GameSprite.SpriteType.Character;
             unit1.spriteLoad = heroes[0].GetComponent<GameSprite>().spriteLoad;
+
             GameObject hero2 = new GameObject();
             hero2.name = "Unit 2";
             hero2.layer = 8;
@@ -157,6 +172,14 @@ namespace RedKite
             }
 
             GameSpriteManager.Instance.GetSprites();
+
+            fow.GenerateFog();
+
+            reticle.Generate();
+
+            glow.Regen();
+
+            spriteSelection.enabled = true;
 
             cam.enabled = true;
         }

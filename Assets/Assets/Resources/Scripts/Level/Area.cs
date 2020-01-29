@@ -147,7 +147,7 @@ namespace RedKite
             public Vector3 Scale;
             public Dictionary<int, Door> Doors = new Dictionary<int, Door>();
 
-            static char[,] cornerGraph;
+            public static char[,] cornerGraph;
             static readonly char TILE_CORNER = 'C';
             
 
@@ -230,7 +230,7 @@ namespace RedKite
 
                     //find maxiest min
                     float diff2 = Utility.DirectedDist(newWall.Min, oldWall.Min);
-                    Vector3 startCorner = diff2 >= 0 ? oldWall.Min :
+                    Vector3 startCorner = diff2 > 0 ? oldWall.Min :
                         newWall.Min;
 
                     Vector3 startCoord = startCorner + up;
@@ -238,27 +238,34 @@ namespace RedKite
 
                     //find minniest max
                     float diff3 = Utility.DirectedDist(newWall.Max, oldWall.Max);
-                    Vector3 endCorner = diff3 <= 0 ? oldWall.Max :
+                    Vector3 endCorner = diff3 < 0 ? oldWall.Max :
                         newWall.Max;
 
                     Vector3 endCoord = endCorner + down;
+
+                    if (startCoord.x > endCoord.x | startCoord.z > endCoord.z)
+                    {
+                        Debug.Log("Culprit");
+                        continue;
+                    }
 
                     //add paths for both. One is declared "removed" to prevent overlapping of tiles
 
                     oldWall.Overlaps.Add(new Segment(oldWall.Orientation, startCoord, endCoord, 1, _isRemoved: true));
 
-                    if (Doors.Keys.Contains(oldWall.RoomIndex))
+                    if (newWall.Doors.Keys.Contains(oldWall.RoomIndex))
                     {
-                        Door door = Doors[oldWall.RoomIndex];
+                        Door door = newWall.Doors[oldWall.RoomIndex];
 
-                        Debug.Log(door.Min + " " + door.Max);
+                        if(door.Min.x >= door.Max.x & door.Min.z >= door.Max.z)
+                            Debug.Log(door.Min + " " + door.Max);
                         if(Utility.DirectedDist(door.Min, door.Max) > 0)
                             newWall.Overlaps.Add(new Segment(newWall.Orientation,door.Min,door.Max, 1, _isPath: true));
 
-                        /*if(Utility.DirectedDist(startCoord, door.Min + down) > 0)
+                        if(Utility.DirectedDist(startCoord, door.Min + down) > 0)
                             newWall.Overlaps.Add(new Segment(newWall.Orientation, startCoord, door.Min + down, 1));
                         if(Utility.DirectedDist(door.Max + up, endCoord) > 0)
-                            newWall.Overlaps.Add(new Segment(newWall.Orientation, door.Max + up, endCoord, 1));*/
+                            newWall.Overlaps.Add(new Segment(newWall.Orientation, door.Max + up, endCoord, 1));
                     }
                     else
                     {
@@ -310,6 +317,8 @@ namespace RedKite
                 //note <= for look behind. This also means I no longer have to have a seperate structure for those with 0 paths.
                 for (int i = 0; i < Overlaps.Count; i++)
                 {
+                    if (Overlaps[i].Min.x > Overlaps[i].Max.x | Overlaps[i].Min.z > Overlaps[i].Max.z)
+                        Debug.Log(Overlaps[i].Orientation.Name);
                     //instantiate start and end of segment                        
                     if (Overlaps[i].IsRemoved == true | Overlaps[i].IsPath == true)
                         continue;
@@ -332,7 +341,8 @@ namespace RedKite
                         segMin = Overlaps[i].Max + up;
                         segMax = Overlaps[i + 1].Min + down;
 
-                        Debug.Log(segMin + " " + segMax);
+                        if (segMin.x > segMax.x & segMin.z > segMax.z)
+                            Debug.Log(segMin + " " + segMax);
                     }
 
                     segments.Add(new Segment(Orientation, segMin, segMax, Height));

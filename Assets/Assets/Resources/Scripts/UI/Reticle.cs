@@ -50,11 +50,17 @@ namespace RedKite
 
             tilemap = GetComponent<Tilemap>();
 
-            units = GameSpriteManager.Instance.Heroes;
-
             grid = FindObjectOfType<Grid>();
 
             menu = FindObjectOfType<SpriteSelection>();
+
+            Generate();
+        }
+
+        public void Generate()
+        {
+            units = GameSpriteManager.Instance.Heroes;
+
         }
 
         // Update is called once per frame

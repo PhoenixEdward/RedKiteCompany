@@ -7,29 +7,19 @@ namespace RedKite
 { 
     public class Glow : MonoBehaviour
     {
-        Material glowTex;
         RawImage img;
         List<Unit> units;
-        Texture target;
-        WallRender wallRender;
+        public WallRender wallRender;
 
-        Camera cam;
-        RenderTexture unitRender;
+        public Camera cam;
         public Shader UnitShader;
         // Start is called before the first frame update
         void Start()
         {
-            cam = GetComponent<Camera>();
-
-            unitRender = new RenderTexture(Screen.width, Screen.height, 1);
-            cam.targetTexture = unitRender;
-
             cam.SetReplacementShader(UnitShader, "RenderType");
 
             img = GetComponentInChildren<RawImage>();
             img.rectTransform.sizeDelta = new Vector2(Screen.width, Screen.height);
-
-            wallRender = FindObjectOfType<WallRender>();
 
             units = GameSpriteManager.Instance.Units;
         }
@@ -39,6 +29,7 @@ namespace RedKite
             foreach(Unit unit in units)
             {
                 unit.mirrorRender.material.SetTexture("_MainTex2", wallRender.wallRender);
+
                 Vector3 point;
 
                 if (CameraMovement.facing == CameraMovement.Facing.NE)
@@ -67,8 +58,14 @@ namespace RedKite
                     unit.mirrorRender.material.SetInt("_Covered", 0);
                 }
 
-                img.texture = unitRender;
+                img.texture = cam.activeTexture;
             }
+        }
+
+        public void Regen()
+        {
+            units.Clear();
+            units = GameSpriteManager.Instance.Units;
         }
     }
 }

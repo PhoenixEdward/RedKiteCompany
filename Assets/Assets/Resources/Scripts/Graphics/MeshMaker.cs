@@ -35,9 +35,6 @@ namespace RedKite
             int sideVertCount = ((int)_scale.z * 2) * ((int)_scale.y * 2); ;
             int topVertCount = ((int)_scale.x  * 2) * ((int)_scale.z * 2);
 
-            Debug.Log(_scale.x + " " + _scale.y);
-            Debug.Log(_scale.x + " " + _scale.z);
-
             Vector3[] frontVertices = new Vector3[frontVertCount];
             Vector3[] topVertices = new Vector3[topVertCount];
             Vector3[] backVertices = new Vector3[frontVertCount];

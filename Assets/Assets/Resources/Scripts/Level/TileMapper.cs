@@ -62,7 +62,7 @@ namespace RedKite
 
         public virtual void Generate()
         {
-
+            Area.Wall.cornerGraph = null;
 
             H = rndState.Next(40, 50);
             W = rndState.Next(40, 50);
@@ -550,13 +550,13 @@ namespace RedKite
             return null;
         }
 
-        public Vector3[] GetSpawnPoints(int spawnNumber)
+        public Vector3[] GetSpawnPoints()
         {
             List<Vector3> spawnPoints = Areas[0].GetCoords().ToList();
 
             spawnPoints.Shuffle();
 
-            return spawnPoints.Take(spawnNumber).ToArray();
+            return spawnPoints.ToArray();
         }
 
     }
