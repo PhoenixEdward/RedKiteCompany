@@ -4,19 +4,41 @@ using UnityEngine;
 using UnityEngine.Tilemaps;
 
 namespace RedKite
-{ 
+{
     [System.Serializable]
     public class Unit : GameSprite
     {
+        public string Name { get; private set; }
+
+        public List<Skill> Skills
+        {
+            get;
+            private set;
+        } = new List<Skill>();
+
+
+        public int Health { get; private set; }
+        public int MaxHealth { get; private set; }
+
+        public bool Ready;
+
+        public int Level { get; private set; }
+
+        public Stats Stats { get; protected set; }
+        public JobClass jobClass { get; private set; }
+        public int Movement { get; private set; }
+        public int Initiative { get; private set; }
+
+        protected System.Random rnd;
+
         //Should destination be here?
         protected static Grid grid;
 
-        PathFinder pathFinder = new PathFinder();
+        readonly PathFinder pathFinder = new PathFinder();
 
         protected List<Node> currentPath = null;
 
-        int speed = 2;
-        public int movement = 4;
+        readonly int speed = 2;
 
         public Vector3 Destination { get; set; } = Vector3.zero;
         public bool IsAnimated { get; set; }
@@ -31,9 +53,195 @@ namespace RedKite
         
         public SpriteRenderer mirrorRender;
 
-        public BoxCollider collider;
+        public BoxCollider boxCollider;
 
         public Vector3 distanceFromCoord;
+
+        public void Instantiate(string _name, JobClass _jobClass, int _level)
+        {
+            Name = _name;
+            jobClass = _jobClass;
+
+            Stats = new Stats(jobClass);
+
+            Movement = 4 + (Stats.Dexterity.Modifier / 2);
+
+            MaxHealth = 20 + Stats.Constitution.Modifier;
+
+            Level = 1;
+
+            for (int level = 0; level < _level; level++)
+                LevelUp();
+        }
+
+        public void Spawn()
+        {
+            if (rnd == null)
+                rnd = new System.Random();
+
+            Initiative = rnd.Next(0, 10) + Stats.Dexterity.Modifier;
+
+            Health = MaxHealth;
+
+            Ready = true;
+        }
+
+        public void StartTurn()
+        {
+            Movement = 4 + (Stats.Dexterity.Modifier / 2);
+
+            if (Stats.Strength.Altered)
+                Stats.Strength.DecrementBuffDuration();
+            if (Stats.Constitution.Altered)
+                Stats.Constitution.DecrementBuffDuration();
+            if (Stats.Dexterity.Altered)
+                Stats.Dexterity.DecrementBuffDuration();
+            if (Stats.Intelligence.Altered)
+                Stats.Intelligence.DecrementBuffDuration();
+            if (Stats.Wisdom.Altered)
+                Stats.Wisdom.DecrementBuffDuration();
+            if (Stats.Charisma.Altered)
+                Stats.Charisma.DecrementBuffDuration();
+        }
+
+        public void NextTurn()
+        {
+            Ready = true;
+        }
+
+        public void Wait()
+        {
+            Ready = false;
+        }
+
+        public void Action(Unit _unit, Skill _skill)
+        {
+            if (_skill.Type.Major != Skill.Form.None)
+                if (Skills.Contains(_skill))
+                    _skill.Use(this, _unit);
+
+            Ready = false;
+        }
+
+        public void ChangeHealth(int change, bool anti)
+        {
+
+            if (change < 0)
+            {
+                return;
+            }
+
+            if (anti)
+                Health = Mathf.Min(change + Health, MaxHealth);
+            else
+            {
+                int damage = jobClass != JobClass.Ranger | jobClass != JobClass.Fighter ?
+                change - Stats.Constitution.Modifier : change - Stats.Dexterity.Modifier;
+
+                Health = Mathf.Max(0, Health - damage);
+            }
+
+        }
+
+        public void LearnSkill(string item)
+        {
+            dynamic skill;
+
+            if (Loot.Keys[item].majorForm != Skill.Form.Charming)
+                skill = JsonMerchant.Instance.Load<Weapon>(item);
+            else
+                skill = JsonMerchant.Instance.Load<Buff>(item);
+
+            if ((jobClass == JobClass.Ranger | jobClass == JobClass.Fighter) & skill.Type.Major == Skill.Form.Finesse)
+                Skills.Add(skill);
+            else if ((jobClass == JobClass.Mage | jobClass == JobClass.Bard) & skill.Type.Major == Skill.Form.Clever)
+                Skills.Add(skill);
+            else if ((jobClass == JobClass.Cleric | jobClass == JobClass.Mage) & skill.Type.Major == Skill.Form.Wise)
+                Skills.Add(skill);
+            else if ((jobClass == JobClass.Bard | jobClass == JobClass.Ranger) & skill.Type.Major == Skill.Form.Charming)
+                Skills.Add(skill);
+            else if (skill.Type.Major == Skill.Form.Brute)
+                Skills.Add(skill);
+
+
+        }
+
+        public int AbilityCheck(Skill.Form _type)
+        {
+            int roll;
+
+            if (_type == Skill.Form.Brute)
+                roll = Stats.Strength.Roll(10);
+            else if (_type == Skill.Form.Charming)
+                roll = Stats.Charisma.Roll(10);
+            else if (_type == Skill.Form.Clever)
+                roll = Stats.Intelligence.Roll(10);
+            else if (_type == Skill.Form.Finesse)
+                roll = Stats.Dexterity.Roll(10);
+            else if (_type == Skill.Form.Stoic)
+                roll = Stats.Constitution.Roll(10);
+            else
+                roll = Stats.Wisdom.Roll(10);
+
+            return roll;
+
+        }
+
+        public void Buff(Skill.Form _type, int _amount, int _duration, bool anti)
+        {
+            int amount;
+
+            if (anti)
+                amount = -_amount;
+            else
+                amount = _amount;
+
+            if (_type == Skill.Form.Brute)
+                Stats.Strength.Buff(amount, _duration);
+            else if (_type == Skill.Form.Charming)
+                Stats.Charisma.Buff(amount, _duration);
+            else if (_type == Skill.Form.Clever)
+                Stats.Intelligence.Buff(amount, _duration);
+            else if (_type == Skill.Form.Finesse)
+                Stats.Dexterity.Buff(amount, _duration);
+            else if (_type == Skill.Form.Stoic)
+                Stats.Constitution.Buff(amount, _duration);
+            else
+                Stats.Wisdom.Buff(amount, _duration);
+
+        }
+
+        public int DefensiveRoll()
+        {
+            int roll;
+
+            roll = Stats.Dexterity.Roll(6);
+
+            return roll;
+        }
+
+        public int OffensiveRoll(Skill.Form _type)
+        {
+            int roll;
+
+            if (_type == Skill.Form.Finesse)
+                roll = Stats.Dexterity.Roll(10);
+            else if (_type == Skill.Form.Clever)
+                roll = Stats.Intelligence.Roll(10);
+            else if (_type == Skill.Form.Wise)
+                roll = Stats.Wisdom.Roll(10);
+            else
+                roll = Stats.Charisma.Roll(10);
+
+            return roll;
+        }
+
+        public void LevelUp()
+        {
+            Stats.LevelUp(jobClass);
+
+            Level++;
+        }
 
         public override void Start()
         {
@@ -53,63 +261,16 @@ namespace RedKite
             mirror.transform.SetParent(transform);
             mirror.layer = 13;
 
-            collider = gameObject.AddComponent<BoxCollider>();
-            collider.center += new Vector3(0, 0.5f, 0);
+            boxCollider = gameObject.AddComponent<BoxCollider>();
+            boxCollider.center += new Vector3(0, 0.5f, 0);
         }
 
         public override void Update()
         {
             if (currentPath != null)
             {
-                IsMoving = true;
-
-                Vector3 currentPos = Coordinate + distanceFromCoord;
-
-                nextCell = currentPath[0].cell;
-
-                if (currentPos != currentPath[0].cell)
-                {
-
-                    if (currentPos.x < currentPath[0].cell.x)
-                    {
-                        distanceFromCoord.x += Mathf.Min(speed * Time.deltaTime, Mathf.Abs(currentPos.x - currentPath[0].cell.x));
-
-                        velocity.x = 1;
-
-                    }
-                    else if (currentPos.x > currentPath[0].cell.x)
-                    {
-                        distanceFromCoord.x  -= Mathf.Min(speed * Time.deltaTime, Mathf.Abs(currentPos.x - currentPath[0].cell.x));
-                        velocity.x = -1;
-
-                    }
-                    else
-                        velocity.x = 0;
-                    
-                    if (currentPos.y < currentPath[0].cell.y)
-                    {
-                        distanceFromCoord.y += Mathf.Min(speed * Time.deltaTime, Mathf.Abs(currentPos.y - currentPath[0].cell.y));
-
-                        velocity.z = 1;
-
-                    }
-                    else if (currentPos.y > currentPath[0].cell.y)
-                    {
-                        distanceFromCoord.y -= Mathf.Min(speed * Time.deltaTime, Mathf.Abs(currentPos.y - currentPath[0].cell.y));
-
-                        velocity.z = -1;
-                    }
-
-                    else
-                        velocity.z = 0;
-
-                }
-                else
-                { 
-                    MoveNextTile();
-                }
+                Move();
             }
-
             if (timeSinceLastFrame > charSecondsPerFrame)
             {
 
@@ -276,6 +437,55 @@ namespace RedKite
 
         }
 
+        public void Move()
+        {
+            Vector3 currentPos = Coordinate + distanceFromCoord;
+
+            nextCell = currentPath[0].cell;
+
+            if (currentPos != currentPath[0].cell)
+            {
+
+                if (currentPos.x < currentPath[0].cell.x)
+                {
+                    distanceFromCoord.x += Mathf.Min(speed * Time.deltaTime, Mathf.Abs(currentPos.x - currentPath[0].cell.x));
+
+                    velocity.x = 1;
+
+                }
+                else if (currentPos.x > currentPath[0].cell.x)
+                {
+                    distanceFromCoord.x -= Mathf.Min(speed * Time.deltaTime, Mathf.Abs(currentPos.x - currentPath[0].cell.x));
+                    velocity.x = -1;
+
+                }
+                else
+                    velocity.x = 0;
+
+                if (currentPos.y < currentPath[0].cell.y)
+                {
+                    distanceFromCoord.y += Mathf.Min(speed * Time.deltaTime, Mathf.Abs(currentPos.y - currentPath[0].cell.y));
+
+                    velocity.z = 1;
+
+                }
+                else if (currentPos.y > currentPath[0].cell.y)
+                {
+                    distanceFromCoord.y -= Mathf.Min(speed * Time.deltaTime, Mathf.Abs(currentPos.y - currentPath[0].cell.y));
+
+                    velocity.z = -1;
+                }
+
+                else
+                    velocity.z = 0;
+
+            }
+            else
+            {
+                MoveNextTile();
+            }
+        }
+
         void MoveNextTile()
         {
 
@@ -305,9 +515,10 @@ namespace RedKite
 
         }
 
-        public void Move(Vector3 destination)
+        public virtual void Embark(Vector3 destination)
         {
             currentPath = pathFinder.GeneratePathTo(Coordinate, destination);
+            IsMoving = true;
         }
 
         public void ResetFrames()

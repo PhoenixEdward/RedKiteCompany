@@ -1,0 +1,112 @@
+
+  [
+    {
+      "Name": "Training Axe",
+      "Uses": 25,
+      "Anti": false,
+      "DiceBonus": 6,
+      "BaseBonus": 6,
+      "Type": {
+        "Major": 1,
+        "Minor": 0
+      },
+      "Range": 1
+    },
+    {
+      "Name": "Training Gauntlets",
+      "uses": 40,
+      "Anti": false,
+      "DiceBonus": 4,
+      "BaseBonus": 7,
+      "Type": {
+        "Major": 1,
+        "Minor": 0
+      },
+      "Range": 1
+    },
+    {
+      "Name": "Training Sword",
+      "Uses": 30,
+      "Anti": false,
+      "DiceBonus": 6,
+      "BaseBonus": 5,
+      "Type": {
+        "Major": 3,
+        "Minor": 0
+      },
+      "Range": 1
+    },
+    {
+      "Name": "Training Dagger",
+      "Uses": 40,
+      "Anti": false,
+      "DiceBonus": 8,
+      "BaseBonus": 4,
+      "Type": {
+        "Major": 3,
+        "Minor": 0
+      },
+      "Range": 1
+    },
+    {
+      "Name": "Training Long Bow",
+      "Uses": 25,
+      "Anti": false,
+      "DiceBonus": 6,
+      "BaseBonus": 4,
+      "Type": {
+        "Major": 3,
+        "Minor": 0
+      },
+      "Range": 3
+    },
+    {
+      "Name": "Training Short Bow",
+      "Uses": 30,
+      "Anti": false,
+      "DiceBonus": 8,
+      "BaseBonus": 4,
+      "Type": {
+        "Major": 3,
+        "Minor": 0
+      },
+      "Range": 2
+    },
+    {
+      "Name": "Firebolt",
+      "Uses": 30,
+      "Anti": false,
+      "DiceBonus": 6,
+      "BaseBonus": 5,
+      "Type": {
+        "Major": 4,
+        "Minor": 0
+      },
+      "Range": 2
+    },
+    {
+      "Name": "Cure",
+      "Uses": 10,
+      "Anti": true,
+      "DiceBonus": 4,
+      "BaseBonus": 5,
+      "Type": {
+        "Major": 5,
+        "Minor": 0
+      },
+      "Range": 1
+    },
+    {
+      "Name": "Disarm",
+      "Uses": 5,
+      "Anti": true,
+      "DiceBonus": 4,
+      "BaseBonus": 5,
+      "Type": {
+        "Major": 6,
+        "Minor": 1
+      },
+      "Range": 2,
+      "Duration": 1
+    }
+  ]

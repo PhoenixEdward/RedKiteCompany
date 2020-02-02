@@ -130,7 +130,7 @@ namespace RedKite
                 else if (isActive)
                 {
                     Debug.Log("Run");
-                    panel.localPosition = new Vector3(0 +                                                                                               Screen.width / 2, - Screen.height/2, 0);
+                    panel.localPosition = new Vector3(0 + Screen.width / 2, - Screen.height/2, 0);
                     isActive = false;
                     texturerActive = false;
                 }
@@ -164,27 +164,27 @@ namespace RedKite
                             pos = new Vector2(pos.x - Screen.width/2, pos.y - Screen.height/2);
                             propCreateInstance.GetComponent<RectTransform>().localPosition = pos;
 
+                            string path3 = Application.dataPath + "\\Sprites\\PropSprites";
+
+                            List<string> sprites = Directory.GetFiles(path3, "*.png").ToList<string>().Select(x => x.Substring(path3.Length + 1)).ToList();
+
+                            List<Dropdown.OptionData> spriteOptions = new List<Dropdown.OptionData>();
+
+                            foreach (string file in sprites)
+                            {
+                                Dropdown.OptionData dat = new Dropdown.OptionData(file);
+                                spriteOptions.Add(dat);
+                            }
+
+                            UIPropCreator propCreate = propCreateInstance.transform.GetChild(2).gameObject.AddComponent<UIPropCreator>();
+                            propCreate.position = new Vector3Int(reticle.highlight.x, reticle.highlight.y, -1);
+
+                            UIPropCreator propDelete = propCreateInstance.transform.GetChild(1).gameObject.AddComponent<UIPropCreator>();
+                            propDelete.position = new Vector3Int(reticle.highlight.x, reticle.highlight.y, -1);
+
+                            propCreateInstance.GetComponentInChildren<Dropdown>().AddOptions(spriteOptions);
+
                         }
-
-                        string path3 = Application.dataPath + "\\Sprites\\PropSprites";
-
-                        List<string> sprites = Directory.GetFiles(path3, "*.png").ToList<string>().Select(x => x.Substring(path3.Length + 1)).ToList();
-
-                        List<Dropdown.OptionData> spriteOptions = new List<Dropdown.OptionData>();
-
-                        foreach (string file in sprites)
-                        {
-                            Dropdown.OptionData dat = new Dropdown.OptionData(file);
-                            spriteOptions.Add(dat);
-                        }
-
-                        UIPropCreator propCreate = propCreateInstance.transform.GetChild(2).gameObject.AddComponent<UIPropCreator>();
-                        propCreate.position = new Vector3Int(reticle.highlight.x, reticle.highlight.y, -1);
-
-                        UIPropCreator propDelete = propCreateInstance.transform.GetChild(1).gameObject.AddComponent<UIPropCreator>();
-                        propDelete.position = new Vector3Int(reticle.highlight.x, reticle.highlight.y, -1);
-
-                        propCreateInstance.GetComponentInChildren<Dropdown>().AddOptions(spriteOptions);
 
                     }
                     else

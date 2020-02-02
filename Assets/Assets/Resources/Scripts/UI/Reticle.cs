@@ -21,6 +21,7 @@ namespace RedKite
         PathFinder pathFinder = new PathFinder();
 
         Grid grid;
+        CombatMenu combatMenu;
 
         bool isSelection;
 
@@ -34,7 +35,9 @@ namespace RedKite
 
         SpriteSelection menu;
 
-        
+        StatSheet statSheet;
+
+        BattleGrid battleGrid;
 
         // Start is called before the first frame update
         void Start()
@@ -54,6 +57,12 @@ namespace RedKite
 
             menu = FindObjectOfType<SpriteSelection>();
 
+            combatMenu = FindObjectOfType<CombatMenu>();
+
+            statSheet = FindObjectOfType<StatSheet>();
+
+            battleGrid = FindObjectOfType<BattleGrid>();
+
             Generate();
         }
 
@@ -67,23 +76,72 @@ namespace RedKite
         void Update()
         {
             if(!menu.isActive)
-            { 
-                TileTracker();
+            {
+                if(combatMenu.IsActive == false)
+                    TileTracker();
+
+                UnitData();
                 if (selectedHero != null)
                 {
-                    if (destination != null)
+                    if (selectedHero.IsMoving == false & combatMenu.IsActive == false)
+                        battleGrid.UnitRange(selectedHero);
+                    else if(battleGrid.withinRange != null & battleGrid.canMoveTo != null)
+                        battleGrid.DeactivateUnitRange();
+
+                    if (destination != null & combatMenu.IsActive == false)
                     {
                         if (TileMapper.Instance.Tiles[destination.cell.x, destination.cell.y].IsWalkable == true & selectedHero.IsMoving == false)
-                            if (Utility.ManhattanDistance(new Vector3Int((int)selectedHero.Coordinate.x, (int)selectedHero.Coordinate.y,2), new Vector3Int(destination.cell.x, destination.cell.y,2)) <= selectedHero.movement)
+                            if (Utility.ManhattanDistance(new Vector3Int((int)selectedHero.Coordinate.x, (int)selectedHero.Coordinate.y,2), new Vector3Int(destination.cell.x, destination.cell.y,2)) <= selectedHero.Movement)
                             {
-                                if (pathFinder.IsReachable(selectedHero, destination, BattleGrid.withinRange.ToArray()))
+                                if (pathFinder.IsReachable(selectedHero, destination, battleGrid.withinRange.ToArray()))
                                 { 
-                                    selectedHero.Move(new Vector3(destination.cell.x,1,destination.cell.y));
-                                    destination = null;
+                                    //selectedHero.Embark(new Vector3(destination.cell.x,1,destination.cell.y));
+                                    //destination = null;
+
+                                    combatMenu.Activate(selectedHero, destination.cell);
                                 }
                             }
                     }
+
+                    if (Input.GetMouseButtonDown(1))
+                    {
+
+                        if (combatMenu.IsActive == false)
+                            selectedHero = null;
+
+                        destination = null;
+                        combatMenu.Deactivate();
+                        battleGrid.DeactivateUnitRange();
+                        destination = null;
+                    }
                 }
+                else
+                {
+                    combatMenu.Deactivate();
+                }
+            }
+            //this needs to be reworked. The above should be a function. A later problem.
+        }
+
+        public void UnitData()
+        {
+            Unit highlightedUnit = null;
+
+            foreach (Unit unit in units)
+            {
+                if (new Vector2(unit.Coordinate.x, unit.Coordinate.y) == new Vector2(highlight.x, highlight.y))
+                {
+                    highlightedUnit = unit;
+                }
+            }
+
+            if(highlightedUnit != null)
+            {
+                statSheet.Activate(highlightedUnit);
+            }
+            else
+            {
+                statSheet.Deactivate();
             }
         }
 
@@ -99,14 +157,6 @@ namespace RedKite
 
             tilemap.SetTile(highlight, highlightTile);
 
-            if (selectedHero != null)
-            {
-                if (Input.GetMouseButtonDown(1) & selectedHero.IsMoving == false)
-                {
-                    selectedHero = null;
-                    destination = null;
-                }
-            }
             foreach (Hero unit in units)
             {
                 if (new Vector2(unit.Coordinate.x, unit.Coordinate.y) == new Vector2(highlight.x, highlight.y) & selectedHero == null)
@@ -136,7 +186,7 @@ namespace RedKite
                 temp = highlight;
             }
 
-
+            //this needs to be moved somewhere else 
             if (selectedHero != null)
             {
                 if (!isSelection)
@@ -151,7 +201,7 @@ namespace RedKite
 
                         }
 
-                        foreach (Node node in BattleGrid.canMoveTo)
+                        foreach (Node node in battleGrid.canMoveTo)
                         {
 
                             if (highlight.x == node.cell.x & highlight.y == node.cell.y)

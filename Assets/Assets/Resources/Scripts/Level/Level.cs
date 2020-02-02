@@ -75,6 +75,8 @@ namespace RedKite
             hero1.layer = 8;
             Hero unit1 = hero1.AddComponent<Hero>();
             unit1.spriteName = "SwordGal";
+            unit1.Instantiate("Gongagoo", JobClass.Ranger, 5);
+            unit1.Spawn();
             heroes.Add(hero1);
 
             GameObject hero2 = new GameObject();
@@ -82,6 +84,8 @@ namespace RedKite
             hero2.layer = 8;
             Hero unit2 = hero2.AddComponent<Hero>();
             unit2.spriteName = "Mage";
+            unit2.Instantiate("Cestra", JobClass.Bard, 5);
+            unit2.Spawn();
             heroes.Add(hero2);
 
             QuestMapper.Instance.Generate();

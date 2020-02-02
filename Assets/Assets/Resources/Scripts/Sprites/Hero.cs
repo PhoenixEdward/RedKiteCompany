@@ -12,6 +12,7 @@ namespace RedKite
         static bool firstSpawn = true;
         static Vector3[] spawnPoints;
         static int unitCount = 2;
+        Vector3Int startingTile;
 
         public override void Start()
         {
@@ -38,6 +39,22 @@ namespace RedKite
             mirrorRender.material.SetColor("_Color", Color.blue);
 
             IsVisible = true;
+        }
+
+        public void ResetPosition()
+        {
+            Coordinate = startingTile;
+            IsMoving = false;
+            currentPath = null;
+            distanceFromCoord = Vector3.zero;
+            nextCell = Coordinate;
+        }
+
+        public override void Embark(Vector3 destination)
+        {
+            startingTile = Coordinate;
+
+            base.Embark(destination);
         }
 
         public static void ClearStatic()

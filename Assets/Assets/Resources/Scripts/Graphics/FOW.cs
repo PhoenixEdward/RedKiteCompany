@@ -123,9 +123,9 @@ namespace RedKite
                 {
                     patch.Rotate();
 
-                    if (patch.isHidden & !patch.hasDissipated)
+                    if (patch.IsHidden & (!patch.HasDissipated | patch.IsDissipating))
                         patch.Dissipate(true);
-                    else if (!patch.isHidden & patch.hasDissipated)
+                    else if (!patch.IsHidden & (patch.HasDissipated | patch.IsDissipating))
                         patch.Dissipate(false);
                 }
             }
@@ -192,12 +192,12 @@ namespace RedKite
                     { 
                         if (fogMap[x, y] == TILE_FOG)
                         {
-                            patches[x, y].isHidden = false;
+                            patches[x, y].IsHidden = false;
                         }
                         else if (fogMap[x, y] == TILE_EDGE &
                             !new char[] { fogMap[x, y + 1], fogMap[x, y - 1], fogMap[x + 1, y], fogMap[x - 1, y] }.All(q => q == TILE_EDGE | q == TILE_CLEAR))
                         {
-                            patches[x, y].isHidden = false;
+                            patches[x, y].IsHidden = false;
                         }
                         else
                         {
@@ -206,7 +206,7 @@ namespace RedKite
                                 patches[x, y].Hide(true);
                             }
                             else
-                                patches[x, y].isHidden = true;
+                                patches[x, y].IsHidden = true;
                         }
                     }
 
@@ -234,8 +234,9 @@ namespace RedKite
             float dissipateAlphaRate = 0.075f;
             float[] currentDissipation;
 
-            public bool isHidden = false;
-            public bool hasDissipated = false;
+            public bool IsHidden { get; set; } = false;
+            public bool HasDissipated { get; private set; } = false;
+            public bool IsDissipating { get; private set; } = false;
 
             Color[] meshAlpha;
             Color colorFade = new Color(0, 0, 0, .075f);
@@ -305,9 +306,9 @@ namespace RedKite
                 }
 
                 if (_hide)
-                    isHidden = true;
+                    IsHidden = true;
                 else
-                    isHidden = false;
+                    IsHidden = false;
             }
 
             public void Rotate()
@@ -337,6 +338,8 @@ namespace RedKite
 
             public void Dissipate(bool _dissipate)
             {
+                IsDissipating = true;
+
                 bool[] dis = new bool[puffCount];
 
 
@@ -345,7 +348,7 @@ namespace RedKite
                     dis[i] = false;
                 }
 
-                    if (_dissipate)
+                if (_dissipate)
                 {
 
                     for (int i = 0; i < puffCount; i++)
@@ -364,7 +367,10 @@ namespace RedKite
                     if (dis.All(x=> x == true))
                         Hide(true);
 
-                    hasDissipated = dis.All(x => x == true) == true ? true : false;
+                    HasDissipated = dis.All(x => x == true) == true ? true : false;
+
+                    if (HasDissipated)
+                        IsDissipating = false;
                 }
                 else
                 {
@@ -385,7 +391,10 @@ namespace RedKite
                         }
                     }
 
-                    hasDissipated = dis.All(x => x == true) == true ? false : true;
+                    HasDissipated = dis.All(x => x == true) == true ? false : true;
+
+                    if (!HasDissipated)
+                        IsDissipating = false;
                 }
             }
         }

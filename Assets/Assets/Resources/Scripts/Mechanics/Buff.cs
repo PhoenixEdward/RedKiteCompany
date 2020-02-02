@@ -1,0 +1,55 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Text;
+using Newtonsoft.Json;
+
+namespace RedKite
+{
+    class Buff: Skill
+    {
+        public int Duration { get; set; }
+
+        public Buff() { }
+
+        [JsonConstructor]
+        public Buff(string _name, int _uses, bool _anti, int _diceBonus, int _baseBonus, Form _majorForm, Form _minorForm, int _range, int _duration) 
+            : base(_name, _uses, _anti, _diceBonus, _baseBonus, _majorForm, _minorForm, _range)
+        {
+            Duration = _duration;
+        }
+
+        public override void Use(Unit giver, Unit receiver)
+        {
+
+            base.Use(giver, receiver);
+
+            int chanceSuccessMajor = giver.AbilityCheck(Type.Major);
+            int chanceFailureMinor = receiver.AbilityCheck(Type.Minor);
+
+            int statBonus;
+
+            /*if(Type.Minor == Form.Brute)
+                statBonus = giver.stats.dexterity.Modifier;
+            else if (Type.Minor == Form.Finesse)
+                statBonus = giver.stats.dexterity.Modifier;
+            else if (Type.Minor == Form.Clever)
+                statBonus = giver.stats.intelligence.Modifier;
+            else if (Type.Minor == Form.Wise)
+                statBonus = giver.stats.wisdom.Modifier;
+            else*/
+
+            statBonus = giver.Stats.Charisma.Roll(DiceBonus);
+
+            int grossBonus = baseBonus + statBonus;
+
+            if (chanceFailureMinor < chanceSuccessMajor)
+            {
+                receiver.Buff(Type.Minor, grossBonus, Duration, Anti);
+
+                Console.WriteLine(receiver.Name + " Strength Altered " + receiver.Stats.Strength.Altered);
+
+                Console.WriteLine("Disarmed for: " + grossBonus + " To " + Type.Minor.ToString());
+            }
+        }
+    }
+}

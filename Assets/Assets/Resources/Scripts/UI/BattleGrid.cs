@@ -17,11 +17,8 @@ namespace RedKite
 
         public static Tilemap map;
 
-        public static List<Node> withinRange = new List<Node>();
-        public static List<Node> canMoveTo = new List<Node>();
-
-        Reticle reticle;
-
+        public List<Node> withinRange = new List<Node>();
+        public List<Node> canMoveTo = new List<Node>();
 
         // Start is called before the first frame update
         void Start()
@@ -41,27 +38,18 @@ namespace RedKite
                     map.SetTile(new Vector3Int(x, y, 0), clearTile);
                 }
             }
-
-            reticle = FindObjectOfType<Reticle>();
         }
 
         // Update is called once per frame
-        void Update()
+
+
+
+        public void UnitRange(Unit unit)
         {
-            UnitRange();
-
-        }
-
-
-
-        void UnitRange()
-        {
-            if (reticle.selectedHero != null)
-            {
                 //draw grid of valid movement tiles
                 //may need to keep an eye out for impassible moving units. could cause issues here.
 
-                if (reticle.selectedHero.IsMoving == false & withinRange.Count == 0)
+                if (unit.IsMoving == false & withinRange.Count == 0)
                 {
 
                     Debug.Log("Rand");
@@ -76,12 +64,12 @@ namespace RedKite
 
                     //changed box from List to Array. May not really be worth it for this small of an operation but it's good practice. Nulls indicate
 
-                    int boxRange = (reticle.selectedHero.movement * 2) + 1;
+                    int boxRange = (unit.Movement * 2) + 1;
 
 
                     Vector2Int cell;
 
-                    Vector2 startingSpot = new Vector2(reticle.selectedHero.Coordinate.x - reticle.selectedHero.movement, reticle.selectedHero.Coordinate.y - reticle.selectedHero.movement);
+                    Vector2 startingSpot = new Vector2(unit.Coordinate.x - unit.Movement, unit.Coordinate.y - unit.Movement);
 
                     for (int i = 0; i < boxRange; i++)
                     {
@@ -89,7 +77,7 @@ namespace RedKite
                         {
                             cell = new Vector2Int((int)startingSpot.x + i, (int)startingSpot.y + j);
 
-                            if (Utility.ManhattanDistance(new Vector3Int((int)reticle.selectedHero.Coordinate.x, (int)reticle.selectedHero.Coordinate.y,2), new Vector3Int(cell.x, cell.y,2)) <= reticle.selectedHero.movement)
+                            if (Utility.ManhattanDistance(new Vector3Int((int)unit.Coordinate.x, (int)unit.Coordinate.y,2), new Vector3Int(cell.x, cell.y,2)) <= unit.Movement)
                             {
 
                                 if (cell.x >= 0 & cell.x < TileMapper.Instance.W & cell.y >= 0 & cell.y < TileMapper.Instance.H)
@@ -110,7 +98,7 @@ namespace RedKite
                     {
                         if (withinRange[i] != null)
                         {
-                            if (pathFinder.IsReachable(reticle.selectedHero, withinRange[i], withinRange.ToArray()))
+                            if (pathFinder.IsReachable(unit, withinRange[i], withinRange.ToArray()))
                             {
                                 canMoveTo.Add(withinRange[i]);
                             }
@@ -126,7 +114,7 @@ namespace RedKite
                     map.RefreshAllTiles();
                 }
 
-                else if (reticle.selectedHero.IsMoving == true & withinRange != null & canMoveTo != null)
+                else if (unit.IsMoving == true & withinRange != null & canMoveTo != null)
                 {
 
                     for (int i = 0; i < canMoveTo.Count; i++)
@@ -143,20 +131,19 @@ namespace RedKite
 
                 map.RefreshAllTiles();
 
-            }
+            //kept in case something doesnt work
+
+        }
+
+        public void DeactivateUnitRange()
+        {
+            withinRange = new List<Node>();
+            canMoveTo = new List<Node>();
 
 
-            else if (reticle.selectedHero == null & withinRange != null & canMoveTo != null)
-            {
+            map.ClearAllTiles();
 
-                map.ClearAllTiles();
-
-                map.RefreshAllTiles();
-
-                withinRange = new List<Node>();
-                canMoveTo = new List<Node>();
-            }
-
+            map.RefreshAllTiles();
         }
     }
 }
