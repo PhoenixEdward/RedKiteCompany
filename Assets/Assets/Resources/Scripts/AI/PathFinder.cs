@@ -196,6 +196,7 @@ namespace RedKite
                     if (Utility.ManhattanDistance(new Vector3Int((int)unit.Coordinate.x,(int)unit.Coordinate.y,2), new Vector3Int(v.cell.x, v.cell.y,2)) <= unit.Movement & 
                         Utility.WithinBounds(new Vector3(unit.Coordinate.x,2,unit.Coordinate.y),TileMapper.Instance.W,TileMapper.Instance.H))
                     {
+                        Debug.Log(v.cell);
                         float alt = dist[u] + CostToEnterTile(v.cell.x, v.cell.y);
                         if (alt < dist[v] & alt < unit.Movement)
                         {

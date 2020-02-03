@@ -2,14 +2,16 @@
 using System.Collections.Generic;
 using System.Text;
 using Newtonsoft.Json;
+using UnityEngine;
 
 namespace RedKite
 {
+    [Serializable]
     public class Weapon : Skill
     {
         Weapon() { }
-        public Weapon(string _name, int _uses, bool _anti, int _diceBonus, int _baseBonus, Form _majorForm, Form _minorForm, int _range) 
-            : base(_name, _uses, _anti, _diceBonus, _baseBonus, _majorForm, _minorForm, _range) { }
+        public Weapon(string _name, int _uses, bool _anti, int _diceBonus, int _baseBonus, Form _majorForm, Form _minorForm, int _range, int _burden) 
+            : base(_name, _uses, _anti, _diceBonus, _baseBonus, _majorForm, _minorForm, _range, _burden) { }
 
 
         public override void Use(Unit giver, Unit receiver)
@@ -19,7 +21,7 @@ namespace RedKite
 
             if (chanceOfFailure > chanceOfSuccess)
             {
-                Console.WriteLine("Miss");
+                Debug.Log("Miss");
                 return;
             }
 
@@ -36,8 +38,8 @@ namespace RedKite
 
             int grossBonus = rnd.Next(0, DiceBonus) + baseBonus + statBonus;
 
-            Console.WriteLine("Damage: " + grossBonus);
-            Console.WriteLine("Stat Bonus: " + statBonus);
+            Debug.Log("Damage: " + grossBonus);
+            Debug.Log("Stat Bonus: " + statBonus);
 
             receiver.ChangeHealth(grossBonus, Anti);
 

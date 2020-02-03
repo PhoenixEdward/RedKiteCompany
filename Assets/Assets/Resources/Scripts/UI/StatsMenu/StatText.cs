@@ -19,9 +19,11 @@ namespace RedKite
         void Update()
         {
             if(unit!= null)
-            { 
+            {
                 if (name == "UnitName")
                     text.text = unit.Name.ToString();
+                else if (name == "Fatigue")
+                    text.text = unit.Fatigue.ToString();
                 else if (name == "JobClass")
                     text.text = unit.jobClass.ToString();
                 else if (name == "Strength")

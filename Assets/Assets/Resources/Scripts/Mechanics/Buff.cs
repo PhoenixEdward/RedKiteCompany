@@ -2,18 +2,20 @@
 using System.Collections.Generic;
 using System.Text;
 using Newtonsoft.Json;
+using UnityEngine;
 
 namespace RedKite
 {
-    class Buff: Skill
+    [Serializable]
+    public class Buff: Skill
     {
-        public int Duration { get; set; }
+        public int Duration;
 
         public Buff() { }
 
         [JsonConstructor]
-        public Buff(string _name, int _uses, bool _anti, int _diceBonus, int _baseBonus, Form _majorForm, Form _minorForm, int _range, int _duration) 
-            : base(_name, _uses, _anti, _diceBonus, _baseBonus, _majorForm, _minorForm, _range)
+        public Buff(string _name, int _uses, bool _anti, int _diceBonus, int _baseBonus, Form _majorForm, Form _minorForm, int _range, int _burden, int _duration) 
+            : base(_name, _uses, _anti, _diceBonus, _baseBonus, _majorForm, _minorForm, _range, _burden)
         {
             Duration = _duration;
         }
@@ -46,9 +48,9 @@ namespace RedKite
             {
                 receiver.Buff(Type.Minor, grossBonus, Duration, Anti);
 
-                Console.WriteLine(receiver.Name + " Strength Altered " + receiver.Stats.Strength.Altered);
+                Debug.Log(receiver.Name + " Strength Altered " + receiver.Stats.Strength.Altered);
 
-                Console.WriteLine("Disarmed for: " + grossBonus + " To " + Type.Minor.ToString());
+                Debug.Log("Disarmed for: " + grossBonus + " To " + Type.Minor.ToString());
             }
         }
     }

@@ -44,12 +44,14 @@ namespace RedKite
 
             int[] rolls = new int[6];
 
-            rolls[0] = rnd.Next(0, 3);
-            rolls[1] = rnd.Next(0, 3);
-            rolls[2] = rnd.Next(0, 3);
-            rolls[3] = rnd.Next(0, 3);
-            rolls[4] = rnd.Next(0, 3);
-            rolls[5] = rnd.Next(0, 3);
+            //this needs to be adjusted to not always give highest to major attribute.
+            //they need to be most likely to level up but shouldn't always.
+            rolls[0] = rnd.Next(0, 2);
+            rolls[1] = rnd.Next(0, 2);
+            rolls[2] = rnd.Next(0, 2);
+            rolls[3] = rnd.Next(0, 2);
+            rolls[4] = rnd.Next(0, 2);
+            rolls[5] = rnd.Next(0, 2);
 
             DistributeRolls(rolls, jobClass);
         }

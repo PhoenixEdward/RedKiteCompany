@@ -75,52 +75,53 @@ namespace RedKite
         // Update is called once per frame
         void Update()
         {
-            if(!menu.isActive)
+            if (!menu.isActive)
             {
-                if(combatMenu.IsActive == false)
+                if (combatMenu.IsActive == false)
                     TileTracker();
 
                 UnitData();
                 if (selectedHero != null)
                 {
+                    if (!selectedHero.Ready)
+                    {
+                        selectedHero = null;
+                        return;
+                    }
+
                     if (selectedHero.IsMoving == false & combatMenu.IsActive == false)
                         battleGrid.UnitRange(selectedHero);
-                    else if(battleGrid.withinRange != null & battleGrid.canMoveTo != null)
+                    else if (battleGrid.withinRange != null & battleGrid.canMoveTo != null)
                         battleGrid.DeactivateUnitRange();
 
                     if (destination != null & combatMenu.IsActive == false)
                     {
                         if (TileMapper.Instance.Tiles[destination.cell.x, destination.cell.y].IsWalkable == true & selectedHero.IsMoving == false)
-                            if (Utility.ManhattanDistance(new Vector3Int((int)selectedHero.Coordinate.x, (int)selectedHero.Coordinate.y,2), new Vector3Int(destination.cell.x, destination.cell.y,2)) <= selectedHero.Movement)
+                        {
+                            if (Utility.ManhattanDistance(new Vector3Int((int)selectedHero.Coordinate.x, (int)selectedHero.Coordinate.y, 2), new Vector3Int(destination.cell.x, destination.cell.y, 2)) <= selectedHero.Movement)
                             {
                                 if (pathFinder.IsReachable(selectedHero, destination, battleGrid.withinRange.ToArray()))
-                                { 
-                                    //selectedHero.Embark(new Vector3(destination.cell.x,1,destination.cell.y));
-                                    //destination = null;
-
-                                    combatMenu.Activate(selectedHero, destination.cell);
+                                {
+                                    {
+                                        combatMenu.ActivatePopUp(selectedHero, destination.cell);
+                                        destination = null;
+                                    }
                                 }
                             }
+                        }
                     }
 
                     if (Input.GetMouseButtonDown(1))
                     {
+                        selectedHero = null;
 
-                        if (combatMenu.IsActive == false)
-                            selectedHero = null;
-
-                        destination = null;
                         combatMenu.Deactivate();
                         battleGrid.DeactivateUnitRange();
-                        destination = null;
                     }
+
                 }
-                else
-                {
-                    combatMenu.Deactivate();
-                }
+                //this needs to be reworked. The above should be a function. A later problem.
             }
-            //this needs to be reworked. The above should be a function. A later problem.
         }
 
         public void UnitData()
@@ -161,10 +162,14 @@ namespace RedKite
             {
                 if (new Vector2(unit.Coordinate.x, unit.Coordinate.y) == new Vector2(highlight.x, highlight.y) & selectedHero == null)
                 {
-                    if (Input.GetMouseButtonDown(0))
+                    if (Input.GetMouseButtonDown(0) & unit.Ready)
                     {
                         selectedHero = unit;
                         isSelection = true;
+                    }
+                    else
+                    {
+                        //create flash message class to communicate that unit is not ready to move and other such UI bull shit.
                     }
 
                     tilemap.SetTile(highlight, selectTile);

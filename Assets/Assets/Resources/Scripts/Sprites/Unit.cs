@@ -10,12 +10,29 @@ namespace RedKite
     {
         public string Name { get; private set; }
 
-        public List<Skill> Skills
+        public List<Weapon> Weapons
         {
             get;
             private set;
-        } = new List<Skill>();
+        } = new List<Weapon>();
 
+        public List<Weapon> Heals
+        {
+            get;
+            private set;
+        } = new List<Weapon>();
+
+        public List<Buff> Buffs
+        {
+            get;
+            private set;
+        } = new List<Buff>();
+
+        public List<Buff> Debuffs
+        {
+            get;
+            private set;
+        } = new List<Buff>();
 
         public int Health { get; private set; }
         public int MaxHealth { get; private set; }
@@ -27,7 +44,7 @@ namespace RedKite
         public Stats Stats { get; protected set; }
         public JobClass jobClass { get; private set; }
         public int Movement { get; private set; }
-        public int Initiative { get; private set; }
+        public int Fatigue { get; private set; }
 
         protected System.Random rnd;
 
@@ -64,7 +81,7 @@ namespace RedKite
 
             Stats = new Stats(jobClass);
 
-            Movement = 4 + (Stats.Dexterity.Modifier / 2);
+            Movement = 4 + (Stats.Dexterity.Modifier / 4);
 
             MaxHealth = 20 + Stats.Constitution.Modifier;
 
@@ -79,15 +96,14 @@ namespace RedKite
             if (rnd == null)
                 rnd = new System.Random();
 
-            Initiative = rnd.Next(0, 10) + Stats.Dexterity.Modifier;
-
             Health = MaxHealth;
 
-            Ready = true;
+            Ready = false;
         }
 
         public void StartTurn()
         {
+            Ready = true;
             Movement = 4 + (Stats.Dexterity.Modifier / 2);
 
             if (Stats.Strength.Altered)
@@ -104,23 +120,31 @@ namespace RedKite
                 Stats.Charisma.DecrementBuffDuration();
         }
 
-        public void NextTurn()
+        public void EndTurn()
         {
-            Ready = true;
+            Fatigue += Mathf.Max(35 - (Stats.Dexterity.Modifier/2), 10);
+            Ready = false;
         }
 
-        public void Wait()
+        public void DecreaseFatigue()
         {
-            Ready = false;
+            if(Fatigue > 0)
+                Fatigue--;
+
+            if (Fatigue <= 0)
+                StartTurn();
         }
 
         public void Action(Unit _unit, Skill _skill)
         {
-            if (_skill.Type.Major != Skill.Form.None)
-                if (Skills.Contains(_skill))
-                    _skill.Use(this, _unit);
+            if (_skill is Weapon weapon)
+                if (Weapons.Contains(weapon) | Heals.Contains(weapon))
+                    weapon.Use(this, _unit);
+                else if (_skill is Buff buff)
+                    if (Buffs.Contains(buff))
+                        buff.Use(this, _unit);
 
-            Ready = false;
+            EndTurn();
         }
 
         public void ChangeHealth(int change, bool anti)
@@ -153,15 +177,17 @@ namespace RedKite
                 skill = JsonMerchant.Instance.Load<Buff>(item);
 
             if ((jobClass == JobClass.Ranger | jobClass == JobClass.Fighter) & skill.Type.Major == Skill.Form.Finesse)
-                Skills.Add(skill);
+                Weapons.Add(skill);
             else if ((jobClass == JobClass.Mage | jobClass == JobClass.Bard) & skill.Type.Major == Skill.Form.Clever)
-                Skills.Add(skill);
+                Weapons.Add(skill);
             else if ((jobClass == JobClass.Cleric | jobClass == JobClass.Mage) & skill.Type.Major == Skill.Form.Wise)
-                Skills.Add(skill);
-            else if ((jobClass == JobClass.Bard | jobClass == JobClass.Ranger) & skill.Type.Major == Skill.Form.Charming)
-                Skills.Add(skill);
+                Heals.Add(skill);
+            else if ((jobClass == JobClass.Bard | jobClass == JobClass.Ranger) & skill.Type.Major == Skill.Form.Charming & skill.Anti == false)
+                Buffs.Add(skill);
+            else if ((jobClass == JobClass.Bard | jobClass == JobClass.Ranger) & skill.Type.Major == Skill.Form.Charming & skill.Anti == true)
+                Debuffs.Add(skill);
             else if (skill.Type.Major == Skill.Form.Brute)
-                Skills.Add(skill);
+                Weapons.Add(skill);
 
 
         }

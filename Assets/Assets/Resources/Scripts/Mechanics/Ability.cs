@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using UnityEngine;
 
 namespace RedKite
 {
@@ -14,7 +15,7 @@ namespace RedKite
         {
             get
             {
-                Console.WriteLine("Current Buff: " + buff);
+                Debug.Log("Current Buff: " + buff);
                 return _modifier + buff;
 
             }
@@ -49,7 +50,7 @@ namespace RedKite
 
         public void Buff(int _buff, int _buffDuration)
         {
-            Console.WriteLine("Buffed for: " + _buffDuration);
+            Debug.Log("Buffed for: " + _buffDuration);
             buff = _buff;
             buffDuration = _buffDuration;
             Altered = true;
@@ -62,7 +63,7 @@ namespace RedKite
 
             if (buffDuration <= 0)
             {
-                Console.WriteLine("Buff Depleted");
+                Debug.Log("Buff Depleted");
                 buff = 0;
                 Altered = false;
             }

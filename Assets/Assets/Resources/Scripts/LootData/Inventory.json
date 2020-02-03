@@ -1,5 +1,5 @@
-
-  [
+{
+  "Brute": [
     {
       "Name": "Training Axe",
       "Uses": 25,
@@ -10,7 +10,8 @@
         "Major": 1,
         "Minor": 0
       },
-      "Range": 1
+      "Range": 1,
+      "Burden":  5
     },
     {
       "Name": "Training Gauntlets",
@@ -22,8 +23,11 @@
         "Major": 1,
         "Minor": 0
       },
-      "Range": 1
-    },
+      "Range": 1,
+      "Burden": 5
+    }
+  ],
+  "Finesse": [
     {
       "Name": "Training Sword",
       "Uses": 30,
@@ -34,7 +38,8 @@
         "Major": 3,
         "Minor": 0
       },
-      "Range": 1
+      "Range": 1,
+      "Burden": 5
     },
     {
       "Name": "Training Dagger",
@@ -46,7 +51,8 @@
         "Major": 3,
         "Minor": 0
       },
-      "Range": 1
+      "Range": 1,
+      "Burden": 5
     },
     {
       "Name": "Training Long Bow",
@@ -58,7 +64,8 @@
         "Major": 3,
         "Minor": 0
       },
-      "Range": 3
+      "Range": 3,
+      "Burden": 5
     },
     {
       "Name": "Training Short Bow",
@@ -70,8 +77,11 @@
         "Major": 3,
         "Minor": 0
       },
-      "Range": 2
-    },
+      "Range": 2,
+      "Burden": 5
+    }
+  ],
+  "Clever": [
     {
       "Name": "Firebolt",
       "Uses": 30,
@@ -82,8 +92,11 @@
         "Major": 4,
         "Minor": 0
       },
-      "Range": 2
-    },
+      "Range": 2,
+      "Burden": 5
+    }
+  ],
+  "Wise": [
     {
       "Name": "Cure",
       "Uses": 10,
@@ -94,8 +107,11 @@
         "Major": 5,
         "Minor": 0
       },
-      "Range": 1
-    },
+      "Range": 2,
+      "Burden": 5
+    }
+  ],
+  "Charming": [
     {
       "Name": "Disarm",
       "Uses": 5,
@@ -107,6 +123,8 @@
         "Minor": 1
       },
       "Range": 2,
-      "Duration": 1
+      "Duration": 1,
+      "Burden": 5
     }
   ]
+}

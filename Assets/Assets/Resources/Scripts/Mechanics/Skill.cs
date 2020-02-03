@@ -5,6 +5,7 @@ using Newtonsoft.Json;
 
 namespace RedKite
 {
+    [Serializable]
     public class Skill : Item
     {
         public enum Form
@@ -19,18 +20,20 @@ namespace RedKite
         }
 
 
-        public string Name { get; set; }
-        public FormCombo Type { get; set; }
+        public string Name;
+        public FormCombo Type;
 
-        public bool Anti { get; set; }
+        public bool Anti;
 
-        public int Range { get; set; }
+        public int Range;
 
+        public int Burden;
+
+        public static Skill Wait = new Skill("Wait", 1000, false, 0, 0, Form.None, Form.None, 0, 0);
 
         public Skill() { }
 
-        [JsonConstructor]
-        public Skill(string _name, int _uses, bool _anti, int _diceBonus, int _baseBonus, Form _majorForm, Form _minorForm, int _range)
+        public Skill(string _name, int _uses, bool _anti, int _diceBonus, int _baseBonus, Form _majorForm, Form _minorForm, int _range, int _burden)
         {
             DiceBonus = _diceBonus;
             baseBonus = _baseBonus;
@@ -39,7 +42,7 @@ namespace RedKite
             Anti = _anti;
             Name = _name;
             Range = _range;
-
+            Burden = _burden;
             //maybe make this a static variable?
             rnd = new Random();
         }
@@ -50,10 +53,11 @@ namespace RedKite
             Uses--;
         }
 
+        [Serializable]
         public class FormCombo
         {
-            public Form Major { get; set; }
-            public Form Minor { get; set; }
+            public Form Major;
+            public Form Minor;
 
             public FormCombo()
             {

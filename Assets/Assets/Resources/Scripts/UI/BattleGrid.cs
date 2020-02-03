@@ -135,6 +135,36 @@ namespace RedKite
 
         }
 
+        public void HighlightActionables(List<Enemy> actionables)
+        {
+
+            foreach (GameSprite actionable in actionables)
+                map.SetTile(actionable.Coordinate, rangeTile);
+
+            map.RefreshAllTiles();
+        }
+        public void HighlightActionables(List<Hero> actionables)
+        {
+            Debug.Log("Assist " + actionables.Count);
+            foreach (GameSprite actionable in actionables)
+                map.SetTile(actionable.Coordinate, rangeTile);
+
+            map.RefreshAllTiles();
+        }
+        public void HighlightActionables(List<Prop> actionables)
+        {
+            foreach (GameSprite actionable in actionables)
+                map.SetTile(actionable.Coordinate, rangeTile);
+
+            map.RefreshAllTiles();
+        }
+
+        public void Clear()
+        {
+            map.ClearAllTiles();
+            map.RefreshAllTiles();
+        }
+
         public void DeactivateUnitRange()
         {
             withinRange = new List<Node>();

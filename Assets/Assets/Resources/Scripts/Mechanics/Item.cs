@@ -4,12 +4,13 @@ using System.Text;
 
 namespace RedKite
 {
+    [Serializable]
     public abstract class Item
     {
-        public int Uses { get; set; }
+        public int Uses;
 
-        public int DiceBonus { get; set; }
-        public int baseBonus { get; set; }
+        public int DiceBonus;
+        public int baseBonus;
         protected System.Random rnd;
 
 

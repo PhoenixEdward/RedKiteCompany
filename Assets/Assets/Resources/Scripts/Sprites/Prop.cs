@@ -2,17 +2,26 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Prop : MonoBehaviour
-{
-    // Start is called before the first frame update
-    void Start()
+namespace RedKite
+{ 
+    public class Prop : GameSprite
     {
-        
-    }
+        public bool IsInteractable { get; protected set; }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
+        public override void Start()
+        {
+            spriteType = SpriteType.Prop;
+
+            base.Start();
+
+        }
+
+        // Update is called once per frame
+        public override void Update()
+        {
+            base.Update();
+
+            sr.sprite = sprites[HorizontalRow, VerticalRow];
+        }
     }
 }

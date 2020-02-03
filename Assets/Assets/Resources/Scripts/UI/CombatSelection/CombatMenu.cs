@@ -15,24 +15,18 @@ namespace RedKite
 
         List<GameSprite> sprites;
 
-        public bool IsActive;
-        public bool ActionTaken;
-
-        bool canAttack;
-        bool canAssist;
-
-        int maxAttackRange;
-        int maxAssistRange;
-
-        List<Enemy> attackables;
-        List<Prop> interactables;
-        List<Hero> assistables;
+        public bool IsActive { get; private set; }
 
         Reticle reticle;
+
+        BattleGrid battleGrid;
+        Grid grid;
         // Start is called before the first frame update
         void Start()
         {
             sprites = GameSpriteManager.Instance.Sprites;
+            battleGrid = FindObjectOfType<BattleGrid>();
+            grid = FindObjectOfType<Grid>();
         }
 
         // Update is called once per frame
@@ -40,15 +34,13 @@ namespace RedKite
         {
         }
 
-        public void Activate(Unit unit, Vector3Int selectedTile)
+        public void ActivatePopUp(Unit unit, Vector3Int selectedTile)
         {
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 
             RaycastHit hit;
             if (Physics.Raycast(ray, out hit, Mathf.Infinity))
             {
-                ActionTaken = false;
-
                 IsActive = true;
 
                 if (menu == null)
@@ -71,70 +63,107 @@ namespace RedKite
 
                 rect.localPosition = pos;
 
-                GetMaxRanges(unit);
-            }
-            else
-            {
-                return;
+                Actionables actionables = FindInteractions(unit, selectedTile);
+
+                menu.GetComponent<CombatMenuPopUp>().Activate(unit, selectedTile, actionables, battleGrid);
             }
         }
+
         public void Deactivate()
         {
             Destroy(menu);
             IsActive = false;
         }
 
-        public void GetMaxRanges(Unit unit)
+        public Actionables FindInteractions(Unit unit, Vector3Int selectedTile)
         {
 
-            foreach (Skill skill in unit.Skills)
+            int maxAttackRange = 0;
+            int maxAssistRange = 0;
+
+            //find the maximum distance for interactions
+            foreach (Skill skill in unit.Weapons)
             {
-                if ((skill is Weapon & skill.Anti == false) | (skill is Buff & skill.Anti == false))
-                    if (skill.Range > maxAttackRange)
-                        maxAttackRange = skill.Range;
-                    else
-                    if (skill.Range > maxAttackRange)
-                        maxAssistRange = skill.Range;
+                if (skill.Range > maxAttackRange)
+                    maxAttackRange = skill.Range;
             }
 
-        }
+            foreach (Skill skill in unit.Heals)
+            {
+                if (skill.Range > maxAttackRange)
+                    maxAssistRange = skill.Range;
+            }
 
-        public void FindInteractions(Unit unit, Vector3Int selectedTile)
-        {
+            foreach (Skill skill in unit.Buffs)
+            {
+                if (skill.Range > maxAttackRange)
+                    maxAssistRange = skill.Range;
+            }
+
+            foreach (Skill skill in unit.Debuffs)
+            {
+                if (skill.Range > maxAttackRange)
+                    maxAttackRange = skill.Range;
+            }
+
+            List<Enemy> attackables = new List<Enemy>();
+            List<Prop> interactables = new List<Prop>();
+            List<Hero> assistables = new List<Hero>();
+
+            Node[] attackNodes = GenerateBoxRange(selectedTile, maxAttackRange);
+            Node[] assistNodes = GenerateBoxRange(selectedTile, maxAssistRange);
+
             foreach (GameSprite sprite in sprites)
             {
-                if (sprite is Enemy & Utility.ManhattanDistance(selectedTile, sprite.Coordinate) <= maxAttackRange)
+                if (sprite is Enemy enemy)
                 {
-                    Node[] range = GenerateBoxRange(selectedTile, Utility.ManhattanDistance(selectedTile, sprite.Coordinate));
+                    if(Utility.ManhattanDistance(selectedTile, sprite.Coordinate) <= maxAttackRange)
+                    { 
 
-                    bool result = pathFinder.IsReachable(unit, PathFinder.graph[sprite.Coordinate.x, sprite.Coordinate.y], range);
+                        //bool result = pathFinder.IsReachable(unit, PathFinder.graph[sprite.Coordinate.x, enemy.Coordinate.y], attackNodes);
 
-                    if (result)
-                        attackables.Add((Enemy)sprite);
+                        //if (result)
+                            attackables.Add(enemy);
+                    }
                 }
-                else if (sprite is Hero & Utility.ManhattanDistance(selectedTile, sprite.Coordinate) <= maxAssistRange)
+                else if (sprite is Hero hero)
                 {
-                    Node[] range = GenerateBoxRange(selectedTile, Utility.ManhattanDistance(selectedTile, sprite.Coordinate));
+                    if(Utility.ManhattanDistance(selectedTile, sprite.Coordinate) <= maxAssistRange)
+                    { 
 
-                    bool result = pathFinder.IsReachable(unit, PathFinder.graph[sprite.Coordinate.x, sprite.Coordinate.y], range);
+                        //bool result = pathFinder.IsReachable(unit, PathFinder.graph[sprite.Coordinate.x, sprite.Coordinate.y], assistNodes);
 
-                    if (result)
-                        assistables.Add((Hero)sprite);
+                        //if (result)
+                            assistables.Add(hero);
+                    }
                 }
-                else if (sprite is Prop)
-                { }
+                else if (sprite is Prop prop)
+                {
+                    if (prop.IsInteractable & Utility.ManhattanDistance(selectedTile, sprite.Coordinate) <= 1)
+                    {
+                        interactables.Add(prop);
+                    }
+                }
             }
+
+            Actionables actionables = new Actionables(attackables, interactables, assistables);
+
+            return actionables;
         }
 
-        Node[] GenerateBoxRange(Vector3Int startingSpot, int distance)
+        Node[] GenerateBoxRange(Vector3Int _startingSpot, int _distance)
         {
             List<Node> range = new List<Node>();
 
+            Vector2 startingSpot = new Vector2(_startingSpot.x - _distance, _startingSpot.y - _distance);
+
+            int distance = _distance * 2;
+
             Vector2Int cell;
 
-            for (int i = 0; i < distance; i++)
+            for (int i = 0; i <= distance; i++)
             {
-                for (int j = 0; j < distance; j++)
+                for (int j = 0; j <= distance; j++)
                 {
                     cell = new Vector2Int((int)startingSpot.x + i, (int)startingSpot.y + j);
 
@@ -148,6 +177,18 @@ namespace RedKite
             return range.ToArray();
         }
 
+        public struct Actionables
+        {
+            public List<Enemy> Attackables;
+            public List<Prop> Interactables;
+            public List<Hero> Assistables;
 
+            public Actionables(List<Enemy> _attackables, List<Prop> _interactables, List<Hero> _assistables)
+            {
+                Attackables = _attackables;
+                Interactables = _interactables;
+                Assistables = _assistables;
+            }
+        }
     }
 }

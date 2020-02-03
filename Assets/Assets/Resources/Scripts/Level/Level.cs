@@ -70,6 +70,14 @@ namespace RedKite
 
             GameSprite.fogTint = fogColor;
 
+            //Weapon weapon = JsonUtility.FromJson<Weapon>("{\"Name\": \"Training Axe\",\"Uses\": 25,\"Anti\": false,\"DiceBonus\": 6,\"BaseBonus\": 6,\"Type\": {\"Major\": 1,\"Minor\": 0},\"Range\": 1}");
+
+            Weapon weapon = new Weapon("Lute", 100, false, 6, 4, Skill.Form.Charming, Skill.Form.None, 1, 5);
+
+            string lute = JsonUtility.ToJson(weapon);
+
+            Debug.Log(lute);
+
             GameObject hero1 = new GameObject();
             hero1.name = "SwordGal";
             hero1.layer = 8;
@@ -77,15 +85,21 @@ namespace RedKite
             unit1.spriteName = "SwordGal";
             unit1.Instantiate("Gongagoo", JobClass.Ranger, 5);
             unit1.Spawn();
+            unit1.LearnSkill("Training Short Bow");
             heroes.Add(hero1);
+
+            Debug.Log(unit1.Weapons[0].Name);
+            Debug.Log(unit1.Weapons[0].Burden);
+            Debug.Log(unit1.Weapons[0].Type);
 
             GameObject hero2 = new GameObject();
             hero2.name = "MageGuy";
             hero2.layer = 8;
             Hero unit2 = hero2.AddComponent<Hero>();
             unit2.spriteName = "Mage";
-            unit2.Instantiate("Cestra", JobClass.Bard, 5);
+            unit2.Instantiate("Cestra", JobClass.Cleric, 5);
             unit2.Spawn();
+            unit2.LearnSkill("Cure");
             heroes.Add(hero2);
 
             QuestMapper.Instance.Generate();
@@ -106,6 +120,8 @@ namespace RedKite
             cam = FindObjectOfType<CameraMovement>();
 
             cam.enabled = true;
+
+            BattleClock.Instance.Run();
         }
 
         private void Update()
@@ -133,6 +149,9 @@ namespace RedKite
             Hero unit1 = hero1.AddComponent<Hero>();
             unit1.spriteType = GameSprite.SpriteType.Character;
             unit1.spriteLoad = heroes[0].GetComponent<GameSprite>().spriteLoad;
+            unit1.Instantiate("Gongagoo", JobClass.Ranger, 5);
+            unit1.Spawn();
+
 
             GameObject hero2 = new GameObject();
             hero2.name = "Unit 2";
@@ -140,6 +159,8 @@ namespace RedKite
             Hero unit2 = hero2.AddComponent<Hero>();
             unit2.spriteType = GameSprite.SpriteType.Character;
             unit2.spriteLoad = heroes[1].GetComponent<GameSprite>().spriteLoad;
+            unit2.Instantiate("Cestra", JobClass.Bard, 5);
+            unit2.Spawn();
 
 
             for (int i = 0; i < heroes.Count; i++)
@@ -186,6 +207,8 @@ namespace RedKite
             spriteSelection.enabled = true;
 
             cam.enabled = true;
+
+            BattleClock.Instance.Run();
         }
 
         public void AddProp(Vector3Int position, string name, Texture2D spriteSheet, bool _isIso)

@@ -4,6 +4,7 @@ using System.Text;
 using Newtonsoft.Json;
 using System.IO;
 using System.Text.RegularExpressions;
+using UnityEngine;
 
 namespace RedKite
 {
@@ -21,32 +22,34 @@ namespace RedKite
             }
         }
 
-        public T Load<T>(string item)
+        public Skill Load<T>(string item)
         {
-            T output;
+            dynamic output;
 
-            using (StreamReader r = new StreamReader(@"C:\Users\phoen\source\repos\SandBox\LootData\Inventory.json"))
-            {
-                string json = r.ReadToEnd();
+            TextAsset json = Resources.Load<TextAsset>("Scripts/LootData/Inventory");
 
-                List<T> inventory = JsonConvert.DeserializeObject<List<T>>(json);
+            Debug.Log(json.text);
 
-                output = inventory[Loot.Keys[item].index];
+            Inventory inventory = JsonUtility.FromJson<Inventory>(json.text);
 
-                return output;
-            }
+            output = inventory.Purchase(item);
+
+            if (output is Weapon weapon)
+                return weapon;
+            else if (output is Buff buff)
+                return buff;
+            else
+                return Skill.Wait;
         }
 
+        [Serializable]
         class Inventory
         {
-            List<Skill> skills = new List<Skill>();
-            /*
-            List<Weapon> Brute = new List<Weapon>();
-            List<Weapon> Finesse = new List<Weapon>();
-            List<Weapon> Clever = new List<Weapon>();
-            List<Weapon> Wise = new List<Weapon>();
-            List<Buff> Charming = new List<Buff>();
-            */
+            public Weapon[] Brute;
+            public Weapon[] Finesse;
+            public Weapon[] Clever;
+            public Weapon[] Wise;
+            public Buff[] Charming;
 
 
             public Skill Purchase(string item)
@@ -55,9 +58,8 @@ namespace RedKite
 
                 Skill output;
 
-                Console.WriteLine(skills.Count);
+                Debug.Log(Brute.Length);
 
-                /*
                 if (lookup.majorForm == Skill.Form.Brute)
                     output = Brute[lookup.index];
                 else if (lookup.majorForm == Skill.Form.Charming)
@@ -70,9 +72,6 @@ namespace RedKite
                     output = Wise[lookup.index];
                 else
                     output = Brute[0];
-                */
-
-                output = skills[0];
 
                 return output;
             }
