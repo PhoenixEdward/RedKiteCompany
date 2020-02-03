@@ -1,0 +1,257 @@
+﻿using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using System.Linq;
+using UnityEngine.Networking;
+
+namespace RedKite
+{
+    public class Modeler : MonoBehaviour
+    {
+        static Transform level;
+        Texture2D wallTex;
+        Texture2D topWallTex;
+        Texture2D floorTex;
+        Texture2D[] wallTextures;
+        Texture2D[] floorTextures;
+        List<MeshMaker> wallMeshes = new List<MeshMaker>();
+        List<MeshMaker> floorMeshes = new List<MeshMaker>();
+        GameObject walls;
+        GameObject floor;
+
+        MeshFilter wallFilter;
+        MeshFilter floorFilter;
+
+        MeshRenderer wallRenderer;
+        MeshRenderer floorRenderer;
+
+        MeshMaker wallMesh;
+        MeshMaker floorMesh;
+
+        public string floorTexName;
+        public string topWallTexName;
+        public string wallTexName;
+
+        // Start is called before the first frame update
+        public void Start()
+        {
+            floorTexName = floorTexName ?? "WoodFloor";
+            topWallTexName = topWallTexName ?? "DungeonFloor";
+            wallTexName = wallTexName ?? "DungeonFloor";
+
+            floorTex = Resources.Load<Texture2D>("Tiles/" + floorTexName);
+            topWallTex = Resources.Load<Texture2D>("Tiles/" + topWallTexName);
+            wallTex = Resources.Load<Texture2D>("Tiles/" + wallTexName);
+            wallTextures = new Texture2D[6] { wallTex, wallTex, topWallTex, wallTex, wallTex, wallTex };
+            floorTextures = new Texture2D[6] { floorTex, floorTex, floorTex, floorTex, floorTex, floorTex };
+
+            walls = new GameObject();
+            walls.name = "Walls"; 
+            walls.layer = 9;
+            walls.transform.position = new Vector3(0.5f, 0, .5f);
+
+            floor = new GameObject();
+            floor.name = "Floor";
+            floor.transform.position = new Vector3(0.5f, 0, 0.5f);
+
+            wallFilter = walls.AddComponent<MeshFilter>();
+            wallRenderer = walls.AddComponent<MeshRenderer>();
+
+            wallRenderer.material.shader = Shader.Find("Custom/Terrain");
+
+            floorFilter = floor.AddComponent<MeshFilter>();
+            floorRenderer = floor.AddComponent<MeshRenderer>();
+
+            floorRenderer.material.shader = Shader.Find("Custom/Terrain");
+
+            RenderWalls(walls, wallFilter, wallRenderer);
+            RenderFloor(floor, floorFilter, floorRenderer);
+
+            walls.transform.SetParent(transform);
+            floor.transform.SetParent(transform);
+        }
+
+        public void Regen()
+        {
+            wallTextures = wallMesh.SubMeshTextures;
+            floorTextures = floorMesh.SubMeshTextures;
+
+            wallFilter.mesh.Clear();
+            floorFilter.mesh.Clear();
+
+            wallMeshes.Clear();
+            floorMeshes.Clear();
+
+            RenderWalls(walls, wallFilter, wallRenderer);
+            RenderFloor(floor, floorFilter, floorRenderer);
+        }
+
+        // Update is called once per frame
+        void Update()
+        {
+
+        }
+
+        void RenderWalls(GameObject go, MeshFilter meshFilter, MeshRenderer meshRenderer)
+        {
+            foreach (KeyValuePair<int, Area> entry in TileMapper.Instance.Areas)
+            {
+                Area area = entry.Value;
+
+                foreach (Area.Wall wall in area.Walls)
+                {
+                    foreach (Segment seg in wall.Segments)
+                    {
+                        MeshMaker segMesh = new MeshMaker();
+
+                        if (seg.Scale.x < 0 | seg.Scale.y < 0 | seg.Scale.z < 0)
+                            Debug.Log(seg.Min + " " + seg.Max);
+
+                        segMesh.NewMakeMesh(seg.Scale, seg.Center + Vector3.up);
+
+                        wallMeshes.Add(segMesh);
+
+                    }
+                }
+            }
+
+            wallMesh = MeshMaker.CombinePlanes(wallMeshes);
+
+            wallMesh.SetTextures(meshRenderer, wallTextures, new bool[] { false, false, false, false, false, false });
+
+            wallMesh.MergeSides();
+
+            meshFilter.mesh = wallMesh.Mesh;
+
+            MeshCollider meshCollider;
+
+            if (go.TryGetComponent<MeshCollider>(out meshCollider))
+                meshCollider.sharedMesh = meshFilter.mesh;
+            else
+                go.AddComponent<MeshCollider>();
+        }
+
+
+        void RenderFloor(GameObject go, MeshFilter meshFilter, MeshRenderer meshRenderer)
+        {
+            foreach (KeyValuePair<int, Area> entry in TileMapper.Instance.Areas)
+            {
+                Area area = entry.Value;
+
+                MeshMaker floorMesh = new MeshMaker();
+
+                floorMesh.NewMakeMesh(area.Floor.TrueScale, area.Floor.Center);
+
+                floorMeshes.Add(floorMesh);
+
+                //should consider storing pathways somewhere else. In walls seems a little bizarre.
+                foreach (Area.Wall wall in area.Walls)
+                {
+                    if (wall.Overlaps.Count != 0)
+                    {
+                        foreach (Segment path in wall.Overlaps.Where(x => x.IsPath == true & x.IsRemoved == false).ToList())
+                        {
+
+                            MeshMaker pathMesh = new MeshMaker();
+
+                            pathMesh.NewMakeMesh(path.Scale, path.Center);
+
+                            floorMeshes.Add(pathMesh);
+                        }
+                    }
+                }
+            }
+
+            foreach (KeyValuePair<int, Area> entry in TileMapper.Instance.Areas)
+            {
+                Area area = entry.Value;
+
+                foreach (Area.Wall wall in area.Walls)
+                {
+                    foreach (Segment seg in wall.Segments)
+                    {
+
+                        MeshMaker segMesh = new MeshMaker();
+
+                        segMesh.NewMakeMesh(seg.Scale, seg.Center);
+
+                        floorMeshes.Add(segMesh);
+
+
+                    }
+                    if (wall.Overlaps.Count != 0)
+                    {
+                        foreach (Segment path in wall.Overlaps.Where(x => x.IsCorner).ToList())
+                        {
+                            if (path.IsRemoved == false)
+                            {
+                                //skip over north and south corners to avoid duplication.
+
+                                MeshMaker cornerMesh = new MeshMaker();
+
+                                cornerMesh.NewMakeMesh(path.Scale, path.Center);
+
+                                floorMeshes.Add(cornerMesh);
+                            }
+                        }
+                    }
+                }
+            }
+
+            floorMesh = MeshMaker.CombinePlanes(floorMeshes);
+
+            floorMesh.SetTextures(meshRenderer, floorTextures, new bool[] { true, true, true, true, true, true });
+
+            floorMesh.MergeSides();
+
+            meshFilter.mesh = floorMesh.Mesh;
+
+            MeshCollider meshCollider;
+
+            if (go.TryGetComponent<MeshCollider>(out meshCollider))
+                meshCollider.sharedMesh = meshFilter.mesh;
+            else
+                go.AddComponent<MeshCollider>();
+        }
+
+
+        public void SetTopWallTexture(string texName, Texture2D myTexture, bool isMirrored)
+        {
+            topWallTexName = texName;
+
+            wallFilter.mesh.Clear();
+
+            wallMesh.UpdateOneTexture(wallRenderer, myTexture, 2, isMirrored);
+
+            wallMesh.MergeSides();
+
+            wallFilter.mesh = wallMesh.Mesh;
+        }
+
+        public void SetSideWallTextures(string texName, Texture2D myTexture, bool isMirrored)
+        {
+            wallTexName = texName;
+
+            wallFilter.mesh.Clear();
+
+            wallMesh.UpdateSideTextures(wallRenderer, myTexture, isMirrored);
+
+            wallMesh.MergeSides();
+
+            wallFilter.mesh = wallMesh.Mesh;
+        }
+        public void SetFloorTexture(string texName, Texture2D myTexture, bool isMirrored)
+        {
+            floorTexName = texName;
+
+            floorFilter.mesh.Clear();
+
+            floorMesh.SetTextures(floorRenderer, new Texture2D[] { myTexture, myTexture, myTexture, myTexture, myTexture, myTexture },
+                new bool[] { isMirrored, isMirrored, isMirrored, isMirrored, isMirrored, isMirrored });
+
+            floorMesh.MergeSides();
+
+            floorFilter.mesh = floorMesh.Mesh;
+        }
+    }
+}

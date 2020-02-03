@@ -3,7 +3,12 @@
 --- !u!78 &1
 TagManager:
   serializedVersion: 2
-  tags: []
+  tags:
+  - 2D Camera
+  - RenderTarget
+  - Level
+  - SpriteSelect
+  - FogCam
   layers:
   - Default
   - TransparentFX
@@ -13,12 +18,12 @@ TagManager:
   - UI
   - 
   - 
+  - Units
+  - Walls
+  - FOW
   - 
   - 
-  - 
-  - 
-  - 
-  - 
+  - Mirrors
   - 
   - 
   - 
@@ -40,4 +45,19 @@ TagManager:
   m_SortingLayers:
   - name: Default
     uniqueID: 0
+    locked: 0
+  - name: Range
+    uniqueID: 1791906537
+    locked: 0
+  - name: Selection
+    uniqueID: 3119888579
+    locked: 0
+  - name: Units
+    uniqueID: 3184934743
+    locked: 0
+  - name: FOW
+    uniqueID: 2124626219
+    locked: 0
+  - name: UI
+    uniqueID: 2337280619
     locked: 0
