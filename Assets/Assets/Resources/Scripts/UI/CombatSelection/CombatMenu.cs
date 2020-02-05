@@ -15,7 +15,7 @@ namespace RedKite
 
         List<GameSprite> sprites;
 
-        public bool IsActive { get; private set; }
+        public static bool IsActive { get; private set; }
 
         Reticle reticle;
 
@@ -72,6 +72,7 @@ namespace RedKite
         public void Deactivate()
         {
             Destroy(menu);
+            battleGrid.Clear();
             IsActive = false;
         }
 
@@ -110,6 +111,9 @@ namespace RedKite
             List<Prop> interactables = new List<Prop>();
             List<Hero> assistables = new List<Hero>();
 
+            Debug.Log("Highlight " + selectedTile);
+            Debug.Log("Unit: " + unit.Coordinate);
+
             Node[] attackNodes = GenerateBoxRange(selectedTile, maxAttackRange);
             Node[] assistNodes = GenerateBoxRange(selectedTile, maxAssistRange);
 
@@ -117,29 +121,30 @@ namespace RedKite
             {
                 if (sprite is Enemy enemy)
                 {
-                    if(Utility.ManhattanDistance(selectedTile, sprite.Coordinate) <= maxAttackRange)
-                    { 
+                    if (Utility.ManhattanDistance(new Vector3Int(selectedTile.x, selectedTile.y, -1), new Vector3Int(enemy.Coordinate.x, enemy.Coordinate.y, -1)) <= maxAttackRange)
+                    {
+                        bool result = pathFinder.IsReachable(PathFinder.graph[selectedTile.x, selectedTile.y], PathFinder.graph[enemy.Coordinate.x, enemy.Coordinate.y], attackNodes, maxAttackRange);
 
-                        //bool result = pathFinder.IsReachable(unit, PathFinder.graph[sprite.Coordinate.x, enemy.Coordinate.y], attackNodes);
-
-                        //if (result)
+                        if (result)
                             attackables.Add(enemy);
                     }
                 }
                 else if (sprite is Hero hero)
                 {
-                    if(Utility.ManhattanDistance(selectedTile, sprite.Coordinate) <= maxAssistRange)
-                    { 
+                    if (Utility.ManhattanDistance(new Vector3Int(selectedTile.x, selectedTile.y, -1), new Vector3Int(hero.Coordinate.x, hero.Coordinate.y, -1)) <= maxAssistRange | hero.Equals(unit))
+                    {
+                        bool result = false;
 
-                        //bool result = pathFinder.IsReachable(unit, PathFinder.graph[sprite.Coordinate.x, sprite.Coordinate.y], assistNodes);
+                        if(!hero.Equals(unit))
+                            result = pathFinder.IsReachable(PathFinder.graph[selectedTile.x, selectedTile.y], PathFinder.graph[hero.Coordinate.x, hero.Coordinate.y], assistNodes, maxAssistRange);
 
-                        //if (result)
+                        if (result | hero.Equals(unit))
                             assistables.Add(hero);
                     }
                 }
                 else if (sprite is Prop prop)
                 {
-                    if (prop.IsInteractable & Utility.ManhattanDistance(selectedTile, sprite.Coordinate) <= 1)
+                    if (prop.IsInteractable & Utility.ManhattanDistance(selectedTile, prop.Coordinate) <= 1)
                     {
                         interactables.Add(prop);
                     }
@@ -157,15 +162,17 @@ namespace RedKite
 
             Vector2 startingSpot = new Vector2(_startingSpot.x - _distance, _startingSpot.y - _distance);
 
-            int distance = _distance * 2;
+            int distance = (_distance * 2) + 1;
 
-            Vector2Int cell;
+            Debug.Log("Distance: " + distance);
 
-            for (int i = 0; i <= distance; i++)
+            Vector3Int cell;
+
+            for (int i = 0; i < distance; i++)
             {
-                for (int j = 0; j <= distance; j++)
+                for (int j = 0; j < distance; j++)
                 {
-                    cell = new Vector2Int((int)startingSpot.x + i, (int)startingSpot.y + j);
+                    cell = new Vector3Int((int)startingSpot.x + i, (int)startingSpot.y + j, -1);
 
                     if (cell.x >= 0 & cell.x < TileMapper.Instance.W & cell.y >= 0 & cell.y < TileMapper.Instance.H)
                     {

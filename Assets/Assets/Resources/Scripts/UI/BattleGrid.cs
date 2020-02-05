@@ -52,8 +52,6 @@ namespace RedKite
                 if (unit.IsMoving == false & withinRange.Count == 0)
                 {
 
-                    Debug.Log("Rand");
-
                     //formula for area of max unit range is (n+1)^2 + n^2 where n is movement speed.
                     //for now null for withinRange will be a single array with Vector3Int.Zero (default value) indicating a non walkable cell.
                     //this will either need a second array or be converted to a dictionary later to record WHY the cell isn't walkable (enemy unit, chest, wall).
@@ -98,7 +96,7 @@ namespace RedKite
                     {
                         if (withinRange[i] != null)
                         {
-                            if (pathFinder.IsReachable(unit, withinRange[i], withinRange.ToArray()))
+                            if (pathFinder.IsReachable(PathFinder.graph[unit.Coordinate.x, unit.Coordinate.y], withinRange[i], withinRange.ToArray(), unit.Movement))
                             {
                                 canMoveTo.Add(withinRange[i]);
                             }
@@ -145,7 +143,6 @@ namespace RedKite
         }
         public void HighlightActionables(List<Hero> actionables)
         {
-            Debug.Log("Assist " + actionables.Count);
             foreach (GameSprite actionable in actionables)
                 map.SetTile(actionable.Coordinate, rangeTile);
 

@@ -30,7 +30,7 @@ namespace RedKite
             {
                 if (!activeSpawns.Contains(spawnPoint))
                 {
-                    Coordinate = grid.WorldToCell(spawnPoint);
+                    Coordinate = Vector3Int.FloorToInt(spawnPoint) + new Vector3Int(0,0,-2);
                     activeSpawns.Add(spawnPoint);
                     break;
                 }

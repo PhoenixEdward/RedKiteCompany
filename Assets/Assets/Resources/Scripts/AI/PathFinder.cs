@@ -20,7 +20,7 @@ namespace RedKite
         {
             // Clear out our Hero's old path.
 
-            if (HeroCanEnterTile((int)destCoord.x, (int)destCoord.z) == false)
+            if (HeroCanEnterTile((int)destCoord.x, (int)destCoord.y) == false)
             {
                 // We probably clicked on a mountain or something, so just quit out.
                 return null;
@@ -39,7 +39,7 @@ namespace RedKite
 
             Node target = graph[
                                 (int)destCoord.x,
-                                (int)destCoord.z
+                                (int)destCoord.y
                                 ];
 
             dist[source] = 0;
@@ -122,9 +122,9 @@ namespace RedKite
 
         }
 
-        public bool IsReachable(Unit unit, Node node, Node[] range)
+        public bool IsReachable(Node _start, Node _target, Node[] range, int maxDistance)
         {
-            if (HeroCanEnterTile((int)node.cell.x, (int)node.cell.y) == false)
+            if (HeroCanEnterTile((int)_target.cell.x, (int)_target.cell.y) == false)
             {
                 // We probably clicked on a mountain or something, so just quit out.
                 return false;
@@ -136,17 +136,14 @@ namespace RedKite
             // Setup the "Q" -- the list of nodes we haven't checked yet.
             List<Node> unvisited = new List<Node>();
 
-            Node source = graph[
-                                (int)unit.Coordinate.x,
-                                (int)unit.Coordinate.y
-                                ];
+            Node source = _start;
 
-            if (node == source)
+            if (_target == source)
             {
                 return true;
             }
 
-            Node target = node;
+            Node target = _target;
 
             dist[source] = 0;
             prev[source] = null;
@@ -193,12 +190,12 @@ namespace RedKite
 
                 foreach (Node v in u.neighbours)
                 {
-                    if (Utility.ManhattanDistance(new Vector3Int((int)unit.Coordinate.x,(int)unit.Coordinate.y,2), new Vector3Int(v.cell.x, v.cell.y,2)) <= unit.Movement & 
-                        Utility.WithinBounds(new Vector3(unit.Coordinate.x,2,unit.Coordinate.y),TileMapper.Instance.W,TileMapper.Instance.H))
+                    if(Utility.ManhattanDistance(new Vector3Int(source.cell.x, source.cell.y, 2), new Vector3Int(v.cell.x, v.cell.y, 2)) <= maxDistance &
+                        Utility.WithinBounds(new Vector3(source.cell.x,2,source.cell.y),TileMapper.Instance.W,TileMapper.Instance.H))
                     {
-                        Debug.Log(v.cell);
                         float alt = dist[u] + CostToEnterTile(v.cell.x, v.cell.y);
-                        if (alt < dist[v] & alt < unit.Movement)
+
+                        if (alt < dist[v] & alt <= maxDistance)
                         {
                             dist[v] = alt;
                             prev[v] = u;

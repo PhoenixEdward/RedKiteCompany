@@ -46,7 +46,7 @@ namespace RedKite
             floorTextures = new Texture2D[6] { floorTex, floorTex, floorTex, floorTex, floorTex, floorTex };
 
             walls = new GameObject();
-            walls.name = "Walls"; 
+            walls.name = "Walls";
             walls.layer = 9;
             walls.transform.position = new Vector3(0.5f, 0, .5f);
 
@@ -105,9 +105,9 @@ namespace RedKite
                         MeshMaker segMesh = new MeshMaker();
 
                         if (seg.Scale.x < 0 | seg.Scale.y < 0 | seg.Scale.z < 0)
-                            Debug.Log(seg.Min + " " + seg.Max);
+                            continue;
 
-                        segMesh.NewMakeMesh(seg.Scale, seg.Center + Vector3.up);
+                        segMesh.NewMakeMesh(new Vector3(seg.Scale.x, seg.Scale.z, seg.Scale.y), new Vector3(seg.Center.x, seg.Center.z, seg.Center.y) + Vector3.up);
 
                         wallMeshes.Add(segMesh);
 
@@ -140,7 +140,7 @@ namespace RedKite
 
                 MeshMaker floorMesh = new MeshMaker();
 
-                floorMesh.NewMakeMesh(area.Floor.TrueScale, area.Floor.Center);
+                floorMesh.NewMakeMesh(new Vector3(area.Floor.TrueScale.x, area.Floor.TrueScale.z, area.Floor.TrueScale.y), new Vector3(area.Floor.Center.x, area.Floor.Center.z, area.Floor.Center.y));
 
                 floorMeshes.Add(floorMesh);
 
@@ -154,7 +154,7 @@ namespace RedKite
 
                             MeshMaker pathMesh = new MeshMaker();
 
-                            pathMesh.NewMakeMesh(path.Scale, path.Center);
+                            pathMesh.NewMakeMesh(new Vector3(path.Scale.x, path.Scale.z, path.Scale.y), new Vector3(path.Center.x, path.Center.z, path.Center.y));
 
                             floorMeshes.Add(pathMesh);
                         }
@@ -173,7 +173,7 @@ namespace RedKite
 
                         MeshMaker segMesh = new MeshMaker();
 
-                        segMesh.NewMakeMesh(seg.Scale, seg.Center);
+                        segMesh.NewMakeMesh(new Vector3(seg.Scale.x, seg.Scale.z, seg.Scale.y), new Vector3(seg.Center.x, seg.Center.z, seg.Center.y));
 
                         floorMeshes.Add(segMesh);
 
@@ -189,7 +189,7 @@ namespace RedKite
 
                                 MeshMaker cornerMesh = new MeshMaker();
 
-                                cornerMesh.NewMakeMesh(path.Scale, path.Center);
+                                cornerMesh.NewMakeMesh(new Vector3(path.Scale.x, path.Scale.z, path.Scale.y), new Vector3(path.Center.x, path.Center.z, path.Center.y));
 
                                 floorMeshes.Add(cornerMesh);
                             }

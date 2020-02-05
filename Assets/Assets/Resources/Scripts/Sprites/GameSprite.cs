@@ -21,7 +21,7 @@ namespace RedKite
         public int VerticalRow { get; set; }
         public int HorizontalRow { get; set; }
 
-        public Vector3Int Coordinate = new Vector3Int(0, 0, -2);
+        public Vector3Int Coordinate = new Vector3Int(0, 0, -1);
 
         static Grid grid;
 
@@ -110,6 +110,7 @@ namespace RedKite
 
         public virtual void Update()
         {
+
             if (!IsVisible)
                 sr.enabled = false;
             else

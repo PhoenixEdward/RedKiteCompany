@@ -34,12 +34,12 @@ namespace RedKite
 
             if (_orientation == Orient.North | _orientation == Orient.South)
             {
-                Scale = new Vector3(Max.x - Min.x + 1, _height, 1);
+                Scale = new Vector3(Max.x - Min.x + 1, 1, _height);
                 Center = Min + ((Max - Min) / 2);
             }
             else
             {
-                Scale = new Vector3(1, _height, Max.z - Min.z + 1);
+                Scale = new Vector3(1, Max.y - Min.y + 1, _height);
                 Center = Min + ((Max - Min) / 2);
             }
             Height = _height;

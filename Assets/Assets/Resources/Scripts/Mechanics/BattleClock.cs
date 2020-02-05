@@ -6,7 +6,7 @@ namespace RedKite
 {
     public class BattleClock : MonoBehaviour
     {
-        List<Unit> units;
+        List<Hero> units;
         private static BattleClock _instance;
         public static int Beats { get; private set; }
 
@@ -23,14 +23,15 @@ namespace RedKite
         // Start is called before the first frame update
         void Start()
         {
-            units = GameSpriteManager.Instance.Units;
+            //units = GameSpriteManager.Instance.Units;
+            units = GameSpriteManager.Instance.Heroes;
             //need to rethink how units spawn. They need to be cached in someway then re-entered in to the pool when in aggro distance. Need some sort of UI message "AN ENEMY STIRS"
         }
 
         // Update is called once per frame
         public void Run()
         {
-            units = units == null ? GameSpriteManager.Instance.Units : units;
+            units = units == null ? GameSpriteManager.Instance.Heroes : units;
 
             bool unitReady = false;
 

@@ -7,81 +7,6 @@ using UnityEngine;
 
 namespace RedKite
 {
-    public struct OCipher
-    {
-        public float N;
-        public float E;
-        public float S;
-        public float W;
-
-        public OCipher(int n, int e, int s, int w)
-        {
-            N = n;
-            E = e;
-            S = s;
-            W = w;
-        }
-
-        public static OCipher Zero = new OCipher(0, 0, 0, 0);
-
-        public static OCipher operator +(OCipher a) => a;
-        public static OCipher operator -(OCipher a) => -a;
-        public OCipher this[int key]
-        {
-            get => this[key];
-            set => this[key] = value;
-        }
-
-        public static OCipher operator +(OCipher a, OCipher b)
-        {
-            a.N += b.N;
-            a.E += b.E;
-            a.S += b.S;
-            a.W += b.W;
-
-            return a;
-        }
-        public static OCipher operator -(OCipher a, OCipher b)
-        {
-            a.N -= b.N;
-            a.E -= b.E;
-            a.S -= b.S;
-            a.W -= b.W;
-
-            return a;
-        }
-
-        public static OCipher operator +(OCipher a, Vector3 v)
-        {
-            if (v.x < 0)
-                a.E += v.x;
-            else if (v.x > 0)
-                a.W += v.x;
-
-            if (v.z < 0)
-                a.S += v.z;
-            else if (v.z > 0)
-                a.N += v.z;
-
-            return a;
-        }
-
-        public static OCipher operator -(OCipher a, Vector3 v)
-        {
-            if (v.x < 0)
-                a.E -= v.x;
-            else if (v.x > 0)
-                a.W -= v.x;
-
-            if (v.z < 0)
-                a.S -= v.z;
-            else if (v.z > 0)
-                a.N -= v.z;
-
-            return a;
-        }
-
-    }
     public struct Orient
     {
         enum Side
@@ -110,24 +35,24 @@ namespace RedKite
 
         Orient(Side _side)
         {
-            Forward = Vector3.forward;
-            Back = Vector3.back;
+            Forward = Vector3.up;
+            Back = Vector3.down;
             Right = Vector3.right;
             Left = Vector3.left;
 
             if (_side == Side.North)
             {
                 Name = "North";
-                Forward = Vector3.forward;
-                Back = Vector3.back;
+                Forward = Vector3.up;
+                Back = Vector3.down;
                 Right = Vector3.right;
                 Left = Vector3.left;
             }
             else if (_side == Side.South)
             {
                 Name = "South";
-                Forward = Vector3.back;
-                Back = Vector3.forward;
+                Forward = Vector3.down;
+                Back = Vector3.up;
                 Right = Vector3.left;
                 Left = Vector3.right;
             }
@@ -136,20 +61,20 @@ namespace RedKite
                 Name = "West";
                 Forward = Vector3.left;
                 Back = Vector3.right;
-                Right = Vector3.forward;
-                Left = Vector3.back;
+                Right = Vector3.up;
+                Left = Vector3.down;
             }
             else
             {
                 Name = "East";
                 Forward = Vector3.right;
                 Back = Vector3.left;
-                Right = Vector3.back;
-                Left = Vector3.forward;
+                Right = Vector3.down;
+                Left = Vector3.up;
             }
 
-            foreUnit = Forward.x == 0 ? Forward.z : Forward.x;
-            rightUnit = Right.x == 0 ? Right.z : Right.x;
+            foreUnit = Forward.x == 0 ? Forward.y : Forward.x;
+            rightUnit = Right.x == 0 ? Right.y : Right.x;
 
         }
 

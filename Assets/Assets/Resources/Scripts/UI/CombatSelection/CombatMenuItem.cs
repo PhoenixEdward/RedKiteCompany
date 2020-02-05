@@ -6,7 +6,7 @@ namespace RedKite
 {
     public class CombatMenuItem : MonoBehaviour
     {
-        CombatMenuSkillScreen menu;
+        CombatMenuPopUp menu;
 
         private dynamic _action;
         public dynamic Action
@@ -28,7 +28,7 @@ namespace RedKite
         // Start is called before the first frame update
         void Start()
         {
-            menu = GetComponentInParent<CombatMenuSkillScreen>();
+            menu = GetComponentInParent<CombatMenuPopUp>();
         }
 
         public void SendToMenu()

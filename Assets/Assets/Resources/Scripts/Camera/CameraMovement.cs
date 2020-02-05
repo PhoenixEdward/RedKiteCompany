@@ -10,11 +10,14 @@ namespace RedKite
         protected float timeSinceLastMove = 0;
         protected float secondsPerMove = 0.0167f;
         protected float pix = 32f/8;
-        protected Hero[] heroes;
         protected Vector2 xBounds;
         protected Vector2 yBounds;
 
         public static Facing facing;
+
+        static GameSprite[] interactables;
+        static Unit lockedOnUnit;
+        public static bool LockedOn { get; private set; } = false;
 
         //these are all backwards. Should fix.
         public enum Facing
@@ -27,9 +30,8 @@ namespace RedKite
 
         void OnEnable()
         {
-            heroes = FindObjectsOfType<Hero>();
 
-            transform.position = TileMapper.Instance.Areas[0].Floor.Center + new Vector3(-15f, 15f, -15f);
+            transform.position = new Vector3(TileMapper.Instance.Areas[0].Floor.Center.x, TileMapper.Instance.Areas[0].Floor.Center.z, TileMapper.Instance.Areas[0].Floor.Center.y) + new Vector3(-15f, 15f, -15f);
 
             xBounds = new Vector2(0, TileMapper.Instance.W);
             yBounds = new Vector2(0, TileMapper.Instance.H);
@@ -42,51 +44,41 @@ namespace RedKite
 
         void Update()
         {
-            if(Input.GetKeyDown(KeyCode.Q))
-            { 
-                Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-                RaycastHit hit;
-                if (Physics.Raycast(ray, out hit, Mathf.Infinity))
-                {
-                    transform.RotateAround(hit.point, Vector3.up, 90f);
+            if (!CombatMenu.IsActive)
+                 LockOff();
 
-                    if (facing == Facing.NE)
-                        facing = Facing.SE;
-                    else if (facing == Facing.SE)
-                        facing = Facing.SW;
-                    else if (facing == Facing.SW)
-                        facing = Facing.NW;
-                    else
-                        facing = Facing.NE;
-                }
+            Rotate();
 
-            }
-
-            if (Input.GetKeyDown(KeyCode.E))
+            if(!LockedOn)
             {
-                Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-                RaycastHit hit;
-                if (Physics.Raycast(ray, out hit, Mathf.Infinity))
-                {
-                    transform.RotateAround(hit.point, Vector3.down, 90f);
-
-                    if (facing == Facing.NE)
-                        facing = Facing.NW;
-                    else if (facing == Facing.NW)
-                        facing = Facing.SW;
-                    else if (facing == Facing.SW)
-                        facing = Facing.SE;
-                    else
-                        facing = Facing.NE;
-                }
-
+                Move();
             }
-            
+        }
 
+        public static void LockOn(GameSprite[] _interactables, int lockOnIndex)
+        {
+            interactables = _interactables;
+
+            LockedOn = true;
+
+            Vector3 offset = facing == Facing.NE ? new Vector3(-15f, 15f, -15f) : facing == Facing.NW ? new Vector3(15f, 15f, -15f) :
+                facing == Facing.SE ? new Vector3(-15f, 15f, 15f) : new Vector3(15f, 15f, 15f);
+
+            Camera.main.transform.position = new Vector3(interactables[lockOnIndex].Coordinate.x, 0, interactables[lockOnIndex].Coordinate.y) + offset;
+        }
+
+        public static void LockOff()
+        {
+            LockedOn = false;
+            interactables = null;
+        }
+
+        public void Move()
+        {
             Vector3 movement = Vector3.zero;
 
-            if(facing == Facing.NE)
-            { 
+            if (facing == Facing.NE)
+            {
                 if (Input.GetKey(KeyCode.W))
                 {
                     movement.x += pix * Time.deltaTime;
@@ -99,13 +91,13 @@ namespace RedKite
                 }
                 if (Input.GetKey(KeyCode.D) & transform.position.x < xBounds.y)
                 {
-                    movement.x += pix/2 * Time.deltaTime;
-                    movement.z -= pix/2 * Time.deltaTime;
+                    movement.x += pix / 2 * Time.deltaTime;
+                    movement.z -= pix / 2 * Time.deltaTime;
                 }
                 if (Input.GetKey(KeyCode.A))
                 {
-                    movement.x -= pix/2 * Time.deltaTime;
-                    movement.z += pix/2 * Time.deltaTime;
+                    movement.x -= pix / 2 * Time.deltaTime;
+                    movement.z += pix / 2 * Time.deltaTime;
                 }
             }
 
@@ -127,10 +119,10 @@ namespace RedKite
                     movement.z -= pix / 2 * Time.deltaTime;
                     movement.x -= pix / 2 * Time.deltaTime;
                 }
-                if (Input.GetKey(KeyCode.A) )
+                if (Input.GetKey(KeyCode.A))
                 {
                     movement.z += pix / 2 * Time.deltaTime;
-                    movement.x += pix / 2 * Time.deltaTime; 
+                    movement.x += pix / 2 * Time.deltaTime;
                 }
             }
 
@@ -150,14 +142,14 @@ namespace RedKite
                 }
                 if (Input.GetKey(KeyCode.D))
                 {
-                    movement.z += pix/2 * Time.deltaTime;
-                    movement.x -= pix/2 * Time.deltaTime;
+                    movement.z += pix / 2 * Time.deltaTime;
+                    movement.x -= pix / 2 * Time.deltaTime;
 
                 }
                 if (Input.GetKey(KeyCode.A))
                 {
-                    movement.z -= pix/2 * Time.deltaTime;
-                    movement.x += pix/2 * Time.deltaTime;
+                    movement.z -= pix / 2 * Time.deltaTime;
+                    movement.x += pix / 2 * Time.deltaTime;
                 }
             }
 
@@ -186,9 +178,50 @@ namespace RedKite
                 }
             }
 
-
             transform.position += movement;
+        }
 
+        public void Rotate()
+        {
+            if (Input.GetKeyDown(KeyCode.Q))
+            {
+                Ray ray = Camera.main.ScreenPointToRay(new Vector3(Screen.width / 2, Screen.height / 2, 0));
+                RaycastHit hit;
+                if (Physics.Raycast(ray, out hit, Mathf.Infinity))
+                {
+                    transform.RotateAround(hit.point, Vector3.up, 90f);
+
+                    if (facing == Facing.NE)
+                        facing = Facing.SE;
+                    else if (facing == Facing.SE)
+                        facing = Facing.SW;
+                    else if (facing == Facing.SW)
+                        facing = Facing.NW;
+                    else
+                        facing = Facing.NE;
+                }
+
+            }
+
+            if (Input.GetKeyDown(KeyCode.E))
+            {
+                Ray ray = Camera.main.ScreenPointToRay(new Vector3(Screen.width / 2, Screen.height / 2, 0));
+                RaycastHit hit;
+                if (Physics.Raycast(ray, out hit, Mathf.Infinity))
+                {
+                    transform.RotateAround(hit.point, Vector3.down, 90f);
+
+                    if (facing == Facing.NE)
+                        facing = Facing.NW;
+                    else if (facing == Facing.NW)
+                        facing = Facing.SW;
+                    else if (facing == Facing.SW)
+                        facing = Facing.SE;
+                    else
+                        facing = Facing.NE;
+                }
+
+            }
         }
     }
 }

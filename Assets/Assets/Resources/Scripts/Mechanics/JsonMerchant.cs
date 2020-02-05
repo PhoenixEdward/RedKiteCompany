@@ -28,8 +28,6 @@ namespace RedKite
 
             TextAsset json = Resources.Load<TextAsset>("Scripts/LootData/Inventory");
 
-            Debug.Log(json.text);
-
             Inventory inventory = JsonUtility.FromJson<Inventory>(json.text);
 
             output = inventory.Purchase(item);
@@ -57,8 +55,6 @@ namespace RedKite
                 Loot.LookupValue lookup = Loot.Keys[item];
 
                 Skill output;
-
-                Debug.Log(Brute.Length);
 
                 if (lookup.majorForm == Skill.Form.Brute)
                     output = Brute[lookup.index];

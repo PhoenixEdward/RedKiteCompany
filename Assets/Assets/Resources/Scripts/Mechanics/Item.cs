@@ -11,7 +11,7 @@ namespace RedKite
 
         public int DiceBonus;
         public int baseBonus;
-        protected System.Random rnd;
+        protected System.Random rnd = new System.Random();
 
 
         public virtual void Use(Unit giver, Unit reciever)
