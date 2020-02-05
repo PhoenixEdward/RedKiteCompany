@@ -47,39 +47,11 @@ namespace RedKite
             return new Vector3(1 / vec.x, 1 / vec.y, 1 / vec.z);
         }
 
-        public static VectorExtrema GetVectorExtrema(Vector3[] vecArray)
-        {
-            Vector3 tempMax = new Vector3(Vector3.negativeInfinity.x, 0, Vector3.negativeInfinity.z);
-            Vector3 tempMin = new Vector3(Vector3.positiveInfinity.x,0,Vector3.positiveInfinity.z);
-
-            foreach (Vector3 vector in vecArray)
-            {
-                if (tempMax.x < vector.x)
-                    tempMax.x = vector.x;
-                if (tempMin.x > vector.x)
-                    tempMin.x = vector.x;
-                if (tempMax.z < vector.z)
-                    tempMax.z = vector.z;
-                if (tempMin.z > vector.z)
-                    tempMin.z = vector.z;
-                if (tempMax.y < vector.y)
-                    tempMax.y = vector.y;
-                if (tempMin.y > vector.y)
-                    tempMin.y = vector.y;
-            }
-
-            Vector3 outMin = tempMin;
-            Vector3 outMax = tempMax;
-
-            return new VectorExtrema(outMin, outMax);
-
-        }
-
         public static float DirectedDist(Vector3 start, Vector3 end)
         {
             float outDist = 0;
 
-            if (end.x < start.x | end.z < start.z)
+            if (end.x < start.x | end.y < start.y)
                 outDist = -Vector3.Distance(start, end);
             else
                 outDist = Vector3.Distance(start, end);
@@ -166,8 +138,8 @@ namespace RedKite
         */
         public static bool WithinBounds(Vector3 point, int width, int height)
         {
-            bool tooHigh = point.z >= height;
-            bool tooLow = point.z < 0;
+            bool tooHigh = point.y >= height;
+            bool tooLow = point.y < 0;
             bool tooEast = point.x >= width;
             bool tooWest = point.x < 0;
 
@@ -191,7 +163,16 @@ namespace RedKite
         {
             checked
             {
-                return Mathf.Abs(a.x - b.x) + Mathf.Abs(a.y - b.y) + Mathf.Abs(a.z - b.z);
+                return Mathf.Abs(a.x - b.x) + Mathf.Abs(a.y - b.y);
+            }
+
+        }
+
+        public static int ManhattanDistance(Vector3 a, Vector3 b)
+        {
+            checked
+            {
+                return (int)Mathf.Abs(a.x - b.x) + (int)Mathf.Abs(a.y - b.y);
             }
 
         }
@@ -201,22 +182,6 @@ namespace RedKite
             return new Vector2(cartesian.x - cartesian.y, (cartesian.x + cartesian.y) / 2);
         }
 
-
-    }
-
-    public struct VectorExtrema
-    {
-        public Vector3 min;
-        public Vector3 max;
-        public float width;
-        public float height;
-        public VectorExtrema(Vector3 _min, Vector3 _max)
-        {
-            min = _min;
-            max = _max;
-            width = _max.x - _min.x + 1;
-            height = _max.z - _min.z + 1;
-        }
 
     }
 }

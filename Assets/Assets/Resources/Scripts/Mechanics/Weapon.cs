@@ -16,15 +16,18 @@ namespace RedKite
 
         public override void Use(Unit giver, Unit receiver)
         {
-            int chanceOfSuccess = giver.OffensiveRoll(Type.Major);
-            int chanceOfFailure = receiver.DefensiveRoll();
+            //will need to replace later with some clearer way of identifying than anti weapon
+            if(!Anti)
+            { 
+                int chanceOfSuccess = giver.OffensiveRoll(Type.Major);
+                int chanceOfFailure = receiver.DefensiveRoll();
 
-            if (chanceOfFailure > chanceOfSuccess)
-            {
-                Debug.Log("Miss");
-                return;
+                if (chanceOfFailure > chanceOfSuccess)
+                {
+                    Debug.Log("Miss");
+                    return;
+                }
             }
-
             int statBonus;
 
             if (Type.Major == Form.Finesse)
@@ -40,7 +43,7 @@ namespace RedKite
 
             Debug.Log("Damage: " + grossBonus);
             Debug.Log("Stat Bonus: " + statBonus);
-
+            Debug.Log("Enemy Health: " + receiver.Health);
             receiver.ChangeHealth(grossBonus, Anti);
 
             base.Use(giver, receiver);

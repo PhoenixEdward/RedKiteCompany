@@ -690,8 +690,7 @@ namespace RedKite
 
                     for (int vert = 0; vert <= meshMakers[mesh].SubMeshes[plane].vertexCount - 4; vert += 4)
                     {
-                        Debug.Log("Run");
-                        List<Vector3> face = new List<Vector3> {meshMakers[mesh].SubMeshes[plane].vertices[vert] + meshMakers[mesh].position,
+\                        List<Vector3> face = new List<Vector3> {meshMakers[mesh].SubMeshes[plane].vertices[vert] + meshMakers[mesh].position,
                             meshMakers[mesh].SubMeshes[plane].vertices[vert + 1] + meshMakers[mesh].position,
                             meshMakers[mesh].SubMeshes[plane].vertices[vert + 2] + meshMakers[mesh].position,
                             meshMakers[mesh].SubMeshes[plane].vertices[vert + 3] + meshMakers[mesh].position};
@@ -700,8 +699,7 @@ namespace RedKite
 
                         for (int nextMesh = mesh + 1; nextMesh < meshMakers.Count; nextMesh++)
                         {
-                            Debug.Log("Run2");
-                            for (int oVert = 0; oVert <= meshMakers[nextMesh].SubMeshes[plane].vertexCount - 4; oVert += 4)
+\                            for (int oVert = 0; oVert <= meshMakers[nextMesh].SubMeshes[plane].vertexCount - 4; oVert += 4)
                             {
 
                                 List<Vector3> oFace = new List<Vector3> {meshMakers[nextMesh].SubMeshes[plane].vertices[oVert] + meshMakers[nextMesh].position,
@@ -715,7 +713,6 @@ namespace RedKite
 
                                 if (match)
                                 {
-                                    Debug.Log(match);
                                     vertRemoveIndices.AddRange(new List<int>
                                     {
                                         vert,

@@ -131,7 +131,7 @@ namespace RedKite
                         Vector3[] tiles = Utility.CoordRange(segment.Min, segment.Max);
                         foreach(Vector3 tile in tiles)
                         {
-                            map[(int)tile.x,(int)tile.z] = (char)(area.RoomIndex + 48);
+                            map[(int)tile.x,(int)tile.y] = (char)(area.RoomIndex + 48);
                         }
                     }
                 }
@@ -148,7 +148,7 @@ namespace RedKite
                         foreach (Vector3 tile in tiles)
                         {
                             if (Utility.WithinBounds(tile, W, H))
-                                map[(int)tile.x, (int)tile.z] = TILE_WALL;
+                                map[(int)tile.x, (int)tile.y] = TILE_WALL;
                         }
                     }
                 }
@@ -208,7 +208,7 @@ namespace RedKite
             int ry = rndState.Next(1, H - h);
             int rx = rndState.Next(1, W - w);
 
-            Vector3 startPoint = new Vector3(rx, 1, ry);
+            Vector3 startPoint = new Vector3(rx, ry, 1);
 
             Area firstArea = new Area(Orient.North, roomIndex, startPoint, w - 2, h - 2);
 
@@ -216,7 +216,7 @@ namespace RedKite
             Vector3[] tileCoords = firstArea.GetCoords();
 
             foreach (Vector3 coord in tileCoords)
-                map[(int)coord.x, (int)coord.z] = (char)(roomIndex + 48);
+                map[(int)coord.x, (int)coord.y] = (char)(roomIndex + 48);
 
             firstArea.GenerateWalls();
 
@@ -224,18 +224,18 @@ namespace RedKite
             Vector3[] wallCoords = firstArea.GetWallCoords();
 
             foreach (Vector3 coord in wallCoords)
-                map[(int)coord.x, (int)coord.z] = TILE_CORNER;
+                map[(int)coord.x, (int)coord.y] = TILE_CORNER;
 
             foreach (Area.Wall wall in firstArea.Walls)
             {
-                map[(int)wall.Min.x, (int)wall.Min.z] = TILE_WALL_CORNER;
-                map[(int)wall.Max.x, (int)wall.Max.z] = TILE_WALL_CORNER;
+                map[(int)wall.Min.x, (int)wall.Min.y] = TILE_WALL_CORNER;
+                map[(int)wall.Max.x, (int)wall.Max.y] = TILE_WALL_CORNER;
             }
 
             int randoIndex = rndState.Next(0, tileCoords.Length);
             Vector3 spawn = tileCoords[randoIndex];
 
-            map[(int)spawn.x, (int)spawn.z] = TILE_SPAWN;
+            map[(int)spawn.x, (int)spawn.y] = TILE_SPAWN;
 
 
             Areas.Add(roomIndex, firstArea);
@@ -270,18 +270,18 @@ namespace RedKite
             Vector3[] floorCoords = foundRoom.GetCoords();
 
             foreach (Vector3 coord in floorCoords)
-                map[(int)coord.x, (int)coord.z] = (char)(roomIndex + 48);
+                map[(int)coord.x, (int)coord.y] = (char)(roomIndex + 48);
 
             Vector3[] wallCoords = foundRoom.GetWallCoords();
 
             foreach (Vector3 coord in wallCoords)
-                if (map[(int)coord.x, (int)coord.z] != TILE_WALL_CORNER)
-                    map[(int)coord.x, (int)coord.z] = TILE_WALL;
+                if (map[(int)coord.x, (int)coord.y] != TILE_WALL_CORNER)
+                    map[(int)coord.x, (int)coord.y] = TILE_WALL;
 
             foreach (Area.Wall wall in foundRoom.Walls)
             {
-                map[(int)wall.Min.x, (int)wall.Min.z] = TILE_WALL_CORNER;
-                map[(int)wall.Max.x, (int)wall.Max.z] = TILE_WALL_CORNER;
+                map[(int)wall.Min.x, (int)wall.Min.y] = TILE_WALL_CORNER;
+                map[(int)wall.Max.x, (int)wall.Max.y] = TILE_WALL_CORNER;
             }
 
             Areas.Add(roomIndex, foundRoom);
@@ -338,8 +338,8 @@ namespace RedKite
                             {
                                 //https://stackoverflow.com/questions/325933/determine-whether-two-date-ranges-overlap
 
-                                Vector3 up = newWall.Orientation == Orient.North | newWall.Orientation == Orient.South ? new Vector3(1, 0, 0) : new Vector3(0, 0, 1);
-                                Vector3 down = up == new Vector3(0, 0, 1) ? new Vector3(0, 0, -1) : new Vector3(-1, 0, 0);
+                                Vector3 up = newWall.Orientation == Orient.North | newWall.Orientation == Orient.South ? new Vector3(1, 0, 0) : new Vector3(0, 1, 0);
+                                Vector3 down = up == new Vector3(0, 1, 0) ? new Vector3(0, -1, 0) : new Vector3(-1, 0, 0);
 
 
                                 float diff0 = Utility.DirectedDist(newWall.Min, oldWall.Max);
@@ -415,10 +415,10 @@ namespace RedKite
                                             else
                                             { 
                                                 //ensure you are not touching a corner. Check once behind and twice in the expanding direction
-                                                if (map[(int)coord.x, (int)coord.z] == TILE_WALL_CORNER |
-                                                    map[(int)checkAhead.x, (int)checkAhead.z] == TILE_WALL_CORNER |
-                                                    map[(int)checkBehind.x, (int)checkBehind.z] == TILE_WALL_CORNER |
-                                                    map[(int)checkAhead2.x, (int)checkAhead2.z] == TILE_WALL_CORNER)
+                                                if (map[(int)coord.x, (int)coord.y] == TILE_WALL_CORNER |
+                                                    map[(int)checkAhead.x, (int)checkAhead.y] == TILE_WALL_CORNER |
+                                                    map[(int)checkBehind.x, (int)checkBehind.y] == TILE_WALL_CORNER |
+                                                    map[(int)checkAhead2.x, (int)checkAhead2.y] == TILE_WALL_CORNER)
                                                 {
                                                     continue;
                                                 }
@@ -468,12 +468,12 @@ namespace RedKite
                     //because width and height are relative to orientation.
                     if (wall.Orientation == Orient.North | wall.Orientation == Orient.South)
                     {
-                        isLong = Areas[area].Floor.TrueNE.z - Areas[area].Floor.TrueSW.z >
+                        isLong = Areas[area].Floor.TrueNE.y - Areas[area].Floor.TrueSW.y >
                             Areas[area].Floor.TrueNE.x - Areas[area].Floor.TrueSW.x ? false : true;
                     }
                     else
                     {
-                        isLong = Areas[area].Floor.TrueNE.z - Areas[area].Floor.TrueSW.z >
+                        isLong = Areas[area].Floor.TrueNE.y - Areas[area].Floor.TrueSW.y >
                             Areas[area].Floor.TrueNE.x - Areas[area].Floor.TrueSW.x ? true : false;
                     }
 
@@ -481,10 +481,10 @@ namespace RedKite
                     int h = isLong ? rndState.Next(10, 16) : rndState.Next(8, 10);
 
 
-                    Vector3 roomDims = new Vector3(w - 2, 1, h - 2);
+                    Vector3 roomDims = new Vector3(w - 2, h - 2, 1);
 
-                    Vector3 up = wall.Orientation == Orient.North | wall.Orientation == Orient.South ? new Vector3(1, 0, 0) : new Vector3(0, 0, 1);
-                    Vector3 down = up == new Vector3(0, 0, 1) ? new Vector3(0, 0, -1) : new Vector3(-1, 0, 0);
+                    Vector3 up = wall.Orientation == Orient.North | wall.Orientation == Orient.South ? new Vector3(1, 0, 0) : new Vector3(0, 1, 0);
+                    Vector3 down = up == new Vector3(0, 1, 0) ? new Vector3(0, -1, 0) : new Vector3(-1, 0, 0);
 
                     //pick random spot on "old wall"
 
@@ -498,7 +498,7 @@ namespace RedKite
                     if (wall.Orientation == Orient.North | wall.Orientation == Orient.South)
                         justify = rndState.Next(1,(int)roomDims.x - 1);
                     else
-                        justify = rndState.Next(1,(int)roomDims.z - 1);
+                        justify = rndState.Next(1,(int)roomDims.y - 1);
 
                     //move it out one space from the wall and select as corner of new floor.
                     Vector3 startPoint = oldCoord + wall.Orientation.Forward + (wall.Orientation.Right * justify);
@@ -532,8 +532,8 @@ namespace RedKite
                     //make sure no floor tiles come in contact with any existing floor OR door tiles.
                     foreach (Vector3 tileCoord in allCoords)
                     {
-                        if (((int)map[(int)tileCoord.x, (int)tileCoord.z] >= 40 |
-                            map[(int)tileCoord.x, (int)tileCoord.z] == TILE_CORNER | map[(int)tileCoord.x, (int)tileCoord.z] == TILE_WALL_CORNER))
+                        if (((int)map[(int)tileCoord.x, (int)tileCoord.y] >= 40 |
+                            map[(int)tileCoord.x, (int)tileCoord.y] == TILE_CORNER | map[(int)tileCoord.x, (int)tileCoord.y] == TILE_WALL_CORNER))
                         {
                             break;
                         }

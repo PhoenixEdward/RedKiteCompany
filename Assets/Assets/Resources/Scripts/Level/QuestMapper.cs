@@ -57,9 +57,9 @@ namespace RedKite
                         coords.Shuffle();
 
                         foreach(Vector3 coord in coords)
-                            if(!Props.ContainsKey(grid.WorldToCell(coord)))
+                            if(!Props.ContainsKey(Vector3Int.FloorToInt(coord)))
                             { 
-                                Props.Add(grid.WorldToCell(coord), "chest");
+                                Props.Add(Vector3Int.FloorToInt(coord), "chest");
                                 break;
                             }
 

@@ -157,10 +157,10 @@ namespace RedKite
                 foreach (Vector3 coord in edgeCoords)
                 {
                     if (currentRooms.Contains(roomIndex))
-                        fogMap[(int)coord.x, (int)coord.z] = TILE_EDGE;
+                        fogMap[(int)coord.x, (int)coord.y] = TILE_EDGE;
                     else
                     {
-                        fogMap[(int)coord.x, (int)coord.z] = TILE_FOG;
+                        fogMap[(int)coord.x, (int)coord.y] = TILE_FOG;
                     }
                 }
                 Vector3[] clearCoords = TileMapper.Instance.Areas[roomIndex].GetCoords();
@@ -169,16 +169,25 @@ namespace RedKite
                 {
                     if(currentRooms.Contains(roomIndex))
                     { 
-                        fogMap[(int)coord.x, (int)coord.z] = TILE_CLEAR;
+                        fogMap[(int)coord.x, (int)coord.y] = TILE_CLEAR;
 
 
                         foreach (Prop prop in props)
-                            if (prop.Coordinate.x == coord.x & prop.Coordinate.y == coord.z)
+                            if (prop.Coordinate.x == coord.x & prop.Coordinate.y == coord.y)
                                 prop.IsVisible = true;
+
+                        foreach (Enemy enemy in enemies)
+                            if (enemy.Coordinate.x == coord.x & enemy.Coordinate.y == coord.y)
+                                enemy.IsVisible = true;
                     }
                     else
                     { 
-                        fogMap[(int)coord.x, (int)coord.z] = TILE_FOG;
+                        fogMap[(int)coord.x, (int)coord.y] = TILE_FOG;
+
+
+                        foreach (Enemy enemy in enemies)
+                            if (enemy.Coordinate.x == coord.x & enemy.Coordinate.y == coord.y)
+                                enemy.IsVisible = false;
                     }
                 }
             }

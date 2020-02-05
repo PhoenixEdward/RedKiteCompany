@@ -104,7 +104,7 @@ namespace RedKite
         public void StartTurn()
         {
             Ready = true;
-            Movement = 4 + (Stats.Dexterity.Modifier / 2);
+            Movement = 4 + (Stats.Dexterity.Modifier / 4);
 
             if (Stats.Strength.Altered)
                 Stats.Strength.DecrementBuffDuration();
@@ -152,6 +152,7 @@ namespace RedKite
 
             if (change < 0)
             {
+                Debug.Log("Mistake");
                 return;
             }
 
@@ -535,7 +536,6 @@ namespace RedKite
 
             if (currentPath.Count == 1)
             {
-                Debug.Log("Arrived");
                 currentPath = null;
             }
 

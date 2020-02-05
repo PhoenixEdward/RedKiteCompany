@@ -7,6 +7,7 @@ namespace RedKite
     public class CombatMenuPopUp : MonoBehaviour
     {
         CombatMenu.Actionables actionables;
+        GameSprite[] actionableSprites;
 
         public enum Screen
         {
@@ -22,13 +23,14 @@ namespace RedKite
             Prop,
             None
         }
-        public Screen screen;
-        public Target target;
+        public Screen screen = Screen.None;
+        public Target target = Target.None;
         BattleGrid battleGrid;
         Unit unit;
         Vector3Int selectedTile;
         CombatMenu menu;
         public GameObject skillScreen;
+        int lockOnIndex;
 
         List<Weapon> weapons = new List<Weapon>();
         List<Weapon> heals = new List<Weapon>();
@@ -44,15 +46,68 @@ namespace RedKite
         void Update()
         {
 
-            if (target == Target.Enemy & actionables.Attackables != null)
-                battleGrid.HighlightActionables(actionables.Attackables);
-            else if (target == Target.Prop & actionables.Interactables != null)
-                battleGrid.HighlightActionables(actionables.Interactables);
-            else if (target == Target.Hero & actionables.Assistables != null)
-                battleGrid.HighlightActionables(actionables.Assistables);
-            else
-                battleGrid.Clear();
 
+
+            if (target == Target.Enemy & actionables.Attackables.Count > 0)
+            {
+                battleGrid.HighlightActionables(actionables.Attackables);
+                actionableSprites = actionables.Attackables.ToArray();
+                CycleUnits(actionableSprites);
+                CameraMovement.LockOn(actionables.Attackables.ToArray(), lockOnIndex);
+            }
+            else if (target == Target.Prop & actionables.Interactables.Count > 0)
+            {
+                battleGrid.HighlightActionables(actionables.Interactables);
+                actionableSprites = actionables.Interactables.ToArray();
+                CycleUnits(actionableSprites);
+                CameraMovement.LockOn(actionables.Interactables.ToArray(), lockOnIndex);
+            }
+            else if (target == Target.Hero & actionables.Assistables.Count > 0)
+            {
+                battleGrid.HighlightActionables(actionables.Assistables);
+                actionableSprites = actionables.Assistables.ToArray();
+                CycleUnits(actionableSprites);
+                CameraMovement.LockOn(actionables.Assistables.ToArray(), lockOnIndex);
+            }
+            else
+            {
+                battleGrid.Clear();
+                CameraMovement.LockOff();
+                lockOnIndex = 0;
+            }
+
+        }
+
+        public void UseSkill(Weapon weapon)
+        {
+            weapon.Use(unit, (Unit)actionableSprites[lockOnIndex]);
+            menu.Deactivate();
+        }
+
+        public void UseSkill(Buff buff)
+        {
+            buff.Use(unit, (Unit)actionableSprites[lockOnIndex]);
+            menu.Deactivate();
+        }
+
+        public void CycleUnits(GameSprite[] interactables)
+        {
+            Debug.Log(interactables.Length);
+
+            if (Input.GetKeyDown(KeyCode.D))
+            {
+                if (lockOnIndex < interactables.Length - 1)
+                    lockOnIndex++;
+                else
+                    lockOnIndex = 0;
+            }
+            if (Input.GetKeyDown(KeyCode.A))
+            {
+                if (lockOnIndex > 0)
+                    lockOnIndex--;
+                else
+                    lockOnIndex = interactables.Length - 1;
+            }
         }
 
         public void Activate(Unit _unit, Vector3Int _selectedTile, CombatMenu.Actionables _actionables, BattleGrid _battleGrid)
@@ -76,7 +131,7 @@ namespace RedKite
         public void UnitWait()
         {
             unit.Action(unit, Skill.Wait);
-            unit.Embark(new Vector3Int(selectedTile.x, 1, selectedTile.y));
+            unit.Embark(new Vector3Int(selectedTile.x, selectedTile.y, 1));
             menu.Deactivate();
             BattleClock.Instance.Run();
         }

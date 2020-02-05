@@ -27,7 +27,8 @@ namespace RedKite
 
         Node destination;
 
-        List<Hero> units = new List<Hero>();
+        List<Hero> heroes = new List<Hero>();
+        List<Unit> units = new List<Unit>();
 
         public Hero selectedHero;
 
@@ -68,8 +69,8 @@ namespace RedKite
 
         public void Generate()
         {
-            units = GameSpriteManager.Instance.Heroes;
-
+            heroes = GameSpriteManager.Instance.Heroes;
+            units = GameSpriteManager.Instance.Units;
         }
 
         // Update is called once per frame
@@ -77,7 +78,7 @@ namespace RedKite
         {
             if (!menu.isActive)
             {
-                if (combatMenu.IsActive == false)
+                if (CombatMenu.IsActive == false)
                     TileTracker();
 
                 UnitData();
@@ -89,18 +90,18 @@ namespace RedKite
                         return;
                     }
 
-                    if (selectedHero.IsMoving == false & combatMenu.IsActive == false)
+                    if (selectedHero.IsMoving == false & CombatMenu.IsActive == false)
                         battleGrid.UnitRange(selectedHero);
                     else if (battleGrid.withinRange != null & battleGrid.canMoveTo != null)
                         battleGrid.DeactivateUnitRange();
 
-                    if (destination != null & combatMenu.IsActive == false)
+                    if (destination != null & CombatMenu.IsActive == false)
                     {
                         if (TileMapper.Instance.Tiles[destination.cell.x, destination.cell.y].IsWalkable == true & selectedHero.IsMoving == false)
                         {
                             if (Utility.ManhattanDistance(new Vector3Int((int)selectedHero.Coordinate.x, (int)selectedHero.Coordinate.y, 2), new Vector3Int(destination.cell.x, destination.cell.y, 2)) <= selectedHero.Movement)
                             {
-                                if (pathFinder.IsReachable(selectedHero, destination, battleGrid.withinRange.ToArray()))
+                                if (pathFinder.IsReachable(PathFinder.graph[selectedHero.Coordinate.x, selectedHero.Coordinate.y], destination, battleGrid.withinRange.ToArray(), selectedHero.Movement))
                                 {
                                     {
                                         combatMenu.ActivatePopUp(selectedHero, destination.cell);
@@ -158,7 +159,7 @@ namespace RedKite
 
             tilemap.SetTile(highlight, highlightTile);
 
-            foreach (Hero unit in units)
+            foreach (Hero unit in heroes)
             {
                 if (new Vector2(unit.Coordinate.x, unit.Coordinate.y) == new Vector2(highlight.x, highlight.y) & selectedHero == null)
                 {

@@ -72,7 +72,7 @@ namespace RedKite
 
         }
 
- 
+
         public class Stage
         {
             public Vector3 BottomLeft;
@@ -111,9 +111,9 @@ namespace RedKite
                 TrueSE = _orientation == Orient.North ? BottomRight : _orientation == Orient.East ? TopRight :
                     _orientation == Orient.South ? TopLeft : BottomLeft;
 
-                TrueScale = new Vector3(TrueNE.x - TrueSW.x + 1, 1, TrueNE.z - TrueSW.z + 1);
+                TrueScale = new Vector3(TrueNE.x - TrueSW.x + 1, TrueNE.y - TrueSW.y + 1, 1);
 
-                Center = new Vector3((TrueSW.x + (TrueScale.x - 1) / 2), 1, (TrueSW.z + (TrueScale.z - 1) / 2));
+                Center = new Vector3((TrueSW.x + (TrueScale.x - 1) / 2), (TrueSW.y + (TrueScale.y - 1) / 2), 1);
             }
         }
 
@@ -149,11 +149,11 @@ namespace RedKite
 
             public static char[,] cornerGraph;
             static readonly char TILE_CORNER = 'C';
-            
 
-            public Wall(int _roomIndex,Orient _roomOrientation, Orient _orientation, Stage _floor)
+
+            public Wall(int _roomIndex, Orient _roomOrientation, Orient _orientation, Stage _floor)
             {
-                if(cornerGraph == null)
+                if (cornerGraph == null)
                 {
                     cornerGraph = new char[TileMapper.Instance.W, TileMapper.Instance.H];
                 }
@@ -162,24 +162,24 @@ namespace RedKite
 
                 Orientation = _orientation;
 
-                Vector3 cornerTopLeft = _floor.TrueNW + Vector3.forward + Vector3.left;
-                Vector3 cornerBottomRight = _floor.TrueSE + Vector3.back + Vector3.right;
+                Vector3 cornerTopLeft = _floor.TrueNW + Vector3.up + Vector3.left;
+                Vector3 cornerBottomRight = _floor.TrueSE + Vector3.down + Vector3.right;
 
 
-                Vector3 cornerBottomLeft = _floor.TrueSW + Vector3.back + Vector3.left;
-                Vector3 cornerTopRight = _floor.TrueNE + Vector3.forward + Vector3.right;
+                Vector3 cornerBottomLeft = _floor.TrueSW + Vector3.down + Vector3.left;
+                Vector3 cornerTopRight = _floor.TrueNE + Vector3.up + Vector3.right;
 
-                if(Orientation == Orient.North)
+                if (Orientation == Orient.North)
                 {
                     Max = cornerTopRight;
                     Min = cornerTopLeft;
                 }
-                else if(Orientation == Orient.South)
+                else if (Orientation == Orient.South)
                 {
                     Max = cornerBottomRight;
                     Min = cornerBottomLeft;
                 }
-                else if(Orientation == Orient.East)
+                else if (Orientation == Orient.East)
                 {
                     Max = cornerTopRight;
                     Min = cornerBottomRight;
@@ -194,9 +194,9 @@ namespace RedKite
                 Center = Min + (Vector3.Scale((Max - Min) / 2, Orientation.Forward)) + ((Thickness / 2) * Orientation.Back);
 
                 if (_orientation == Orient.North | _orientation == Orient.South)
-                    Scale = new Vector3(1, Height, Max.z - Min.z + 1);
+                    Scale = new Vector3(1, Max.y - Min.y + 1, Height);
                 else
-                    Scale = new Vector3(Max.x - Min.x + 1, Height, 1);
+                    Scale = new Vector3(Max.x - Min.x + 1, 1, Height);
 
             }
 
@@ -204,15 +204,15 @@ namespace RedKite
             {
                 Wall newWall = this;
 
-                Vector3 up = newWall.Orientation == Orient.North | newWall.Orientation == Orient.South ? new Vector3(1, 0, 0) : new Vector3(0, 0, 1);
-                Vector3 down = up == new Vector3(0, 0, 1) ? new Vector3(0, 0, -1) : new Vector3(-1, 0, 0);
+                Vector3 up = newWall.Orientation == Orient.North | newWall.Orientation == Orient.South ? new Vector3(1, 0, 0) : new Vector3(0, 1, 0);
+                Vector3 down = up == new Vector3(0, 1, 0) ? new Vector3(0, -1, 0) : new Vector3(-1, 0, 0);
 
                 //remove corners on connected walls
                 foreach (Wall oldWall in ConnectedWalls)
                 {
                     if (Utility.DirectedDist(newWall.Min, oldWall.Min) > 0 & Utility.DirectedDist(newWall.Max, oldWall.Min) < 0)
                     {
-                        newWall.Overlaps.Add(new Segment(newWall.Orientation, oldWall.Min, oldWall.Min, 1, _isRemoved: true , _isCorner: true));
+                        newWall.Overlaps.Add(new Segment(newWall.Orientation, oldWall.Min, oldWall.Min, 1, _isRemoved: true, _isCorner: true));
                     }
                     if (Utility.DirectedDist(oldWall.Min, newWall.Min) > 0 & Utility.DirectedDist(oldWall.Max, newWall.Min) < 0)
                     {
@@ -243,7 +243,7 @@ namespace RedKite
 
                     Vector3 endCoord = endCorner + down;
 
-                    if (startCoord.x > endCoord.x | startCoord.z > endCoord.z)
+                    if (startCoord.x > endCoord.x | startCoord.y > endCoord.y)
                     {
                         Debug.Log("Culprit");
                         continue;
@@ -257,14 +257,14 @@ namespace RedKite
                     {
                         Door door = newWall.Doors[oldWall.RoomIndex];
 
-                        if(door.Min.x >= door.Max.x & door.Min.z >= door.Max.z)
+                        if (door.Min.x >= door.Max.x & door.Min.y >= door.Max.y)
                             Debug.Log(door.Min + " " + door.Max);
-                        if(Utility.DirectedDist(door.Min, door.Max) > 0)
-                            newWall.Overlaps.Add(new Segment(newWall.Orientation,door.Min,door.Max, 1, _isPath: true));
+                        if (Utility.DirectedDist(door.Min, door.Max) > 0)
+                            newWall.Overlaps.Add(new Segment(newWall.Orientation, door.Min, door.Max, 1, _isPath: true));
 
-                        if(Utility.DirectedDist(startCoord, door.Min + down) > 0)
+                        if (Utility.DirectedDist(startCoord, door.Min + down) > 0)
                             newWall.Overlaps.Add(new Segment(newWall.Orientation, startCoord, door.Min + down, 1));
-                        if(Utility.DirectedDist(door.Max + up, endCoord) > 0)
+                        if (Utility.DirectedDist(door.Max + up, endCoord) > 0)
                             newWall.Overlaps.Add(new Segment(newWall.Orientation, door.Max + up, endCoord, 1));
                     }
                     else
@@ -277,25 +277,25 @@ namespace RedKite
             public void Split()
             {
                 //establish relative up and down. Will probably move to control flow below when less tired.
-                Vector3 up = Orientation == Orient.North | Orientation == Orient.South ? new Vector3(1, 0, 0) : new Vector3(0, 0, 1);
-                Vector3 down = up == new Vector3(0, 0, 1) ? new Vector3(0, 0, -1) : new Vector3(-1, 0, 0);
+                Vector3 up = Orientation == Orient.North | Orientation == Orient.South ? new Vector3(1, 0, 0) : new Vector3(0, 1, 0);
+                Vector3 down = up == new Vector3(0, 1, 0) ? new Vector3(0, -1, 0) : new Vector3(-1, 0, 0);
 
 
                 //When corners meet exactly on paired walls there is a fuck up
-                if (cornerGraph[(int)Min.x, (int)Min.z] != TILE_CORNER)
+                if (cornerGraph[(int)Min.x, (int)Min.y] != TILE_CORNER)
                 {
                     Overlaps.Add(new Segment(Orientation, Min, Min, 1, _isCorner: true));
-                    cornerGraph[(int)Min.x, (int)Min.z] = TILE_CORNER;
+                    cornerGraph[(int)Min.x, (int)Min.y] = TILE_CORNER;
                 }
                 else
                 {
                     Overlaps.Add(new Segment(Orientation, Min, Min, 1, _isRemoved: true, _isCorner: true));
                 }
 
-                if (cornerGraph[(int)Max.x, (int)Max.z] != TILE_CORNER)
+                if (cornerGraph[(int)Max.x, (int)Max.y] != TILE_CORNER)
                 {
                     Overlaps.Add(new Segment(Orientation, Max, Max, 1, _isCorner: true));
-                    cornerGraph[(int)Max.x, (int)Max.z] = TILE_CORNER;
+                    cornerGraph[(int)Max.x, (int)Max.y] = TILE_CORNER;
                 }
                 else
                 {
@@ -311,13 +311,13 @@ namespace RedKite
                 if (Orientation == Orient.North | Orientation == Orient.South)
                     Overlaps = Overlaps.OrderBy(x => x.Min.x).ToList();
                 else
-                    Overlaps = Overlaps.OrderBy(x => x.Min.z).ToList();
+                    Overlaps = Overlaps.OrderBy(x => x.Min.y).ToList();
 
 
                 //note <= for look behind. This also means I no longer have to have a seperate structure for those with 0 paths.
                 for (int i = 0; i < Overlaps.Count; i++)
                 {
-                    if (Overlaps[i].Min.x > Overlaps[i].Max.x | Overlaps[i].Min.z > Overlaps[i].Max.z)
+                    if (Overlaps[i].Min.x > Overlaps[i].Max.x | Overlaps[i].Min.y > Overlaps[i].Max.y)
                         Debug.Log(Overlaps[i].Orientation.Name);
                     //instantiate start and end of segment                        
                     if (Overlaps[i].IsRemoved == true | Overlaps[i].IsPath == true)
@@ -341,7 +341,7 @@ namespace RedKite
                         segMin = Overlaps[i].Max + up;
                         segMax = Overlaps[i + 1].Min + down;
 
-                        if (segMin.x > segMax.x & segMin.z > segMax.z)
+                        if (segMin.x > segMax.x & segMin.y > segMax.y)
                             Debug.Log(segMin + " " + segMax);
                     }
 
@@ -349,7 +349,7 @@ namespace RedKite
                 }
 
                 Segments = segments;
-                
+
             }
         }
     }

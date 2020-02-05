@@ -19,7 +19,11 @@ namespace RedKite
         void Update()
         {
             if(SelectedUnit != null)
+            { 
                 image.fillAmount = SelectedUnit.Health / SelectedUnit.MaxHealth;
+                Debug.Log("Current Health: " + SelectedUnit.Health);
+                Debug.Log("Max Health: " + SelectedUnit.MaxHealth);
+            }
         }
     }
 }

@@ -70,13 +70,6 @@ namespace RedKite
 
             GameSprite.fogTint = fogColor;
 
-            //Weapon weapon = JsonUtility.FromJson<Weapon>("{\"Name\": \"Training Axe\",\"Uses\": 25,\"Anti\": false,\"DiceBonus\": 6,\"BaseBonus\": 6,\"Type\": {\"Major\": 1,\"Minor\": 0},\"Range\": 1}");
-
-            Weapon weapon = new Weapon("Lute", 100, false, 6, 4, Skill.Form.Charming, Skill.Form.None, 1, 5);
-
-            string lute = JsonUtility.ToJson(weapon);
-
-            Debug.Log(lute);
 
             GameObject hero1 = new GameObject();
             hero1.name = "SwordGal";
@@ -88,10 +81,6 @@ namespace RedKite
             unit1.LearnSkill("Training Short Bow");
             heroes.Add(hero1);
 
-            Debug.Log(unit1.Weapons[0].Name);
-            Debug.Log(unit1.Weapons[0].Burden);
-            Debug.Log(unit1.Weapons[0].Type);
-
             GameObject hero2 = new GameObject();
             hero2.name = "MageGuy";
             hero2.layer = 8;
@@ -101,6 +90,8 @@ namespace RedKite
             unit2.Spawn();
             unit2.LearnSkill("Cure");
             heroes.Add(hero2);
+
+            SpawnEnemies(10);
 
             QuestMapper.Instance.Generate();
 
@@ -209,6 +200,21 @@ namespace RedKite
             cam.enabled = true;
 
             BattleClock.Instance.Run();
+        }
+
+        private void SpawnEnemies(int enemyCount)
+        {
+            for(int i = 0; i < enemyCount; i++)
+            {
+                GameObject enemy = new GameObject();
+                enemy.name = "Bandito " + i;
+                enemy.layer = 8;
+                Enemy unit = enemy.AddComponent<Enemy>();
+                unit.spriteName = "MageGuy";
+                unit.Instantiate("Bandit " + i, JobClass.Bandit, 5);
+                unit.Spawn();
+                unit.LearnSkill("Training Axe");
+            }
         }
 
         public void AddProp(Vector3Int position, string name, Texture2D spriteSheet, bool _isIso)

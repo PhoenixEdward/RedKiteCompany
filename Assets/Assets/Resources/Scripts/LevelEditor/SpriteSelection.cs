@@ -58,8 +58,6 @@ namespace RedKite
                     isActive = true;
                     texturerActive = true;
 
-                    Debug.Log("Run");
-
                     panel.localPosition = new Vector3(0 + Screen.width/2, 0 + Screen.height/2, 0);
                     string path = Application.dataPath + "\\Sprites\\Tiles";
 
@@ -129,7 +127,6 @@ namespace RedKite
 
                 else if (isActive)
                 {
-                    Debug.Log("Run");
                     panel.localPosition = new Vector3(0 + Screen.width / 2, - Screen.height/2, 0);
                     isActive = false;
                     texturerActive = false;
@@ -152,7 +149,6 @@ namespace RedKite
                         RaycastHit hit;
                         if (Physics.Raycast(ray, out hit, Mathf.Infinity))
                         {
-                            Debug.Log(hit.point);
                             if (propCreateInstance == null)
                             {
                                 propCreateInstance = Instantiate(propCreator);
@@ -241,8 +237,6 @@ namespace RedKite
         public IEnumerator GetPropTextures(string textureName, Vector3Int position, bool isIso)
         {
             string path = "file:///" + Application.dataPath + "\\Sprites";
-
-            Debug.Log("Run");
 
             path += "\\PropSprites\\" + textureName;
 

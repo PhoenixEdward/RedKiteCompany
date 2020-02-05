@@ -49,7 +49,7 @@ namespace RedKite
                     Destroy(skill);
             }
 
-            Vector2 startingPosition = new Vector2(0, 135f);
+            Vector3 startingPosition = new Vector3(0, 135f, 0);
 
             for (int i = 0; i < buffs.Count; i++)
             {
@@ -59,7 +59,7 @@ namespace RedKite
 
                 newButton.GetComponent<RectTransform>().SetParent(rect);
 
-                newButton.GetComponent<RectTransform>().localPosition = startingPosition + new Vector2(0, i * 50);
+                newButton.GetComponent<RectTransform>().localPosition = startingPosition + new Vector3(0, i * 50, 0);
 
                 newButton.GetComponent<CombatMenuItem>().Action = buffs[i];
 
@@ -77,7 +77,7 @@ namespace RedKite
 
                 newButton.transform.SetParent(rect);
 
-                newButton.GetComponent<RectTransform>().localPosition = startingPosition + new Vector2(0, i * 50);
+                newButton.GetComponent<RectTransform>().localPosition = startingPosition + new Vector3(0, i * 50, 0);
 
                 newButton.GetComponent<CombatMenuItem>().Action = heals[i];
 
@@ -87,18 +87,7 @@ namespace RedKite
             }
         }
 
-        public void UseSkill(Weapon weapon)
-        {
-                weapon.Use(unit, target);
-        }
-
-        public void UseSkill(Buff buff)
-        {
-            buff.Use(unit, target);
-        }
-
-
-        // Update is called once per frame
+        // This is where tooltips will go
         void Update()
         {
         

@@ -10,21 +10,23 @@ namespace RedKite
     {
         static bool isFirstRun = true;
         static int spawnRoom;
-        static List<Vector3Int> spawnTiles;
+        static List<Vector3> spawnTiles;
         static HashSet<int> filledRooms = new HashSet<int>();
         static Dictionary<int,int> roomEnemyCount = new Dictionary<int,int>();
-        static Vector3Int spawnCenter;
+        static Vector3 spawnCenter;
         static System.Random rand = new System.Random();
         static int maxEnemies;
         public static int totalEnemies;
         static List<Vector2Int> enemySpawnPoints;
 
-        private Vector3Int spawnPoint;
+        private Vector3 spawnPoint;
         private bool failedSpawn = false;
 
 
         public override void Start()
         {
+            spriteType = SpriteType.Character;
+
             base.Start();
 
             if(isFirstRun)
@@ -49,25 +51,19 @@ namespace RedKite
 
                 if (potentialRooms.Count != 0)
                 {
-                    potentialRooms.Shuffle<int>();
+                    potentialRooms.Shuffle();
 
                     spawnRoom = potentialRooms[0];
 
                     Debug.Log("spawn room: " + spawnRoom);
 
-                    spawnTiles = new List<Vector3Int>();
-                    spawnTiles = TileMapper.Instance.RoomTiles[spawnRoom];
-                    spawnTiles.Shuffle<Vector3Int>();
+                    spawnTiles = new List<Vector3>();
+                    spawnTiles = TileMapper.Instance.Areas[spawnRoom].GetCoords().ToList();
+                    spawnTiles.Shuffle();
 
                     spawnCenter = spawnTiles[0];
 
-                    Tile spawnCenterTile = ScriptableObject.CreateInstance<Tile>();
-
-                    spawnCenterTile.color = Colors.NeonPink;
-
                     spawnTiles.RemoveAt(0);
-
-                    Debug.Log("max enemies: " + TileMapper.Instance.RoomTiles[spawnRoom].Count / 6);
 
                     maxEnemies = Mathf.Min(TileMapper.Instance.RoomTiles[spawnRoom].Count / 10,5);
                 }
@@ -108,7 +104,7 @@ namespace RedKite
                 gameObject.SetActive(false);
             else
             {
-                transform.position = new Vector3(spawnPoint.x, spawnPoint.y, -1);
+                Coordinate = new Vector3Int((int)spawnPoint.x, (int)spawnPoint.y, -1);
             }
         }
 
