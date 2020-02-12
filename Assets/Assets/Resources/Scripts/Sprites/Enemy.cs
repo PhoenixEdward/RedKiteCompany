@@ -108,6 +108,15 @@ namespace RedKite
             }
         }
 
+        public override void Embark(Vector3 destination, bool nextTo = false, bool isAttack = true)
+        {
+            //want add something where enemies can loot maybe?
+            if (isAttack)
+                currentPath = pathFinder.GeneratePathTo(Coordinate, Destination, Movement);
+            else
+                currentPath = pathFinder.AIGeneratePathTo(Coordinate, Destination, Movement, MaxAssistRange);
+        }
+
         // Update is called once per frame
         public override void Update()
         {

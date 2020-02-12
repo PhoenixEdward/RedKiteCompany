@@ -24,7 +24,8 @@ namespace RedKite
         {
             new Cell(Cell.Type.Empty),
             new Cell(Cell.Type.Floor),
-            new Cell(Cell.Type.Wall)
+            new Cell(Cell.Type.Wall),
+            new Cell(Cell.Type.OccupiedEnemy)
         };
 
         public int H;
@@ -58,7 +59,34 @@ namespace RedKite
         public Cell[,] Tiles { get; protected set; }
 
         public int index = 0;
-        //to delete below
+
+        List<Unit> units;
+
+        public void Update()
+        {
+            TrackSprites();
+        }
+
+        void TrackSprites()
+        {
+            units = GameSpriteManager.Instance.Units;
+
+            List<Vector2> occupiedTiles = new List<Vector2>();
+
+            foreach (Unit unit in units)
+                occupiedTiles.Add(new Vector2(unit.Coordinate.x, unit.Coordinate.y));
+
+            for(int y = 0; y < Tiles.GetLength(1); y++)
+            { 
+                for(int x = 0; x < Tiles.GetLength(0); x++)
+                {
+                    if (Tiles[x, y].TileType == Cell.Type.OccupiedEnemy & !occupiedTiles.Contains(new Vector2(x, y)))
+                        Tiles[x, y] = tileTypes[1];
+                    else if (occupiedTiles.Contains(new Vector2(x, y)))
+                        Tiles[x, y] = tileTypes[3];
+                }
+            }
+        }
 
         public virtual void Generate()
         {
@@ -69,7 +97,7 @@ namespace RedKite
 
             map = new char[W, H];
 
-            areaCount = 10;
+            areaCount = 4;
             Areas = new Dictionary<int,Area>();
 
 

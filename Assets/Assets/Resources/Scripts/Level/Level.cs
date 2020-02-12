@@ -91,7 +91,7 @@ namespace RedKite
             unit2.LearnSkill("Cure");
             heroes.Add(hero2);
 
-            SpawnEnemies(10);
+            SpawnEnemies(4);
 
             QuestMapper.Instance.Generate();
 
@@ -111,13 +111,12 @@ namespace RedKite
             cam = FindObjectOfType<CameraMovement>();
 
             cam.enabled = true;
-
-            BattleClock.Instance.Run();
         }
 
         private void Update()
         {
             GameSprite.UpdateAllSprites();
+            TileMapper.Instance.Update();
         }
 
         public void Regen()
@@ -198,8 +197,6 @@ namespace RedKite
             spriteSelection.enabled = true;
 
             cam.enabled = true;
-
-            BattleClock.Instance.Run();
         }
 
         private void SpawnEnemies(int enemyCount)

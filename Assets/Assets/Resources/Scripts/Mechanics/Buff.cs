@@ -20,7 +20,7 @@ namespace RedKite
             Duration = _duration;
         }
 
-        public override void Use(Unit giver, Unit receiver)
+        public override void Use(GameSprite giver, GameSprite receiver)
         {
 
             base.Use(giver, receiver);

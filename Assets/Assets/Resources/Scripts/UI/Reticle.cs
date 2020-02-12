@@ -82,47 +82,50 @@ namespace RedKite
                     TileTracker();
 
                 UnitData();
-                if (selectedHero != null)
-                {
-                    if (!selectedHero.Ready)
+                //if(!BattleClock.Instance.IsEnemyTurn)
+                //{ 
+                    if (selectedHero != null)
                     {
-                        selectedHero = null;
-                        return;
-                    }
-
-                    if (selectedHero.IsMoving == false & CombatMenu.IsActive == false)
-                        battleGrid.UnitRange(selectedHero);
-                    else if (battleGrid.withinRange != null & battleGrid.canMoveTo != null)
-                        battleGrid.DeactivateUnitRange();
-
-                    if (destination != null & CombatMenu.IsActive == false)
-                    {
-                        if (TileMapper.Instance.Tiles[destination.cell.x, destination.cell.y].IsWalkable == true & selectedHero.IsMoving == false)
+                        if (!selectedHero.Ready)
                         {
-                            if (Utility.ManhattanDistance(new Vector3Int((int)selectedHero.Coordinate.x, (int)selectedHero.Coordinate.y, 2), new Vector3Int(destination.cell.x, destination.cell.y, 2)) <= selectedHero.Movement)
+                            selectedHero = null;
+                            return;
+                        }
+
+                        if (selectedHero.IsMoving == false & CombatMenu.IsActive == false)
+                            battleGrid.UnitRange(selectedHero);
+                        else if (battleGrid.withinRange != null & battleGrid.canMoveTo != null)
+                            battleGrid.DeactivateUnitRange();
+
+                        if (destination != null & CombatMenu.IsActive == false)
+                        {
+                            if (TileMapper.Instance.Tiles[destination.cell.x, destination.cell.y].IsWalkable == true & selectedHero.IsMoving == false)
                             {
-                                if (pathFinder.IsReachable(PathFinder.graph[selectedHero.Coordinate.x, selectedHero.Coordinate.y], destination, battleGrid.withinRange.ToArray(), selectedHero.Movement))
+                                if (Utility.ManhattanDistance(new Vector3Int((int)selectedHero.Coordinate.x, (int)selectedHero.Coordinate.y, 2), new Vector3Int(destination.cell.x, destination.cell.y, 2)) <= selectedHero.Movement)
                                 {
+                                    if (pathFinder.IsReachable(PathFinder.graph[selectedHero.Coordinate.x, selectedHero.Coordinate.y], destination, battleGrid.withinRange.ToArray(), selectedHero.Movement))
                                     {
-                                        combatMenu.ActivatePopUp(selectedHero, destination.cell);
-                                        destination = null;
+                                        {
+                                            combatMenu.ActivatePopUp(selectedHero, destination.cell);
+                                            destination = null;
+                                        }
                                     }
                                 }
                             }
                         }
+
+                        if (Input.GetMouseButtonDown(1))
+                        {
+                            selectedHero = null;
+
+                            combatMenu.Deactivate();
+                            battleGrid.DeactivateUnitRange();
+                        }
+
                     }
-
-                    if (Input.GetMouseButtonDown(1))
-                    {
-                        selectedHero = null;
-
-                        combatMenu.Deactivate();
-                        battleGrid.DeactivateUnitRange();
-                    }
-
+                    //this needs to be reworked. The above should be a function. A later problem.
                 }
-                //this needs to be reworked. The above should be a function. A later problem.
-            }
+           //}
         }
 
         public void UnitData()

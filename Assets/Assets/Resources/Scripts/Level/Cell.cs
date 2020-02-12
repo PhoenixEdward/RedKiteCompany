@@ -15,7 +15,9 @@ namespace RedKite
             Wall,
             Door,
             Corner,
-            Spawn
+            Spawn,
+            OccupiedEnemy,
+            OccupiedAlly,
         }
 
         public Type TileType { get; private set; }
@@ -26,7 +28,7 @@ namespace RedKite
 
         public Cell(Cell.Type type)
         {
-            TileType = Type.Floor;
+            TileType = type;
 
             if (type == Cell.Type.Floor)
             {
@@ -53,6 +55,14 @@ namespace RedKite
                 IsWalkable = false;
             }
             if (type == Cell.Type.Spawn)
+            {
+                movementCost = 1;
+            }
+            if(type == Cell.Type.OccupiedEnemy)
+            {
+                movementCost = 1;
+            }
+            if(type == Cell.Type.OccupiedAlly)
             {
                 movementCost = 1;
             }

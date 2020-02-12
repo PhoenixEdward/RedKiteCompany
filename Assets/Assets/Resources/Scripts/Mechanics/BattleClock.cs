@@ -1,14 +1,18 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Linq;
 
 namespace RedKite
 {
     public class BattleClock : MonoBehaviour
     {
-        List<Hero> units;
+        List<Hero> heroes;
+        List<Enemy> enemies;
+        List<Unit> units;
         private static BattleClock _instance;
-        public static int Beats { get; private set; }
+        public int CurrentBeat { get; private set; }
+        public bool IsEnemyTurn;
 
         public static BattleClock Instance
         {
@@ -24,14 +28,27 @@ namespace RedKite
         void Start()
         {
             //units = GameSpriteManager.Instance.Units;
-            units = GameSpriteManager.Instance.Heroes;
+            heroes = GameSpriteManager.Instance.Heroes;
+            enemies = GameSpriteManager.Instance.Enemies;
+            units = GameSpriteManager.Instance.Units;
             //need to rethink how units spawn. They need to be cached in someway then re-entered in to the pool when in aggro distance. Need some sort of UI message "AN ENEMY STIRS"
+        }
+
+        void Update()
+        {
+            heroes = GameSpriteManager.Instance.Heroes;
+            enemies = GameSpriteManager.Instance.Enemies;
+            units = GameSpriteManager.Instance.Units;
+
+            if (units.All(x => !x.Ready) & units.All(x=> x.IsMoving == false))
+                Run();
+
+            IsEnemyTurn = enemies.Any(x => x.Ready);
         }
 
         // Update is called once per frame
         public void Run()
         {
-            units = units == null ? GameSpriteManager.Instance.Heroes : units;
 
             bool unitReady = false;
 
@@ -39,7 +56,7 @@ namespace RedKite
             { 
                 foreach(Unit unit in units)
                 {
-                    Beats++;
+                    CurrentBeat++;
                     if (unit.Fatigue >= 0)
                         unit.DecreaseFatigue();
                     if(unit.Fatigue == 0)

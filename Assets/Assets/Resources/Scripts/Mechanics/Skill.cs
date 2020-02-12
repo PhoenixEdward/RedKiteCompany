@@ -30,6 +30,7 @@ namespace RedKite
         public int Burden;
 
         public static Skill Wait = new Skill("Wait", 1000, false, 0, 0, Form.None, Form.None, 0, 0);
+        public static Skill Alert = new Skill("Alert", 1000, false, 0, 0, Form.None, Form.None, 0, 0);
 
         public Skill() { }
 
@@ -47,7 +48,7 @@ namespace RedKite
             rnd = new Random();
         }
 
-        public override void Use(Unit giver, Unit receiver)
+        public override void Use(GameSprite giver, GameSprite receiver)
         {
             giver.Ready = false;
             Uses--;

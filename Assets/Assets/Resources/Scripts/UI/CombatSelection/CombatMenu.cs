@@ -79,34 +79,6 @@ namespace RedKite
         public Actionables FindInteractions(Unit unit, Vector3Int selectedTile)
         {
 
-            int maxAttackRange = 0;
-            int maxAssistRange = 0;
-
-            //find the maximum distance for interactions
-            foreach (Skill skill in unit.Weapons)
-            {
-                if (skill.Range > maxAttackRange)
-                    maxAttackRange = skill.Range;
-            }
-
-            foreach (Skill skill in unit.Heals)
-            {
-                if (skill.Range > maxAttackRange)
-                    maxAssistRange = skill.Range;
-            }
-
-            foreach (Skill skill in unit.Buffs)
-            {
-                if (skill.Range > maxAttackRange)
-                    maxAssistRange = skill.Range;
-            }
-
-            foreach (Skill skill in unit.Debuffs)
-            {
-                if (skill.Range > maxAttackRange)
-                    maxAttackRange = skill.Range;
-            }
-
             List<Enemy> attackables = new List<Enemy>();
             List<Prop> interactables = new List<Prop>();
             List<Hero> assistables = new List<Hero>();
@@ -114,16 +86,16 @@ namespace RedKite
             Debug.Log("Highlight " + selectedTile);
             Debug.Log("Unit: " + unit.Coordinate);
 
-            Node[] attackNodes = GenerateBoxRange(selectedTile, maxAttackRange);
-            Node[] assistNodes = GenerateBoxRange(selectedTile, maxAssistRange);
+            Node[] attackNodes = Utility.GenerateBoxRange(selectedTile, unit.MaxAttackRange);
+            Node[] assistNodes = Utility.GenerateBoxRange(selectedTile, unit.MaxAssistRange);
 
             foreach (GameSprite sprite in sprites)
             {
                 if (sprite is Enemy enemy)
                 {
-                    if (Utility.ManhattanDistance(new Vector3Int(selectedTile.x, selectedTile.y, -1), new Vector3Int(enemy.Coordinate.x, enemy.Coordinate.y, -1)) <= maxAttackRange)
+                    if (Utility.ManhattanDistance(new Vector3Int(selectedTile.x, selectedTile.y, -1), new Vector3Int(enemy.Coordinate.x, enemy.Coordinate.y, -1)) <= unit.MaxAttackRange)
                     {
-                        bool result = pathFinder.IsReachable(PathFinder.graph[selectedTile.x, selectedTile.y], PathFinder.graph[enemy.Coordinate.x, enemy.Coordinate.y], attackNodes, maxAttackRange);
+                        bool result = pathFinder.IsReachable(PathFinder.graph[selectedTile.x, selectedTile.y], PathFinder.graph[enemy.Coordinate.x, enemy.Coordinate.y], attackNodes, unit.MaxAttackRange);
 
                         if (result)
                             attackables.Add(enemy);
@@ -131,12 +103,12 @@ namespace RedKite
                 }
                 else if (sprite is Hero hero)
                 {
-                    if (Utility.ManhattanDistance(new Vector3Int(selectedTile.x, selectedTile.y, -1), new Vector3Int(hero.Coordinate.x, hero.Coordinate.y, -1)) <= maxAssistRange | hero.Equals(unit))
+                    if (Utility.ManhattanDistance(new Vector3Int(selectedTile.x, selectedTile.y, -1), new Vector3Int(hero.Coordinate.x, hero.Coordinate.y, -1)) <= unit.MaxAssistRange | hero.Equals(unit))
                     {
                         bool result = false;
 
                         if(!hero.Equals(unit))
-                            result = pathFinder.IsReachable(PathFinder.graph[selectedTile.x, selectedTile.y], PathFinder.graph[hero.Coordinate.x, hero.Coordinate.y], assistNodes, maxAssistRange);
+                            result = pathFinder.IsReachable(PathFinder.graph[selectedTile.x, selectedTile.y], PathFinder.graph[hero.Coordinate.x, hero.Coordinate.y], assistNodes, unit.MaxAssistRange);
 
                         if (result | hero.Equals(unit))
                             assistables.Add(hero);
@@ -156,33 +128,6 @@ namespace RedKite
             return actionables;
         }
 
-        Node[] GenerateBoxRange(Vector3Int _startingSpot, int _distance)
-        {
-            List<Node> range = new List<Node>();
-
-            Vector2 startingSpot = new Vector2(_startingSpot.x - _distance, _startingSpot.y - _distance);
-
-            int distance = (_distance * 2) + 1;
-
-            Debug.Log("Distance: " + distance);
-
-            Vector3Int cell;
-
-            for (int i = 0; i < distance; i++)
-            {
-                for (int j = 0; j < distance; j++)
-                {
-                    cell = new Vector3Int((int)startingSpot.x + i, (int)startingSpot.y + j, -1);
-
-                    if (cell.x >= 0 & cell.x < TileMapper.Instance.W & cell.y >= 0 & cell.y < TileMapper.Instance.H)
-                    {
-                        range.Add(PathFinder.graph[cell.x, cell.y]);
-                    }
-                }
-            }
-
-            return range.ToArray();
-        }
 
         public struct Actionables
         {

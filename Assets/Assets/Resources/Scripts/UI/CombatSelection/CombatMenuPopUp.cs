@@ -80,13 +80,15 @@ namespace RedKite
 
         public void UseSkill(Weapon weapon)
         {
-            weapon.Use(unit, (Unit)actionableSprites[lockOnIndex]);
+            unit.Embark(selectedTile);
+            unit.Action(actionableSprites[lockOnIndex], weapon);
             menu.Deactivate();
         }
 
         public void UseSkill(Buff buff)
         {
-            buff.Use(unit, (Unit)actionableSprites[lockOnIndex]);
+            unit.Embark(selectedTile);
+            unit.Action(actionableSprites[lockOnIndex], buff);
             menu.Deactivate();
         }
 
@@ -133,7 +135,6 @@ namespace RedKite
             unit.Action(unit, Skill.Wait);
             unit.Embark(new Vector3Int(selectedTile.x, selectedTile.y, 1));
             menu.Deactivate();
-            BattleClock.Instance.Run();
         }
 
         public void TargetEnemy()

@@ -28,6 +28,36 @@ namespace RedKite
             }
         }
 
+        public static Node[] GenerateBoxRange(Vector3Int _startingSpot, int _distance)
+        {
+            List<Node> range = new List<Node>();
+
+            Vector2 startingSpot = new Vector2(_startingSpot.x - _distance, _startingSpot.y - _distance);
+
+            int distance = (_distance * 2) + 1;
+
+            Vector3Int cell;
+
+            Debug.Log("GenerateBoxRangeStart: " + _startingSpot);
+
+            for (int i = 0; i < distance; i++)
+            {
+                for (int j = 0; j < distance; j++)
+                {
+                    cell = new Vector3Int((int)startingSpot.x + i, (int)startingSpot.y + j, -1);
+
+                    if (cell.x >= 0 & cell.x < TileMapper.Instance.W & cell.y >= 0 & cell.y < TileMapper.Instance.H)
+                    {
+                        Debug.Log("GenerateBoxRange: " + cell);
+
+                        range.Add(PathFinder.graph[cell.x, cell.y]);
+                    }
+                }
+            }
+
+            return range.ToArray();
+        }
+
         public static IEnumerable<TSource> DistinctBy<TSource, TKey>
         (this IEnumerable<TSource> source, Func<TSource, TKey> keySelector)
         {

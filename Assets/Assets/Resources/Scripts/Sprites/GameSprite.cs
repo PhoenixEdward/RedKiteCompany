@@ -6,6 +6,51 @@ namespace RedKite
 { 
      public class GameSprite : MonoBehaviour
     {
+        public int ID { get; private set; } = 0;
+        static List<int> activeIDs = new List<int>();
+
+
+        public StateMachine StateMachine { get; private set; }
+
+        public string Name { get; private set; }
+
+        public List<Weapon> Weapons
+        {
+            get;
+            private set;
+        } = new List<Weapon>();
+
+        public List<Weapon> Heals
+        {
+            get;
+            private set;
+        } = new List<Weapon>();
+
+        public List<Buff> Buffs
+        {
+            get;
+            private set;
+        } = new List<Buff>();
+
+        public List<Buff> Debuffs
+        {
+            get;
+            private set;
+        } = new List<Buff>();
+
+        public int Health { get; private set; }
+        public int MaxHealth { get; private set; }
+        public bool Ready;
+        public int Level { get; private set; }
+        public Stats Stats { get; protected set; }
+        public JobClass jobClass { get; private set; }
+        public int Movement { get; private set; }
+        public int Fatigue { get; private set; }
+        public int PerceptionRange { get; private set; }
+        public static PathFinder pathFinder { get; private set; }
+
+        protected System.Random rnd = new System.Random();
+
         public enum SpriteType {
             Tile,
             Character,
@@ -49,9 +94,14 @@ namespace RedKite
 
         public bool IsMoving;
 
+        public int MaxAttackRange { get; private set; }
+        public int MaxAssistRange { get; private set; }
+
+
 
         public virtual void Start()
         {
+
             //load static variables if null
             if(grid == null)
             {
@@ -168,6 +218,11 @@ namespace RedKite
                     HorizontalRow = 0;
                 }
             }
+
+            StateMachine.Upate();
+
+            if (Health <= 0)
+                gameObject.SetActive(false);
         }
 
         public void ReStart(string textureName, Texture2D texture)
@@ -193,5 +248,257 @@ namespace RedKite
             }
 
         }
+
+        public void GetMaxSkillDistances()
+        {
+
+            //find the maximum distance for interactions
+            foreach (Skill skill in Weapons)
+            {
+                if (skill.Range > MaxAttackRange)
+                    MaxAttackRange = skill.Range;
+            }
+
+            foreach (Skill skill in Heals)
+            {
+                if (skill.Range > MaxAssistRange)
+                    MaxAssistRange = skill.Range;
+            }
+
+            foreach (Skill skill in Buffs)
+            {
+                if (skill.Range > MaxAssistRange)
+                    MaxAssistRange = skill.Range;
+            }
+
+            foreach (Skill skill in Debuffs)
+            {
+                if (skill.Range > MaxAttackRange)
+                    MaxAttackRange = skill.Range;
+            }
+        }
+        public void Instantiate(string _name, JobClass _jobClass, int _level)
+        {
+            Name = _name;
+            jobClass = _jobClass;
+
+            Stats = new Stats(jobClass);
+
+            Movement = 4 + (Stats.Dexterity.Modifier / 4);
+
+            MaxHealth = 20 + Stats.Constitution.Modifier;
+
+            Level = 1;
+
+            for (int level = 0; level < _level; level++)
+                LevelUp();
+
+            while (ID == 0)
+            {
+                int tempID = rnd.Next(0, 9999);
+
+                if (!activeIDs.Contains(tempID))
+                {
+                    ID = tempID;
+                    activeIDs.Add(tempID);
+                }
+            }
+        }
+
+        public void Spawn()
+        {
+            if (rnd == null)
+                rnd = new System.Random();
+
+            Health = MaxHealth;
+
+            Ready = false;
+
+            if(pathFinder == null)
+            {
+                pathFinder = new PathFinder();
+                pathFinder.GenerateGraph();
+            }
+
+            GetMaxSkillDistances();
+
+            StateMachine = new StateMachine(this); 
+        }
+
+        public void StartTurn()
+        {
+            Ready = true;
+            Movement = 4 + (Stats.Dexterity.Modifier / 4);
+
+            PerceptionRange = Mathf.Max(10, 5 + (Stats.Intelligence.Modifier / 5));
+
+            if (Stats.Strength.Altered)
+                Stats.Strength.DecrementBuffDuration();
+            if (Stats.Constitution.Altered)
+                Stats.Constitution.DecrementBuffDuration();
+            if (Stats.Dexterity.Altered)
+                Stats.Dexterity.DecrementBuffDuration();
+            if (Stats.Intelligence.Altered)
+                Stats.Intelligence.DecrementBuffDuration();
+            if (Stats.Wisdom.Altered)
+                Stats.Wisdom.DecrementBuffDuration();
+            if (Stats.Charisma.Altered)
+                Stats.Charisma.DecrementBuffDuration();
+        }
+
+        public void EndTurn()
+        {
+            Fatigue += Mathf.Max(35 - (Stats.Dexterity.Modifier / 2), 10);
+            Ready = false;
+        }
+
+        public void DecreaseFatigue()
+        {
+            if (Fatigue > 0)
+                Fatigue--;
+
+            if (Fatigue <= 0)
+                StartTurn();
+        }
+
+        public void Action(GameSprite _unit, Skill _skill)
+        {
+            if (_skill == Skill.Alert)
+                return;
+
+            if (_skill is Weapon weapon)
+                if (Weapons.Contains(weapon) | Heals.Contains(weapon))
+                    weapon.Use(this, _unit);
+                else if (_skill is Buff buff)
+                    if (Buffs.Contains(buff))
+                        buff.Use(this, _unit);
+
+            EndTurn();
+        }
+
+        public void ChangeHealth(int change, bool anti)
+        {
+
+            if (change < 0)
+            {
+                Debug.Log("Mistake");
+                return;
+            }
+
+            if (anti)
+                Health = Mathf.Min(change + Health, MaxHealth);
+            else
+            {
+                int damage = jobClass != JobClass.Ranger | jobClass != JobClass.Fighter ?
+                change - Stats.Constitution.Modifier : change - Stats.Dexterity.Modifier;
+
+                Health = Mathf.Max(0, Health - damage);
+            }
+
+        }
+
+        public void LearnSkill(string item)
+        {
+            dynamic skill;
+
+            if (Loot.Keys[item].majorForm != Skill.Form.Charming)
+                skill = JsonMerchant.Instance.Load<Weapon>(item);
+            else
+                skill = JsonMerchant.Instance.Load<Buff>(item);
+
+            if ((jobClass == JobClass.Ranger | jobClass == JobClass.Fighter) & skill.Type.Major == Skill.Form.Finesse)
+                Weapons.Add(skill);
+            else if ((jobClass == JobClass.Mage | jobClass == JobClass.Bard) & skill.Type.Major == Skill.Form.Clever)
+                Weapons.Add(skill);
+            else if ((jobClass == JobClass.Cleric | jobClass == JobClass.Mage) & skill.Type.Major == Skill.Form.Wise)
+                Heals.Add(skill);
+            else if ((jobClass == JobClass.Bard | jobClass == JobClass.Ranger) & skill.Type.Major == Skill.Form.Charming & skill.Anti == false)
+                Buffs.Add(skill);
+            else if ((jobClass == JobClass.Bard | jobClass == JobClass.Ranger) & skill.Type.Major == Skill.Form.Charming & skill.Anti == true)
+                Debuffs.Add(skill);
+            else if (skill.Type.Major == Skill.Form.Brute)
+                Weapons.Add(skill);
+
+            GetMaxSkillDistances();
+        }
+
+        public int AbilityCheck(Skill.Form _type)
+        {
+            int roll;
+
+            if (_type == Skill.Form.Brute)
+                roll = Stats.Strength.Roll(10);
+            else if (_type == Skill.Form.Charming)
+                roll = Stats.Charisma.Roll(10);
+            else if (_type == Skill.Form.Clever)
+                roll = Stats.Intelligence.Roll(10);
+            else if (_type == Skill.Form.Finesse)
+                roll = Stats.Dexterity.Roll(10);
+            else if (_type == Skill.Form.Stoic)
+                roll = Stats.Constitution.Roll(10);
+            else
+                roll = Stats.Wisdom.Roll(10);
+
+            return roll;
+
+        }
+
+        public void Buff(Skill.Form _type, int _amount, int _duration, bool anti)
+        {
+            int amount;
+
+            if (anti)
+                amount = -_amount;
+            else
+                amount = _amount;
+
+            if (_type == Skill.Form.Brute)
+                Stats.Strength.Buff(amount, _duration);
+            else if (_type == Skill.Form.Charming)
+                Stats.Charisma.Buff(amount, _duration);
+            else if (_type == Skill.Form.Clever)
+                Stats.Intelligence.Buff(amount, _duration);
+            else if (_type == Skill.Form.Finesse)
+                Stats.Dexterity.Buff(amount, _duration);
+            else if (_type == Skill.Form.Stoic)
+                Stats.Constitution.Buff(amount, _duration);
+            else
+                Stats.Wisdom.Buff(amount, _duration);
+
+        }
+
+        public int DefensiveRoll()
+        {
+            int roll;
+
+            roll = Stats.Dexterity.Roll(6);
+
+            return roll;
+        }
+
+        public int OffensiveRoll(Skill.Form _type)
+        {
+            int roll;
+
+            if (_type == Skill.Form.Finesse)
+                roll = Stats.Dexterity.Roll(10);
+            else if (_type == Skill.Form.Clever)
+                roll = Stats.Intelligence.Roll(10);
+            else if (_type == Skill.Form.Wise)
+                roll = Stats.Wisdom.Roll(10);
+            else
+                roll = Stats.Charisma.Roll(10);
+
+            return roll;
+        }
+
+        public void LevelUp()
+        {
+            Stats.LevelUp(jobClass);
+
+            Level++;
+        }
+
+        public bool HandleMessage(Telegram message) { return StateMachine.HandleMessage(message); }
     }
 }

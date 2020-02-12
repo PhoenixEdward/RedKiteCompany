@@ -41,7 +41,7 @@ namespace RedKite
 
             foreach(KeyValuePair<int, Area> area in TileMapper.Instance.Areas.Where(x=> x.Key != 0))
             {
-                distanceFromSpawn.Add(area.Key, pathFinder.GeneratePathTo(TileMapper.Instance.Areas[0].Floor.Center,area.Value.Floor.Center).Count());
+                distanceFromSpawn.Add(area.Key, pathFinder.GeneratePathTo(TileMapper.Instance.Areas[0].Floor.Center,area.Value.Floor.Center, 10000).Count());
             }
 
             for(int i = 0; i < chestCount; i++)

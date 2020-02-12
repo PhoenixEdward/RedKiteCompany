@@ -20,9 +20,10 @@ namespace RedKite
         {
             if(SelectedUnit != null)
             { 
-                image.fillAmount = SelectedUnit.Health / SelectedUnit.MaxHealth;
+                image.fillAmount = ((float)SelectedUnit.Health / (float)SelectedUnit.MaxHealth);
                 Debug.Log("Current Health: " + SelectedUnit.Health);
                 Debug.Log("Max Health: " + SelectedUnit.MaxHealth);
+                Debug.Log("Ratio: " + (SelectedUnit.Health / SelectedUnit.MaxHealth));
             }
         }
     }

@@ -36,6 +36,8 @@ namespace RedKite
 
         public List<Prop> Props { get; private set; } = new List<Prop>();
 
+        char[,] roomMap = TileMapper.Instance.map;
+
         void Awake()
         {
             if (_instance == null)
@@ -49,6 +51,72 @@ namespace RedKite
 
             GetSprites();
 
+        }
+
+        void Update()
+        {
+            int n = Sprites.Count - 2;
+            int q = Sprites.Count - 1;
+
+            while( n > 0)
+            {
+                GameSprite firstSprite = Sprites[q];
+                if (n == Sprites.Count - 2)
+                {
+                    if (!firstSprite.gameObject.activeSelf)
+                    {
+                        Sprites.Remove(firstSprite);
+
+                        if (firstSprite is Unit unit)
+                            Units.Remove(unit);
+
+                        if (firstSprite is Hero hero)
+                            Heroes.Remove(hero);
+                        else if (firstSprite is Enemy enemy)
+                            Enemies.Remove(enemy);
+                        else if (firstSprite is Prop prop)
+                            Props.Remove(prop);
+
+                        n--;
+                        q--;
+
+                        continue;
+                    }
+                }
+
+                for (int i = 0; i < n; i++)
+                {
+                    GameSprite compareSprite = Sprites[i];
+
+                    if (i == 0)
+                    {
+                        if(!compareSprite.gameObject.activeSelf)
+                        {
+                            Sprites.Remove(compareSprite);
+                            if (compareSprite is Unit unit)
+                                Units.Remove(unit);
+
+                            if (compareSprite is Hero hero)
+                                Heroes.Remove(hero);
+                            else if (compareSprite is Enemy enemy)
+                                Enemies.Remove(enemy);
+                            else if (compareSprite is Prop prop)
+                                Props.Remove(prop);
+
+                            continue;
+                        }
+                    }
+
+                    if (Utility.ManhattanDistance(compareSprite.Coordinate, firstSprite.Coordinate) < compareSprite.PerceptionRange)
+                        Telegraph.Instance.DispatchMessage(new Telegram(new Telegram.BeatSignature(BattleClock.Instance.CurrentBeat, firstSprite.Stats.Dexterity.Modifier, 0),
+                            firstSprite, compareSprite, Message.InFOV));
+                    if (Utility.ManhattanDistance(firstSprite.Coordinate, compareSprite.Coordinate) < firstSprite.PerceptionRange)
+                        Telegraph.Instance.DispatchMessage(new Telegram(new Telegram.BeatSignature(BattleClock.Instance.CurrentBeat, compareSprite.Stats.Dexterity.Modifier, 0),
+                            compareSprite, firstSprite, Message.InFOV));
+                }
+                n--;
+                q--;
+            }
         }
 
         public void  GetSprites()
@@ -72,6 +140,18 @@ namespace RedKite
                 if (sprite is Unit)
                     Units.Add((Unit)sprite);
             }
+        }
+
+        public GameSprite GetSpriteFromID(int id)
+        {
+            foreach(GameSprite sprite in Sprites)
+            {
+                if (sprite.ID == id)
+                    return sprite;
+            }
+
+            //this is gonna lead to some crazy bugs.
+            return new GameSprite();
         }
     }
 }

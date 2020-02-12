@@ -14,6 +14,8 @@ namespace RedKite
 
             base.Start();
 
+            Instantiate(spriteName, JobClass.Bard, 1);
+            Spawn();
         }
 
         // Update is called once per frame

@@ -14,8 +14,9 @@ namespace RedKite
         protected System.Random rnd = new System.Random();
 
 
-        public virtual void Use(Unit giver, Unit reciever)
+        public virtual void Use(GameSprite giver, GameSprite reciever)
         {
         }
+
     }
 }

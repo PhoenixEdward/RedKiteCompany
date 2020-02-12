@@ -14,20 +14,24 @@ namespace RedKite
             : base(_name, _uses, _anti, _diceBonus, _baseBonus, _majorForm, _minorForm, _range, _burden) { }
 
 
-        public override void Use(Unit giver, Unit receiver)
+        public override void Use(GameSprite giver, GameSprite receiver)
         {
             //will need to replace later with some clearer way of identifying than anti weapon
-            if(!Anti)
+            if(receiver is Unit unit)
             { 
-                int chanceOfSuccess = giver.OffensiveRoll(Type.Major);
-                int chanceOfFailure = receiver.DefensiveRoll();
+                if(!Anti)
+                { 
+                    int chanceOfSuccess = giver.OffensiveRoll(Type.Major);
+                    int chanceOfFailure = unit.DefensiveRoll();
 
-                if (chanceOfFailure > chanceOfSuccess)
-                {
-                    Debug.Log("Miss");
-                    return;
+                    if (chanceOfFailure > chanceOfSuccess)
+                    {
+                        Debug.Log("Miss");
+                        return;
+                    }
                 }
             }
+
             int statBonus;
 
             if (Type.Major == Form.Finesse)
