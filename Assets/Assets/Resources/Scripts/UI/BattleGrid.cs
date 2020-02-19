@@ -49,7 +49,7 @@ namespace RedKite
                 //draw grid of valid movement tiles
                 //may need to keep an eye out for impassible moving units. could cause issues here.
 
-                if (unit.IsMoving == false & withinRange.Count == 0)
+                if (unit.IsMoving == false & withinRange.Count == 0 & unit.Ready)
                 {
 
                     //formula for area of max unit range is (n+1)^2 + n^2 where n is movement speed.

@@ -15,7 +15,6 @@ namespace RedKite
 
         readonly int speed = 2;
 
-        public Vector3 Destination { get; set; } = Vector3.zero;
         public bool IsAnimated { get; set; }
         public bool IsReverseAnimated { get; set; }
 
@@ -34,8 +33,6 @@ namespace RedKite
         public override void Start()
         {
             base.Start();
-
-            Destination = Coordinate;
 
             //possibly shortcut in TileMapper code
             grid = FindObjectOfType<Grid>();
@@ -57,8 +54,6 @@ namespace RedKite
 
         public override void Update()
         {
-            StateMachine.Upate();
-
             if (currentPath != null)
             {
                 Move();
@@ -90,6 +85,8 @@ namespace RedKite
             }
 
             timeSinceLastFrame += Time.deltaTime;
+
+            StateMachine.Upate();
 
             base.Update();
 

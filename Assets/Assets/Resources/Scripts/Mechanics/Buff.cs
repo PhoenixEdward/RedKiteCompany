@@ -52,6 +52,8 @@ namespace RedKite
 
                 Debug.Log("Disarmed for: " + grossBonus + " To " + Type.Minor.ToString());
             }
+
+            UseFX(this, grossBonus, receiver);
         }
     }
 }

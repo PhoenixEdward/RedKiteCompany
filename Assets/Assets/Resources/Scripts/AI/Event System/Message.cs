@@ -11,6 +11,7 @@ namespace RedKite
         InFOV,
         TakeDamage,
         Die,
-        Critical
+        Critical,
+        UseSkill
     }
 }

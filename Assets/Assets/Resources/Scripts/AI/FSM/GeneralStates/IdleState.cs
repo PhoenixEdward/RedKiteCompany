@@ -13,9 +13,12 @@ namespace RedKite
 
         public void Execute(GameSprite owner)
         {
-            if(owner is Enemy enemy)
-                if(enemy.Ready)
+            if (owner is Enemy enemy)
+                if (enemy.Ready)
                     enemy.Action(enemy, Skill.Wait);
+                else { }
+            else if (owner is Hero)
+                owner.StateMachine.ChangeState(new CombatState());
         }
 
         public void Exit(GameSprite owner)

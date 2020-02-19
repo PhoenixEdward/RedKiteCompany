@@ -12,7 +12,8 @@ namespace RedKite
         List<GameSprite> Targets = new List<GameSprite>();
         List<bool> TargetPings = new List<bool>();
         GameSprite primaryTarget;
-        bool hasTakenTurn;
+        bool hasTakenTurn = false;
+        bool initiated = false;
 
         public void Enter(IState previousState, GameSprite owner)
         {
@@ -24,17 +25,23 @@ namespace RedKite
 
         public void Execute(GameSprite owner)
         {
-            for (int i = 0; i < TargetPings.Count; i++)
-            { 
-                if(TargetPings[i] == false)
-                {
-                    Targets.RemoveAt(i);
-                    TargetPings.RemoveAt(i);
-                }
-            }
             if (owner is Enemy attacker)
             {
-                if(attacker.Ready)
+                for (int i = 0; i < TargetPings.Count; i++)
+                {
+                    if (TargetPings[i] == false)
+                    {
+                        Targets.RemoveAt(i);
+                        TargetPings.RemoveAt(i);
+                    }
+                }
+
+                if (Targets.Count == 0)
+                {
+                    owner.StateMachine.ChangeState(new IdleState());
+                }
+
+                if (attacker.Ready)
                 {
                     Debug.Log("Attack Flow");
                     if (primaryTarget == null & Targets.Count > 0)
@@ -43,8 +50,9 @@ namespace RedKite
                         Debug.Log("Finding Target");
                     }
                     //this will need to be adjusted for ranged. Will need to find a way of cacheing distance and DPB.
-                    if (Utility.ManhattanDistance(primaryTarget.Coordinate, attacker.Coordinate) > 1)
+                    if (Utility.ManhattanDistance(primaryTarget.Coordinate, attacker.Coordinate) > attacker.MaxAttackRange & !hasTakenTurn)
                     {
+                        hasTakenTurn = true;
 
                         attacker.Embark(primaryTarget.Coordinate, true, true);
 
@@ -52,37 +60,56 @@ namespace RedKite
 
                     }
                     //need to add skil cycling here
-                    else if(Utility.ManhattanDistance(primaryTarget.Coordinate, attacker.Coordinate) <= attacker.MaxAttackRange & !GameSprite.IsUsingSkill)
+                    //this may not be the best place for the FX but eff it
+                    else if (!owner.IsMoving & Utility.ManhattanDistance(primaryTarget.Coordinate, attacker.Coordinate) <= attacker.MaxAttackRange & !BattleFX.IsActive)
                     {
                         if(attacker.Weapons.Count > 0)
                             if (attacker.Weapons[0].Anti == false & attacker.Weapons[0].Uses > 0)
+                            { 
                                 attacker.Action(primaryTarget, attacker.Weapons[0]);
+                            }
                             else
                             { }
                         else if (attacker.Buffs.Count > 0)
                             if (attacker.Buffs[0].Anti == true & attacker.Buffs[0].Uses > 0)
+                            { 
                                 attacker.Action(primaryTarget, attacker.Buffs[0]);
+
+                            }
                             else
                             { }
                         else
                             Debug.Log("No Skills");
+
+                        hasTakenTurn = false;
+
                     }
                     else if(!owner.IsMoving & Utility.ManhattanDistance(primaryTarget.Coordinate, attacker.Coordinate) > attacker.MaxAttackRange)
                     {
-                        hasTakenTurn = false;
                         //needs to be adjusted to include rest. Need to see if starting position is same as ending. Won't happen
                         //very often but necessary to give the AI for fairness.
                         attacker.Action(attacker, Skill.Wait);
+
+                        hasTakenTurn = false;
                     }
                 }
 
                 for (int i = 0; i < TargetPings.Count; i++)
                     TargetPings[i] = false;
             }
+
+            else if(initiated == true)
+            {
+                if (!owner.IsMoving)
+                {
+                    Debug.Log("Runomundo");
+                    owner.Action(primaryTarget, owner.ActiveSkill);
+                    initiated = false;
+                }
+            }
         }
         public void Exit(GameSprite owner)
         {
-            Debug.Log("Exit");
             Targets = null;
             primaryTarget = null;
         }
@@ -107,20 +134,25 @@ namespace RedKite
                 }
             }
 
-            if (Targets.Count == 0)
+           if(message.Msg == Message.Die & Targets.Count == 1)
             {
-                owner.StateMachine.ChangeState(new IdleState());
+                if(message.Sender == Targets[0])
+                {
+                    owner.StateMachine.ChangeState(new IdleState());
+                }
+
                 return true;
             }
 
-           if(message.Msg == Message.Die & Targets.Count == 1 & message.Sender == Targets[0])
+            if (message.Msg == Message.Critical)
             {
-                owner.StateMachine.ChangeState(new IdleState());
+                primaryTarget = message.Sender;
                 return true;
             }
 
-           if(message.Msg == Message.Critical)
+           if(message.Msg == Message.UseSkill)
             {
+                initiated = true;
                 primaryTarget = message.Sender;
                 return true;
             }

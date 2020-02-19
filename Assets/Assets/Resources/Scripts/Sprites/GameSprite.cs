@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 
 namespace RedKite
-{ 
-     public class GameSprite : MonoBehaviour
+{
+    public class GameSprite : MonoBehaviour
     {
         public int ID { get; private set; } = 0;
         static List<int> activeIDs = new List<int>();
@@ -47,6 +47,9 @@ namespace RedKite
         public int Movement { get; private set; }
         public int Fatigue { get; private set; }
         public int PerceptionRange { get; private set; }
+        public Vector3 Destination { get; set; } = Vector3.zero;
+
+        public Skill ActiveSkill { get; private set; } = Skill.Alert;
         public static PathFinder pathFinder { get; private set; }
 
         protected System.Random rnd = new System.Random();
@@ -60,7 +63,7 @@ namespace RedKite
         public SpriteType spriteType;
         public string spriteName;
 
-        public int verticalFrames; 
+        public int verticalFrames;
         public int horizontalFrames;
 
         public int VerticalRow { get; set; }
@@ -97,7 +100,7 @@ namespace RedKite
         public int MaxAttackRange { get; private set; }
         public int MaxAssistRange { get; private set; }
 
-        public static bool IsUsingSkill;
+        public bool IsAlive { get; private set; } = true;
 
         public virtual void Start()
         {
@@ -220,7 +223,10 @@ namespace RedKite
             }
 
             if (Health <= 0)
+            {
+                IsAlive = false;
                 gameObject.SetActive(false);
+            }
         }
 
         public void ReStart(string textureName, Texture2D texture)
@@ -312,7 +318,7 @@ namespace RedKite
 
             Ready = false;
 
-            if(pathFinder == null)
+            if (pathFinder == null)
             {
                 pathFinder = new PathFinder();
                 pathFinder.GenerateGraph();
@@ -344,9 +350,9 @@ namespace RedKite
                 Stats.Charisma.DecrementBuffDuration();
         }
 
-        public void EndTurn()
+        public void EndTurn(int burden)
         {
-            Fatigue += Mathf.Max(35 - (Stats.Dexterity.Modifier / 2), 10);
+            Fatigue += Mathf.Max(Mathf.Max(35 - (Stats.Dexterity.Modifier / 2), 10) + burden, 0);
             Ready = false;
         }
 
@@ -361,37 +367,43 @@ namespace RedKite
 
         public void Action(GameSprite _unit, Skill _skill)
         {
-            if (_skill == Skill.Alert)
-                return;
-
             if (_skill is Weapon weapon)
                 if (Weapons.Contains(weapon) | Heals.Contains(weapon))
                     weapon.Use(this, _unit);
-                else if (_skill is Buff buff)
-                    if (Buffs.Contains(buff))
-                        buff.Use(this, _unit);
+                else
+                { }
+            else if (_skill is Buff buff)
+                if (Buffs.Contains(buff))
+                    buff.Use(this, _unit);
 
-            EndTurn();
+            EndTurn(_skill.Burden);
         }
 
-        public void ChangeHealth(int change, bool anti)
+        public int ChangeHealth(int change, bool anti)
         {
 
             if (change < 0)
             {
                 Debug.Log("Mistake");
-                return;
+                return 0;
             }
 
             if (anti)
+            {
                 Health = Mathf.Min(change + Health, MaxHealth);
+                return change;
+            }
             else
             {
                 int damage = jobClass != JobClass.Ranger | jobClass != JobClass.Fighter ?
                 change - Stats.Constitution.Modifier : change - Stats.Dexterity.Modifier;
 
                 Health = Mathf.Max(0, Health - damage);
+
+                return Mathf.Min(0,-damage);
             }
+
+            return change;
 
         }
 
@@ -463,6 +475,11 @@ namespace RedKite
             else
                 Stats.Wisdom.Buff(amount, _duration);
 
+        }
+
+        public void SetActiveSkill(Skill skill)
+        {
+            ActiveSkill = skill;
         }
 
         public int DefensiveRoll()

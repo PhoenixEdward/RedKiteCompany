@@ -40,7 +40,7 @@ namespace RedKite
             enemies = GameSpriteManager.Instance.Enemies;
             units = GameSpriteManager.Instance.Units;
 
-            if (units.All(x => !x.Ready) & units.All(x=> x.IsMoving == false))
+            if (units.All(x => !x.Ready) & units.All(x=> x.IsMoving == false) & !BattleFX.IsActive)
                 Run();
 
             IsEnemyTurn = enemies.Any(x => x.Ready);

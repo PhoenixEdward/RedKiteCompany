@@ -80,15 +80,19 @@ namespace RedKite
 
         public void UseSkill(Weapon weapon)
         {
+            Debug.Log("The Fuck????");
+
             unit.Embark(selectedTile);
-            unit.Action(actionableSprites[lockOnIndex], weapon);
+            unit.SetActiveSkill(weapon);
+            Telegraph.Instance.DispatchMessage(new Telegram(new Telegram.BeatSignature(BattleClock.Instance.CurrentBeat, unit.Stats.Dexterity.Modifier, 0), actionableSprites[lockOnIndex], unit, Message.UseSkill));
             menu.Deactivate();
         }
 
         public void UseSkill(Buff buff)
         {
             unit.Embark(selectedTile);
-            unit.Action(actionableSprites[lockOnIndex], buff);
+            unit.SetActiveSkill(buff);
+            Telegraph.Instance.DispatchMessage(new Telegram(new Telegram.BeatSignature(BattleClock.Instance.CurrentBeat, unit.Stats.Dexterity.Modifier, 0), actionableSprites[lockOnIndex], unit, Message.UseSkill));
             menu.Deactivate();
         }
 

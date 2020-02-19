@@ -48,7 +48,9 @@ namespace RedKite
             Debug.Log("Damage: " + grossBonus);
             Debug.Log("Stat Bonus: " + statBonus);
             Debug.Log("Enemy Health: " + receiver.Health);
-            receiver.ChangeHealth(grossBonus, Anti);
+            int change = receiver.ChangeHealth(grossBonus, Anti);
+
+            UseFX(this, change, receiver);
 
             base.Use(giver, receiver);
         }

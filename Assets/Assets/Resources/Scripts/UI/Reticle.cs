@@ -82,13 +82,14 @@ namespace RedKite
                     TileTracker();
 
                 UnitData();
-                //if(!BattleClock.Instance.IsEnemyTurn)
-                //{ 
+                if(!BattleClock.Instance.IsEnemyTurn)
+                { 
                     if (selectedHero != null)
                     {
                         if (!selectedHero.Ready)
                         {
                             selectedHero = null;
+                            battleGrid.DeactivateUnitRange();
                             return;
                         }
 
@@ -125,7 +126,7 @@ namespace RedKite
                     }
                     //this needs to be reworked. The above should be a function. A later problem.
                 }
-           //}
+            }
         }
 
         public void UnitData()

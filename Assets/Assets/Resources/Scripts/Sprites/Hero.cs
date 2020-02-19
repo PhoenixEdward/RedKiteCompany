@@ -35,6 +35,8 @@ namespace RedKite
                 }
             }
 
+            Destination = Coordinate;
+
             mirrorRender.material.SetColor("_Color", Color.blue);
 
             IsVisible = true;

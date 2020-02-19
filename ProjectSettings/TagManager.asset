@@ -58,6 +58,9 @@ TagManager:
   - name: FOW
     uniqueID: 2124626219
     locked: 0
+  - name: BattleFX
+    uniqueID: 2491472969
+    locked: 0
   - name: UI
     uniqueID: 2337280619
     locked: 0

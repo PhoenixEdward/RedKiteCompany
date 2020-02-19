@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using Newtonsoft.Json;
+using UnityEngine;
 
 namespace RedKite
 {
@@ -30,7 +31,7 @@ namespace RedKite
         public int Burden;
 
         public static Skill Wait = new Skill("Wait", 1000, false, 0, 0, Form.None, Form.None, 0, 0);
-        public static Skill Alert = new Skill("Alert", 1000, false, 0, 0, Form.None, Form.None, 0, 0);
+        public static Skill Alert = new Skill("Alert", 1000, false, 0, 0, Form.None, Form.None, 0, -1000);
 
         public Skill() { }
 
@@ -45,13 +46,25 @@ namespace RedKite
             Range = _range;
             Burden = _burden;
             //maybe make this a static variable?
-            rnd = new Random();
+            rnd = new System.Random();
         }
 
         public override void Use(GameSprite giver, GameSprite receiver)
         {
-            GameSprite.IsUsingSkill = true;
             Uses--;
+        }
+
+        protected void UseFX(Skill skill, int text, GameSprite primaryTarget)
+        {
+            GameObject go = new GameObject();
+            BattleFX fx = go.AddComponent<BattleFX>();
+
+            if (skill.Type.Major == Skill.Form.Clever | skill.Type.Major == Skill.Form.Wise)
+                fx.Activate(BattleFX.Type.Magic, text, primaryTarget.Coordinate);
+            else if (skill.Type.Major == Skill.Form.Finesse)
+                fx.Activate(BattleFX.Type.Ranged, text, primaryTarget.Coordinate);
+            else
+                fx.Activate(BattleFX.Type.Melee, text, primaryTarget.Coordinate);
         }
 
         [Serializable]

@@ -105,6 +105,7 @@ namespace RedKite
             else
             {
                 Coordinate = new Vector3Int((int)spawnPoint.x, (int)spawnPoint.y, -1);
+                Destination = Coordinate;
             }
         }
         public override void Embark(Vector3 destination, bool nextTo = false, bool isAttack = true)

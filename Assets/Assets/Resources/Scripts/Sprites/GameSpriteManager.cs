@@ -130,15 +130,18 @@ namespace RedKite
 
             foreach (GameSprite sprite in Sprites)
             {
-                if (sprite is Hero)
-                    Heroes.Add((Hero)sprite);
-                else if (sprite is Enemy)
-                    Enemies.Add((Enemy)sprite);
-                else if (sprite is Prop)
-                    Props.Add((Prop)sprite);
+                if(sprite.IsAlive)
+                { 
+                    if (sprite is Hero)
+                        Heroes.Add((Hero)sprite);
+                    else if (sprite is Enemy)
+                        Enemies.Add((Enemy)sprite);
+                    else if (sprite is Prop)
+                        Props.Add((Prop)sprite);
 
-                if (sprite is Unit)
-                    Units.Add((Unit)sprite);
+                    if (sprite is Unit)
+                        Units.Add((Unit)sprite);
+                }
             }
         }
 
