@@ -37,26 +37,23 @@ namespace RedKite
                 if(attacker.Ready)
                 {
                     Debug.Log("Attack Flow");
-                    if (primaryTarget == null)
+                    if (primaryTarget == null & Targets.Count > 0)
                     {
                         primaryTarget = Targets.OrderBy(x => x.Health + x.Stats.Constitution.Modifier).ToList()[0];
                         Debug.Log("Finding Target");
                     }
                     //this will need to be adjusted for ranged. Will need to find a way of cacheing distance and DPB.
-                    else if (Utility.ManhattanDistance(primaryTarget.Coordinate, attacker.Coordinate) > 1 & owner.IsMoving == false)
+                    if (Utility.ManhattanDistance(primaryTarget.Coordinate, attacker.Coordinate) > 1)
                     {
-                        Debug.Log("Attempted Move");
 
                         attacker.Embark(primaryTarget.Coordinate, true, true);
 
                         Debug.Log(primaryTarget.Coordinate);
 
-                        hasTakenTurn = true;
                     }
                     //need to add skil cycling here
-                    else if(Utility.ManhattanDistance(primaryTarget.Coordinate, attacker.Coordinate) <= 1 & owner.IsMoving == false)
+                    else if(Utility.ManhattanDistance(primaryTarget.Coordinate, attacker.Coordinate) <= attacker.MaxAttackRange & !GameSprite.IsUsingSkill)
                     {
-                        Debug.Log("Attempted Attack");
                         if(attacker.Weapons.Count > 0)
                             if (attacker.Weapons[0].Anti == false & attacker.Weapons[0].Uses > 0)
                                 attacker.Action(primaryTarget, attacker.Weapons[0]);
@@ -70,7 +67,7 @@ namespace RedKite
                         else
                             Debug.Log("No Skills");
                     }
-                    else if(!owner.IsMoving & hasTakenTurn)
+                    else if(!owner.IsMoving & Utility.ManhattanDistance(primaryTarget.Coordinate, attacker.Coordinate) > attacker.MaxAttackRange)
                     {
                         hasTakenTurn = false;
                         //needs to be adjusted to include rest. Need to see if starting position is same as ending. Won't happen
@@ -105,7 +102,6 @@ namespace RedKite
                     else
                     {
                         int n = Targets.FindIndex(x => x == message.Sender);
-                        Debug.Log(n);
                         TargetPings[n] = true;
                     }
                 }

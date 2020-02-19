@@ -38,22 +38,20 @@ namespace RedKite
 
             Vector3Int cell;
 
-            Debug.Log("GenerateBoxRangeStart: " + _startingSpot);
-
             for (int i = 0; i < distance; i++)
             {
                 for (int j = 0; j < distance; j++)
                 {
-                    cell = new Vector3Int((int)startingSpot.x + i, (int)startingSpot.y + j, -1);
+                    cell = new Vector3Int((int)startingSpot.x + j, (int)startingSpot.y + i, -1);
 
                     if (cell.x >= 0 & cell.x < TileMapper.Instance.W & cell.y >= 0 & cell.y < TileMapper.Instance.H)
                     {
-                        Debug.Log("GenerateBoxRange: " + cell);
-
                         range.Add(PathFinder.graph[cell.x, cell.y]);
                     }
                 }
             }
+
+            Debug.Log("Man Dist: " + Utility.ManhattanDistance(_startingSpot, range[0].cell));
 
             return range.ToArray();
         }

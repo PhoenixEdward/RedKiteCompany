@@ -50,7 +50,7 @@ namespace RedKite
 
         public override void Use(GameSprite giver, GameSprite receiver)
         {
-            giver.Ready = false;
+            GameSprite.IsUsingSkill = true;
             Uses--;
         }
 

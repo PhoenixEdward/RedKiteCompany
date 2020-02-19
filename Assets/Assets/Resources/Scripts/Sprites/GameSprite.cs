@@ -97,7 +97,7 @@ namespace RedKite
         public int MaxAttackRange { get; private set; }
         public int MaxAssistRange { get; private set; }
 
-
+        public static bool IsUsingSkill;
 
         public virtual void Start()
         {
@@ -218,8 +218,6 @@ namespace RedKite
                     HorizontalRow = 0;
                 }
             }
-
-            StateMachine.Upate();
 
             if (Health <= 0)
                 gameObject.SetActive(false);

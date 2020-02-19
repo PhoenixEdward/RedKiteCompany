@@ -11,7 +11,7 @@ namespace RedKite
         //Should destination be here?
         protected static Grid grid;
 
-        protected List<Node> currentPath = null;
+        public List<Node> currentPath = null;
 
         readonly int speed = 2;
 
@@ -23,7 +23,6 @@ namespace RedKite
         protected readonly float charSecondsPerFrame = .125f;
         protected int Frame;
         protected Vector3 velocity = Vector3.zero;
-        public Vector3Int nextCell;
         public GameObject mirror;
         
         public SpriteRenderer mirrorRender;
@@ -35,6 +34,8 @@ namespace RedKite
         public override void Start()
         {
             base.Start();
+
+            Destination = Coordinate;
 
             //possibly shortcut in TileMapper code
             grid = FindObjectOfType<Grid>();
@@ -56,6 +57,8 @@ namespace RedKite
 
         public override void Update()
         {
+            StateMachine.Upate();
+
             if (currentPath != null)
             {
                 Move();
@@ -66,148 +69,19 @@ namespace RedKite
                 timeSinceLastFrame = 0;
                 if (IsMoving)
                 {
-                    if(CameraMovement.facing == CameraMovement.Facing.NE)
-                    { 
-                        if (velocity.x > 0)
-                        {
-                            if (verticalFrames > 1)
-                                VerticalRow = 1;
-                        }
-                        else if (velocity.x < 0)
-                        {
-                            if (verticalFrames > 2)
-                                VerticalRow = 3;
-                        }
-
-                        else if (velocity.z > 0)
-                        {
-                            if (verticalFrames > 3)
-                                VerticalRow = 2;
-                        }
-                        else if (velocity.z < 0)
-                        {
-                            VerticalRow = 0;
-                        }
-                    }
-                    else if (CameraMovement.facing == CameraMovement.Facing.SE)
-                    {
-                        if (velocity.z < 0)
-                        {
-                            if (verticalFrames > 1)
-                                VerticalRow = 1;
-                        }
-                        else if (velocity.z > 0)
-                        {
-                            if (verticalFrames > 2)
-                                VerticalRow = 3;
-                        }
-
-                        else if (velocity.x > 0)
-                        {
-                            if (verticalFrames > 3)
-                                VerticalRow = 2;
-                        }
-                        else if (velocity.x < 0)
-                        {
-                            VerticalRow = 0;
-                        }
-                    }
-                    else if (CameraMovement.facing == CameraMovement.Facing.SW)
-                    {
-                        if (velocity.z < 0)
-                        {
-                            if (verticalFrames > 1)
-                                VerticalRow = 2;
-                        }
-                        else if (velocity.z > 0)
-                        {
-                            if (verticalFrames > 2)
-                                VerticalRow = 0;
-                        }
-
-                        else if (velocity.x < 0)
-                        {
-                            if (verticalFrames > 3)
-                                VerticalRow = 1;
-                        }
-                        else if (velocity.x > 0)
-                        {
-                            VerticalRow = 3;
-                        }
-                    }
-                    else
-                    {
-                        if (velocity.x < 0)
-                        {
-                            if (verticalFrames > 1)
-                                VerticalRow = 2;
-                        }
-                        else if (velocity.x > 0)
-                        {
-                            if (verticalFrames > 2)
-                                VerticalRow = 0;
-                        }
-
-                        else if (velocity.z > 0)
-                        {
-                            if (verticalFrames > 3)
-                                VerticalRow = 1;
-                        }
-                        else if (velocity.z < 0)
-                        {
-                            VerticalRow = 3;
-                        }
-                    }
-                }
-
-                // move to stationary row if not moving. Could probably remove that row  and simply lock them to the first horizontal pane of the correct row.
-
-                else
-                {
-                    if (VerticalRow == 1 & 2 <= horizontalFrames)
-                        HorizontalRow = 2;
-                    else if (VerticalRow == 2 & 1 <= horizontalFrames)
-                        HorizontalRow = 1;
-                    else if (VerticalRow == 3 & 0 <= horizontalFrames)
-                        HorizontalRow = 0;
-                    else if (VerticalRow == 0 & 4 <= horizontalFrames)
-                        HorizontalRow = 3;
-
-                }
-
-                //could move this code under "is moving" and it would probably eliminate the need of the code above.
-                if(IsMoving)
-                { 
-                    if (HorizontalRow < horizontalFrames - 1)
-                        HorizontalRow += 1;
-                    else
-                        HorizontalRow = 0;
-                }
-
-                if (IsAnimated && Frame < 3)
-                {
-                    HorizontalRow += 1;
-                    Frame++;
-                }
-                else
-                {
-                    Frame = 0;
-                    IsAnimated = false;
-                }
-                if (IsReverseAnimated && Frame < 3)
-                    HorizontalRow -= 1;
-                else
-                {
-                    Frame = 0;
-                    IsReverseAnimated = false;
+                    WalkingAnimation();
                 }
             }
+            // move to stationary row if not moving. This is currently being overwritten by the gamesprite update.
+
 
             if (currentPath == null)
             {
                 velocity = Vector3.zero;
                 IsMoving = false;
             }
+
+            //correct if attempting to pass into an unavailable row.
 
             if (VerticalRow > verticalFrames | HorizontalRow > horizontalFrames)
             {
@@ -226,11 +100,109 @@ namespace RedKite
 
         }
 
+        public void WalkingAnimation()
+        {
+            if (CameraMovement.facing == CameraMovement.Facing.NE)
+            {
+                if (velocity.x > 0)
+                {
+                    if (verticalFrames > 1)
+                        VerticalRow = 1;
+                }
+                else if (velocity.x < 0)
+                {
+                    if (verticalFrames > 2)
+                        VerticalRow = 3;
+                }
+
+                else if (velocity.z > 0)
+                {
+                    if (verticalFrames > 3)
+                        VerticalRow = 2;
+                }
+                else if (velocity.z < 0)
+                {
+                    VerticalRow = 0;
+                }
+            }
+            else if (CameraMovement.facing == CameraMovement.Facing.SE)
+            {
+                if (velocity.z < 0)
+                {
+                    if (verticalFrames > 1)
+                        VerticalRow = 1;
+                }
+                else if (velocity.z > 0)
+                {
+                    if (verticalFrames > 2)
+                        VerticalRow = 3;
+                }
+
+                else if (velocity.x > 0)
+                {
+                    if (verticalFrames > 3)
+                        VerticalRow = 2;
+                }
+                else if (velocity.x < 0)
+                {
+                    VerticalRow = 0;
+                }
+            }
+            else if (CameraMovement.facing == CameraMovement.Facing.SW)
+            {
+                if (velocity.z < 0)
+                {
+                    if (verticalFrames > 1)
+                        VerticalRow = 2;
+                }
+                else if (velocity.z > 0)
+                {
+                    if (verticalFrames > 2)
+                        VerticalRow = 0;
+                }
+
+                else if (velocity.x < 0)
+                {
+                    if (verticalFrames > 3)
+                        VerticalRow = 1;
+                }
+                else if (velocity.x > 0)
+                {
+                    VerticalRow = 3;
+                }
+            }
+            else
+            {
+                if (velocity.x < 0)
+                {
+                    if (verticalFrames > 1)
+                        VerticalRow = 2;
+                }
+                else if (velocity.x > 0)
+                {
+                    if (verticalFrames > 2)
+                        VerticalRow = 0;
+                }
+
+                else if (velocity.z > 0)
+                {
+                    if (verticalFrames > 3)
+                        VerticalRow = 1;
+                }
+                else if (velocity.z < 0)
+                {
+                    VerticalRow = 3;
+                }
+            }
+
+            if (HorizontalRow < horizontalFrames - 1)
+                HorizontalRow += 1;
+            else
+                HorizontalRow = 0;
+        }
         public void Move()
         {
             Vector3 currentPos = Coordinate + distanceFromCoord;
-
-            nextCell = currentPath[0].cell;
 
             if (currentPos != currentPath[0].cell)
             {
@@ -291,27 +263,28 @@ namespace RedKite
 
             if (currentPath.Count > 1)
             {
-                if (!pathFinder.IsReachable(currentPath[0], currentPath[1], Utility.GenerateBoxRange(Coordinate, 1), 1))
-                    currentPath = pathFinder.AIGeneratePathTo(Coordinate, currentPath[currentPath.Count - 1].cell, Movement, MaxAttackRange);
-
                 currentPath.RemoveAt(0);
-
             }
 
 
             if (currentPath.Count == 1)
             {
+
                 currentPath = null;
             }
 
         }
 
         public virtual void Embark(Vector3 destination, bool nextTo = false, bool isAttack = true)
-        { 
+        {
+            Destination = destination;
+
+
             if(nextTo)
                 currentPath = pathFinder.GeneratePathTo(Coordinate, destination, Movement, true);
             else
                 currentPath = pathFinder.GeneratePathTo(Coordinate, destination, Movement);
+
             IsMoving = true;
         }
 

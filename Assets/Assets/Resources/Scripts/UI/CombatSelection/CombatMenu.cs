@@ -95,7 +95,7 @@ namespace RedKite
                 {
                     if (Utility.ManhattanDistance(new Vector3Int(selectedTile.x, selectedTile.y, -1), new Vector3Int(enemy.Coordinate.x, enemy.Coordinate.y, -1)) <= unit.MaxAttackRange)
                     {
-                        bool result = pathFinder.IsReachable(PathFinder.graph[selectedTile.x, selectedTile.y], PathFinder.graph[enemy.Coordinate.x, enemy.Coordinate.y], attackNodes, unit.MaxAttackRange);
+                        bool result = pathFinder.IsReachable(PathFinder.graph[selectedTile.x, selectedTile.y], PathFinder.graph[enemy.Coordinate.x, enemy.Coordinate.y], attackNodes, unit.MaxAttackRange, false);
 
                         if (result)
                             attackables.Add(enemy);
@@ -108,7 +108,7 @@ namespace RedKite
                         bool result = false;
 
                         if(!hero.Equals(unit))
-                            result = pathFinder.IsReachable(PathFinder.graph[selectedTile.x, selectedTile.y], PathFinder.graph[hero.Coordinate.x, hero.Coordinate.y], assistNodes, unit.MaxAssistRange);
+                            result = pathFinder.IsReachable(PathFinder.graph[selectedTile.x, selectedTile.y], PathFinder.graph[hero.Coordinate.x, hero.Coordinate.y], assistNodes, unit.MaxAssistRange, false);
 
                         if (result | hero.Equals(unit))
                             assistables.Add(hero);

@@ -25,7 +25,8 @@ namespace RedKite
             new Cell(Cell.Type.Empty),
             new Cell(Cell.Type.Floor),
             new Cell(Cell.Type.Wall),
-            new Cell(Cell.Type.OccupiedEnemy)
+            new Cell(Cell.Type.OccupiedEnemy),
+            new Cell(Cell.Type.OccupiedAlly)
         };
 
         public int H;
@@ -60,7 +61,8 @@ namespace RedKite
 
         public int index = 0;
 
-        List<Unit> units;
+        List<Enemy> enemies;
+        List<Hero> heroes;
 
         public void Update()
         {
@@ -69,21 +71,32 @@ namespace RedKite
 
         void TrackSprites()
         {
-            units = GameSpriteManager.Instance.Units;
+            enemies = GameSpriteManager.Instance.Enemies;
+            heroes = GameSpriteManager.Instance.Heroes;
 
-            List<Vector2> occupiedTiles = new List<Vector2>();
+            List<Vector2> occupiedTilesEnemy = new List<Vector2>();
+            List<Vector2> occupiedTilesHeroes = new List<Vector2>();
 
-            foreach (Unit unit in units)
-                occupiedTiles.Add(new Vector2(unit.Coordinate.x, unit.Coordinate.y));
+            foreach (Unit unit in enemies)
+                occupiedTilesEnemy.Add(new Vector2(unit.Destination.x, unit.Destination.y));
 
-            for(int y = 0; y < Tiles.GetLength(1); y++)
+            foreach (Unit unit in heroes)
+                occupiedTilesHeroes.Add(new Vector2(unit.Destination.x, unit.Destination.y));
+
+
+            for (int y = 0; y < Tiles.GetLength(1); y++)
             { 
                 for(int x = 0; x < Tiles.GetLength(0); x++)
                 {
-                    if (Tiles[x, y].TileType == Cell.Type.OccupiedEnemy & !occupiedTiles.Contains(new Vector2(x, y)))
+                        if (Tiles[x, y].TileType == Cell.Type.OccupiedEnemy & !occupiedTilesEnemy.Contains(new Vector2(x, y)))
+                            Tiles[x, y] = tileTypes[1];
+                        else if (occupiedTilesEnemy.Contains(new Vector2(x, y)))
+                            Tiles[x, y] = tileTypes[3];
+
+                    if (Tiles[x, y].TileType == Cell.Type.OccupiedAlly & !occupiedTilesHeroes.Contains(new Vector2(x, y)))
                         Tiles[x, y] = tileTypes[1];
-                    else if (occupiedTiles.Contains(new Vector2(x, y)))
-                        Tiles[x, y] = tileTypes[3];
+                    else if (occupiedTilesHeroes.Contains(new Vector2(x, y)))
+                        Tiles[x, y] = tileTypes[4];
                 }
             }
         }

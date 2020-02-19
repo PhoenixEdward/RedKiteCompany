@@ -107,16 +107,20 @@ namespace RedKite
                 Coordinate = new Vector3Int((int)spawnPoint.x, (int)spawnPoint.y, -1);
             }
         }
-
         public override void Embark(Vector3 destination, bool nextTo = false, bool isAttack = true)
         {
             //want add something where enemies can loot maybe?
             if (isAttack)
-                currentPath = pathFinder.GeneratePathTo(Coordinate, Destination, Movement);
+                currentPath = pathFinder.AIGeneratePathTo(Coordinate, destination, Movement, MaxAttackRange);
             else
-                currentPath = pathFinder.AIGeneratePathTo(Coordinate, Destination, Movement, MaxAssistRange);
-        }
+                currentPath = pathFinder.AIGeneratePathTo(Coordinate, destination, Movement, MaxAssistRange);
 
+            Destination = currentPath[currentPath.Count - 1].cell;
+
+            TileMapper.Instance.Update();
+
+            IsMoving = true;
+        }
         // Update is called once per frame
         public override void Update()
         {
