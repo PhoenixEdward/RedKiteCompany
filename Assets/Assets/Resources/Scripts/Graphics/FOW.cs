@@ -25,6 +25,8 @@ namespace RedKite
 
         public Shader fogShader;
         public Texture2D fogTexture;
+        public Sprite moveSprite;
+        public static Sprite fogSprite;
 
         List<Hero> heroes;
         List<Enemy> enemies;
@@ -49,10 +51,11 @@ namespace RedKite
         void Start()
         {
             cam = GameObject.FindGameObjectWithTag("FogCam").GetComponent<Camera>();
-            cam.SetReplacementShader(spriteColorShader, "RenderType");
+            //cam.SetReplacementShader(spriteColorShader, "RenderType");
             cam.targetTexture = new RenderTexture(Screen.width, Screen.height, 1);
 
             fogTexture = Level.Instance.fogTexture;
+            fogSprite = moveSprite;
             partMaterial.SetFloat("_TexDimensions", .75f);
 
             wallTarget = FindObjectOfType<WallRender>().wallRender;
@@ -235,7 +238,7 @@ namespace RedKite
 
             static Material partMaterial;
 
-            MeshRenderer[] meshRenderers;
+            SpriteRenderer[] meshRenderers;
 
             Vector3 coordinate;
             Vector3[] offsets;
@@ -262,7 +265,7 @@ namespace RedKite
                 puffs = new GameObject[puffCount];
                 offsets = new Vector3[puffCount];
                 currentDissipation = new float[puffCount];
-                meshRenderers = new MeshRenderer[puffCount];
+                meshRenderers = new SpriteRenderer[puffCount];
                 puffSize = new float[puffCount];
                 meshAlpha = new Color[puffCount];
                 coordinate = new Vector3(_coordinate.x, 1.5f, _coordinate.z);
@@ -290,19 +293,19 @@ namespace RedKite
 
                 for (int i = 0; i < puffCount; i++)
                 { 
-                    puffs[i] = GameObject.CreatePrimitive(PrimitiveType.Quad);
+                    puffs[i] = new GameObject();
                     puffs[i].transform.SetParent(parent);
 
                     puffSize[i] = _puffSizeRange.x + (float)rnd.NextDouble() * (_puffSizeRange.y - _puffSizeRange.x);
-                    puffs[i].transform.localScale = new Vector3(puffSize[i], puffSize[i], 1);
+                    puffs[i].transform.localScale = Vector3.one;
                     //give position random offset. subtract half from intial point so range for tile becomes somewhere between what the tile coords would be face down
                     puffs[i].transform.position = coordinate + offsets[i];
 
-                    meshRenderers[i] = puffs[i].GetComponent<MeshRenderer>();
+                    meshRenderers[i] = puffs[i].AddComponent<SpriteRenderer>();
+                    meshRenderers[i].sprite = fogSprite;
+                    meshRenderers[i].sortingLayerName = "Units";
 
                     meshRenderers[i].material = partMaterial;
-
-                    puffs[i].layer = 10;
                 }
             }
 

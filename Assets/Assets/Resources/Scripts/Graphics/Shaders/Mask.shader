@@ -81,10 +81,12 @@
 					_Covered = 1;
 					return float4(0,0,0,0);
 				}
+				/*
 				else if (fogCol.a != 0)
 				{
 					return col * (_FogColor * float4(.6f, .6f, .6f, 1));
 				}
+				*/
 				else
 				{
 					return col;

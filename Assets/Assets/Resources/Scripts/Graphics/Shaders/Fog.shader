@@ -11,10 +11,12 @@
     }
     SubShader
     {
-        Tags { "RenderType"="Transparent" 
-				
-			"Queue"="Transparent"
-			}
+        Tags { 
+			"Queue" = "Transparent"
+			"IgnoreProjector" = "True"
+			"RenderType" = "Transparent"
+			"PreviewType" = "Plane"
+			"CanUseSpriteAtlas" = "True"			}
         LOD 100
 
 			Cull Off
@@ -95,9 +97,9 @@
 						// sample the texture
 						fixed4 col = tex2D(_MainTex2, newUV);
 
-						float alphaReduction = _DissipateAlpha <= 0.65f ? _DissipateAlpha : 0.65f;
+						float alphaReduction = _DissipateAlpha <= 0.45f ? _DissipateAlpha : 0.45f;
 						// apply fog
-						return float4(col.r, col.g, col.b, primCol.a * (.65f - alphaReduction)) * _Color;
+						return float4(col.r, col.g, col.b, primCol.a * (.45f - alphaReduction)) * _Color;
 					}
 					else
 					{

@@ -72,23 +72,36 @@ namespace RedKite
 
 
             GameObject hero1 = new GameObject();
-            hero1.name = "SwordGal";
+            hero1.name = "RangedGuy";
             hero1.layer = 8;
             Hero unit1 = hero1.AddComponent<Hero>();
-            unit1.spriteName = "SwordGal";
+            unit1.spriteName = "Ranged";
             unit1.Instantiate("Gongagoo", JobClass.Ranger, 5);
             unit1.Spawn();
             unit1.LearnSkill("Training Short Bow");
+            unit1.LearnSkill("Disarm");
             heroes.Add(hero1);
 
             GameObject hero2 = new GameObject();
-            hero2.name = "MageGuy";
+            hero2.name = "MeleeGuy";
             hero2.layer = 8;
             Hero unit2 = hero2.AddComponent<Hero>();
-            unit2.spriteName = "Mage";
-            unit2.Instantiate("Cestra", JobClass.Cleric, 5);
+            unit2.spriteName = "Melee";
+            unit2.Instantiate("Cestra", JobClass.Fighter, 5);
             unit2.Spawn();
-            unit2.LearnSkill("Cure");
+            unit2.LearnSkill("Training Gauntlets");
+            unit2.LearnSkill("Training Axe");
+            heroes.Add(hero2);
+
+            GameObject hero3 = new GameObject();
+            hero3.name = "CasterGal";
+            hero3.layer = 8;
+            Hero unit3 = hero3.AddComponent<Hero>();
+            unit3.spriteName = "Caster";
+            unit3.Instantiate("Eerilai", JobClass.Cleric, 5);
+            unit3.Spawn();
+            unit3.LearnSkill("Cure");
+            unit3.LearnSkill("Training Axe");
             heroes.Add(hero2);
 
             SpawnEnemies(4);
@@ -204,10 +217,10 @@ namespace RedKite
             for(int i = 0; i < enemyCount; i++)
             {
                 GameObject enemy = new GameObject();
-                enemy.name = "Bandito " + i;
+                enemy.name = "Goblin " + i;
                 enemy.layer = 8;
                 Enemy unit = enemy.AddComponent<Enemy>();
-                unit.spriteName = "MageGuy";
+                unit.spriteName = "Monster";
                 unit.Instantiate("Bandit " + i, JobClass.Bandit, 5);
                 unit.Spawn();
                 unit.LearnSkill("Training Axe");

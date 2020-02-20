@@ -129,7 +129,7 @@ namespace RedKite
 
             }
 
-            FrameDimensions = FrameDimensions == Vector2.zero ? new Vector2Int(150, 150) : FrameDimensions;
+            FrameDimensions = FrameDimensions == Vector2.zero ? new Vector2Int(200, 200) : FrameDimensions;
 
             verticalFrames = spriteLoad.height / FrameDimensions.y;
             horizontalFrames = spriteLoad.width / FrameDimensions.x;
@@ -402,8 +402,6 @@ namespace RedKite
 
                 return Mathf.Min(0,-damage);
             }
-
-            return change;
 
         }
 

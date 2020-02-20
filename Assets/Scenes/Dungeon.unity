@@ -6949,6 +6949,7 @@ MonoBehaviour:
   spriteColorShader: {fileID: 4800000, guid: 05142a26c35a5b046bc3c6804afb7853, type: 3}
   fogShader: {fileID: 4800000, guid: 4fe7f395a4ae634458f814dec1e6c4db, type: 3}
   fogTexture: {fileID: 0}
+  moveSprite: {fileID: 21300000, guid: 9de142d2a40fc3a45b1dcb05203a7bb8, type: 3}
   partMaterial: {fileID: 2100000, guid: b0869c75a099d8a45a8cf7826a7ecf83, type: 2}
   fogColor: {r: 0, g: 0, b: 0, a: 0}
   wallTarget: {fileID: 0}
