@@ -448,6 +448,8 @@ namespace RedKite
 
         public Vector2[] FindUVs(Mesh mesh, int side, bool isMirrored)
         {
+            float pixOffsetH = .0025f;
+            float pixOffsetV = .0025f;
 
             Vector2[] uvs = new Vector2[mesh.vertexCount];
 
@@ -517,13 +519,13 @@ namespace RedKite
                         rotH = 1;
 
                     //bottom right
-                    uvs[index + rotOffset[rotV][0][rotH]] = new Vector2(0.65f, 0);
+                    uvs[index + rotOffset[rotV][0][rotH]] = new Vector2(3/4f - pixOffsetH, 0 + pixOffsetV);
                     //bottom left
-                    uvs[index + 1 + rotOffset[rotV][1][rotH]] = new Vector2(0.33f, 0);
+                    uvs[index + 1 + rotOffset[rotV][1][rotH]] = new Vector2(2/4f + pixOffsetH, 0 + pixOffsetV);
                     //top right
-                    uvs[index + 2 + rotOffset[rotV][2][rotH]] = new Vector2(0.66f, 0.24f);
+                    uvs[index + 2 + rotOffset[rotV][2][rotH]] = new Vector2(3/4f - pixOffsetH, 1/4f - pixOffsetV);
                     //top left
-                    uvs[index + 3 + rotOffset[rotV][3][rotH]] = new Vector2(0.33f, 0.25f);
+                    uvs[index + 3 + rotOffset[rotV][3][rotH]] = new Vector2(2/4f + pixOffsetH, 1/4f - pixOffsetV);
 
                     index += 4;
 
@@ -546,13 +548,13 @@ namespace RedKite
                         rotH = 1;
 
                     //top right
-                    uvs[index + rotOffset[rotV][0][rotH]] = new Vector3(0.65f,0.74f);
+                    uvs[index + rotOffset[rotV][0][rotH]] = new Vector3(3/4f - pixOffsetH, 3/4f - pixOffsetV);
                     // top left
-                    uvs[index + 1 + rotOffset[rotV][1][rotH]] = new Vector3(0.33f, 0.74f);
+                    uvs[index + 1 + rotOffset[rotV][1][rotH]] = new Vector3(2/4f + pixOffsetH, 3/4f - pixOffsetV);
                     // bottom right;
-                    uvs[index + 2 + rotOffset[rotV][2][rotH]] = new Vector2(0.65f, 0.50f);
+                    uvs[index + 2 + rotOffset[rotV][2][rotH]] = new Vector2(3/4f - pixOffsetH, 2/4f + pixOffsetV);
                     //bottom left
-                    uvs[index + 3 + rotOffset[rotV][3][rotH]] = new Vector2(0.33f, 0.50f);
+                    uvs[index + 3 + rotOffset[rotV][3][rotH]] = new Vector2(2/4f + pixOffsetH, 2/4f + pixOffsetV);
 
                         index += 4;
 
@@ -574,13 +576,13 @@ namespace RedKite
                         rotH = 1;
 
                     //top right
-                    uvs[index + rotOffset[rotV][0][rotH]] = new Vector3(0.64f, 1);
+                    uvs[index + rotOffset[rotV][0][rotH]] = new Vector3(3/4f - pixOffsetH, 1 - pixOffsetV);
                     //top left
-                    uvs[index + 1 + rotOffset[rotV][1][rotH]] = new Vector3(0.33f, 1f);
+                    uvs[index + 1 + rotOffset[rotV][1][rotH]] = new Vector3(2/4f + pixOffsetH, 1f - pixOffsetV);
                     //bottom right
-                    uvs[index + 2 + rotOffset[rotV][2][rotH]] = new Vector3(0.64f, 0.75f);
+                    uvs[index + 2 + rotOffset[rotV][2][rotH]] = new Vector3(3/4f - pixOffsetH, 3/4f + pixOffsetV);
                     //bottom left
-                    uvs[index + 3 + rotOffset[rotV][3][rotH]] = new Vector3(0.33f, 0.75f);
+                    uvs[index + 3 + rotOffset[rotV][3][rotH]] = new Vector3(2/ 4f + pixOffsetH, 3/4f + pixOffsetV);
 
                     index += 4;
 
@@ -604,13 +606,13 @@ namespace RedKite
                         rotH = 1;
 
                     //bottom right
-                    uvs[index + rotOffset[rotV][0][rotH]] = new Vector3(0.64f, 0.25f);
+                    uvs[index + rotOffset[rotV][0][rotH]] = new Vector3(3/4f - pixOffsetH, 1/4f + pixOffsetV);
                     //top right
-                    uvs[index + 1 + rotOffset[rotV][1][rotH]] = new Vector3(0.64f, 0.49f);
+                    uvs[index + 1 + rotOffset[rotV][1][rotH]] = new Vector3(3/4f - pixOffsetH, 2/4f - pixOffsetV);
                     //top left
-                    uvs[index + 2 + rotOffset[rotV][2][rotH]] = new Vector3(0.33f, 0.49f);
+                    uvs[index + 2 + rotOffset[rotV][2][rotH]] = new Vector3(2/4f + pixOffsetH, 2/4f - pixOffsetV);
                     //bottom left
-                    uvs[index + 3 + rotOffset[rotV][3][rotH]] = new Vector3(0.33f, 0.25f);
+                    uvs[index + 3 + rotOffset[rotV][3][rotH]] = new Vector3(2/4f + pixOffsetH, 1/ 4f + pixOffsetV);
 
                     index += 4;
 
@@ -633,13 +635,13 @@ namespace RedKite
                         rotH = 1;
 
                     //bottom left
-                    uvs[index + rotOffset[rotV][0][rotH]] = new Vector3(0, 0.5f);
+                    uvs[index + rotOffset[rotV][0][rotH]] = new Vector3(1/4f + pixOffsetH, 2/4f + pixOffsetV);
                     //top left
-                    uvs[index + 1 + rotOffset[rotV][1][rotH]] = new Vector3(0, 0.74f);
+                    uvs[index + 1 + rotOffset[rotV][1][rotH]] = new Vector3(1/4f + pixOffsetH, 3/4f - pixOffsetV);
                     //top right
-                    uvs[index + 2 + rotOffset[rotV][2][rotH]] = new Vector3(0.32f, 0.74f);
+                    uvs[index + 2 + rotOffset[rotV][2][rotH]] = new Vector3(2/4f - pixOffsetH, 3/4f - pixOffsetV);
                     //bottom right
-                    uvs[index + 3 + rotOffset[rotV][3][rotH]] = new Vector3(0.32f, 0.5f);
+                    uvs[index + 3 + rotOffset[rotV][3][rotH]] = new Vector3(2/4f - pixOffsetH, 2/4f + pixOffsetV);
 
                     index += 4;
                 }
@@ -660,13 +662,13 @@ namespace RedKite
                         rotH = 1;
 
                     //bottom left
-                    uvs[index + rotOffset[rotV][0][rotH]] = new Vector3(0.66f, 0.5f);
+                    uvs[index + rotOffset[rotV][0][rotH]] = new Vector3(3/4f + pixOffsetH, 2/4f + pixOffsetV);
                     //top left
-                    uvs[index + 1 + rotOffset[rotV][1][rotH]] = new Vector3(0.66f, 0.74f); 
+                    uvs[index + 1 + rotOffset[rotV][1][rotH]] = new Vector3(3/4f + pixOffsetH, 3/4f - pixOffsetV); 
                     //top right
-                    uvs[index + 2 + rotOffset[rotV][2][rotH]] = new Vector3(1f, 0.74f);
+                    uvs[index + 2 + rotOffset[rotV][2][rotH]] = new Vector3(1f - pixOffsetH, 3/4f - pixOffsetV);
                     //bottom right
-                    uvs[index + 3 + rotOffset[rotV][3][rotH]] = new Vector3(1f, 0.5f);
+                    uvs[index + 3 + rotOffset[rotV][3][rotH]] = new Vector3(1f - pixOffsetH, 2/4f + pixOffsetV);
 
                     index += 4;
                 }
@@ -809,7 +811,7 @@ namespace RedKite
 
         public Texture2D CreateCubeTexture(Texture2D[] textures)
         {
-            Texture2D outTexture = new Texture2D(100 * 3, 100 * 4);
+            Texture2D outTexture = new Texture2D(100 * 4, 100 * 4);
             Color[] empty = new Color[100 * 100];
 
             //get empty color array
@@ -821,29 +823,37 @@ namespace RedKite
                 new Vector2Int(0,300),
                 new Vector2Int(100,300),
                 new Vector2Int(200,300),
+                new Vector2Int(300,300),
+                //new Vector2Int(400,300),
 
                 new Vector2Int(0,200),
                 new Vector2Int(100,200),
                 new Vector2Int(200,200),
+                new Vector2Int(300,200),
+                //new Vector2Int(400,200),
 
                 new Vector2Int(0,100),
                 new Vector2Int(100,100),
                 new Vector2Int(200,100),
+                new Vector2Int(300,100),
+                //new Vector2Int(400,100),
 
                 new Vector2Int(0,0),
                 new Vector2Int(100,0),
                 new Vector2Int(200,0),
+                new Vector2Int(300,0),
+                //new Vector2Int(400,0),
 
             };
 
             //creates indexes for skipping over
-            int[] empties = new int[6] { 0, 2, 6, 8, 9, 11 };
+            int[] empties = new int[10] { 0, 1, 3, 4, 8, 9, 11, 12, 13, 14 };//,15,16,18,19};
 
             int[] texOrder = new int[] {2,4,1,5,3,0};
             //to increment the texture array seperately.
             int texIndex = 0;
 
-            for (int i = 0; i < textures.Length + 6; i++)
+            for (int i = 0; i < textures.Length + 9; i++)
             {
                 if (empties.Contains(i))
                 {

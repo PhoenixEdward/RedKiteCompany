@@ -35,9 +35,9 @@ namespace RedKite
         // Start is called before the first frame update
         public void Start()
         {
-            floorTexName = floorTexName ?? "WoodFloor";
-            topWallTexName = topWallTexName ?? "DungeonFloor";
-            wallTexName = wallTexName ?? "DungeonFloor";
+            floorTexName = floorTexName ?? "grass2";
+            topWallTexName = topWallTexName ?? "grass2";
+            wallTexName = wallTexName ?? "dirt";
 
             floorTex = Resources.Load<Texture2D>("Tiles/" + floorTexName);
             topWallTex = Resources.Load<Texture2D>("Tiles/" + topWallTexName);
@@ -200,7 +200,7 @@ namespace RedKite
 
             floorMesh = MeshMaker.CombinePlanes(floorMeshes);
 
-            floorMesh.SetTextures(meshRenderer, floorTextures, new bool[] { true, true, true, true, true, true });
+            floorMesh.SetTextures(meshRenderer, floorTextures, new bool[] { false, false, false, false, false, false });
 
             floorMesh.MergeSides();
 
