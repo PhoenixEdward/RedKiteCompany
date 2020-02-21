@@ -30,9 +30,11 @@ namespace RedKite
         List<Hero> heroes = new List<Hero>();
         List<Unit> units = new List<Unit>();
 
-        public Hero selectedHero;
+        public Unit selectedHero;
 
         Tilemap tilemap;
+
+        TileMapper map;
 
         SpriteSelection menu;
 
@@ -64,6 +66,8 @@ namespace RedKite
 
             battleGrid = FindObjectOfType<BattleGrid>();
 
+            map = TileMapper.Instance;
+
             Generate();
         }
 
@@ -93,22 +97,27 @@ namespace RedKite
                             return;
                         }
 
-                        if (selectedHero.IsMoving == false & CombatMenu.IsActive == false)
-                            battleGrid.UnitRange(selectedHero);
-                        else if (battleGrid.withinRange != null & battleGrid.canMoveTo != null)
-                            battleGrid.DeactivateUnitRange();
-
-                        if (destination != null & CombatMenu.IsActive == false)
-                        {
-                            if (TileMapper.Instance.Tiles[destination.cell.x, destination.cell.y].IsWalkable == true & selectedHero.IsMoving == false)
+                        else
+                        { 
+                            if (selectedHero.IsMoving == false & CombatMenu.IsActive == false & battleGrid.isActive == false)
+                                battleGrid.NewUnitRange(selectedHero);
+                            /*
+                            else if (battleGrid.withinRange != null & battleGrid.canMoveTo != null)
+                                battleGrid.DeactivateUnitRange();
+                            */
+                            if (destination != null & CombatMenu.IsActive == false)
                             {
-                                if (Utility.ManhattanDistance(new Vector3Int((int)selectedHero.Coordinate.x, (int)selectedHero.Coordinate.y, 2), new Vector3Int(destination.cell.x, destination.cell.y, 2)) <= selectedHero.Movement)
+                                if (TileMapper.Instance.Tiles[destination.cell.x, destination.cell.y].IsWalkable == true & selectedHero.IsMoving == false)
                                 {
-                                    if (pathFinder.IsReachable(PathFinder.graph[selectedHero.Coordinate.x, selectedHero.Coordinate.y], destination, battleGrid.withinRange.ToArray(), selectedHero.Movement))
+                                    if (Utility.ManhattanDistance(new Vector3Int((int)selectedHero.Coordinate.x, (int)selectedHero.Coordinate.y, 2), new Vector3Int(destination.cell.x, destination.cell.y, 2)) <= selectedHero.Movement)
                                     {
+                                        if (battleGrid.canMoveTo.Contains(destination) &
+                                            TileMapper.Instance.Tiles[destination.cell.x, destination.cell.y].TileType != Cell.Type.OccupiedAlly)
                                         {
-                                            combatMenu.ActivatePopUp(selectedHero, destination.cell);
-                                            destination = null;
+                                            {
+                                                combatMenu.ActivatePopUp(selectedHero, destination.cell);
+                                                destination = null;
+                                            }
                                         }
                                     }
                                 }
@@ -131,19 +140,9 @@ namespace RedKite
 
         public void UnitData()
         {
-            Unit highlightedUnit = null;
-
-            foreach (Unit unit in units)
-            {
-                if (new Vector2(unit.Coordinate.x, unit.Coordinate.y) == new Vector2(highlight.x, highlight.y))
-                {
-                    highlightedUnit = unit;
-                }
-            }
-
-            if(highlightedUnit != null)
-            {
-                statSheet.Activate(highlightedUnit);
+            if(selectedHero != null)
+            { 
+                statSheet.Activate(selectedHero);
             }
             else
             {
@@ -163,11 +162,11 @@ namespace RedKite
 
             tilemap.SetTile(highlight, highlightTile);
 
-            foreach (Hero unit in heroes)
+            foreach (Unit unit in units)
             {
                 if (new Vector2(unit.Coordinate.x, unit.Coordinate.y) == new Vector2(highlight.x, highlight.y) & selectedHero == null)
                 {
-                    if (Input.GetMouseButtonDown(0) & unit.Ready)
+                    if (Input.GetMouseButtonDown(0)) // & unit.Ready)
                     {
                         selectedHero = unit;
                         isSelection = true;
@@ -177,10 +176,14 @@ namespace RedKite
                         //create flash message class to communicate that unit is not ready to move and other such UI bull shit.
                     }
 
-                    tilemap.SetTile(highlight, selectTile);
                 }
 
             }
+
+            //here is where I can put in all the highlight logic;
+
+            if (map.Tiles[highlight.x, highlight.y].TileType == Cell.Type.OccupiedEnemy | map.Tiles[highlight.x, highlight.y].TileType == Cell.Type.OccupiedAlly)
+                tilemap.SetTile(highlight, selectTile);
 
             if (temp == Vector3Int.zero)
             {
@@ -229,6 +232,11 @@ namespace RedKite
             tilemap.RefreshAllTiles();
 
             isSelection = false;
+        }
+
+        public void BattleGridState()
+        {
+
         }
     }
 }

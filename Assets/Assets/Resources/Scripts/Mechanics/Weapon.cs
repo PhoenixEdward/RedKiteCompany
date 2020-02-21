@@ -26,7 +26,7 @@ namespace RedKite
 
                     if (chanceOfFailure > chanceOfSuccess)
                     {
-                        Debug.Log("Miss");
+                        UseFX(this, 0, receiver);
                         return;
                     }
                 }

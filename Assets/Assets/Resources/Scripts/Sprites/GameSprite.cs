@@ -97,6 +97,8 @@ namespace RedKite
 
         public bool IsMoving;
 
+        public Vector2 TileSize { get; private set; } = Vector2.one;
+
         public int MaxAttackRange { get; private set; }
         public int MaxAssistRange { get; private set; }
 

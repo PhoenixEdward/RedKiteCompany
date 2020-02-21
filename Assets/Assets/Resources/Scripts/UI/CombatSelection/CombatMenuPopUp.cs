@@ -50,21 +50,21 @@ namespace RedKite
 
             if (target == Target.Enemy & actionables.Attackables.Count > 0)
             {
-                battleGrid.HighlightActionables(actionables.Attackables);
+                battleGrid.HighlightActionables(actionables.Attackables.ToArray(), lockOnIndex);
                 actionableSprites = actionables.Attackables.ToArray();
                 CycleUnits(actionableSprites);
                 CameraMovement.LockOn(actionables.Attackables.ToArray(), lockOnIndex);
             }
             else if (target == Target.Prop & actionables.Interactables.Count > 0)
             {
-                battleGrid.HighlightActionables(actionables.Interactables);
+                battleGrid.HighlightActionables(actionables.Interactables.ToArray(), lockOnIndex);
                 actionableSprites = actionables.Interactables.ToArray();
                 CycleUnits(actionableSprites);
                 CameraMovement.LockOn(actionables.Interactables.ToArray(), lockOnIndex);
             }
             else if (target == Target.Hero & actionables.Assistables.Count > 0)
             {
-                battleGrid.HighlightActionables(actionables.Assistables);
+                battleGrid.HighlightActionables(actionables.Assistables.ToArray(), lockOnIndex);
                 actionableSprites = actionables.Assistables.ToArray();
                 CycleUnits(actionableSprites);
                 CameraMovement.LockOn(actionables.Assistables.ToArray(), lockOnIndex);
@@ -93,6 +93,11 @@ namespace RedKite
             unit.Embark(selectedTile);
             unit.SetActiveSkill(buff);
             Telegraph.Instance.DispatchMessage(new Telegram(new Telegram.BeatSignature(BattleClock.Instance.CurrentBeat, unit.Stats.Dexterity.Modifier, 0), actionableSprites[lockOnIndex], unit, Message.UseSkill));
+            menu.Deactivate();
+        }
+
+        public void Close()
+        {
             menu.Deactivate();
         }
 
@@ -163,9 +168,23 @@ namespace RedKite
 
             screen = Screen.Weapons;
         }
-        public void SkillScreenSpells()
+        public void SkillScreenHeals()
         {
-            skillScreen.GetComponent<CombatMenuSkillScreen>().ActivateSpells(buffs, heals);
+            skillScreen.GetComponent<CombatMenuSkillScreen>().ActivateHealing(heals);
+
+            screen = Screen.Spells;
+        }
+
+        public void SkillScreenDebuffs()
+        {
+            skillScreen.GetComponent<CombatMenuSkillScreen>().ActivateDebuffs(debuffs);
+
+            screen = Screen.Weapons;
+        }
+
+        public void SkillScreenBuffs()
+        {
+            skillScreen.GetComponent<CombatMenuSkillScreen>().ActivateBuffs(buffs);
 
             screen = Screen.Spells;
         }

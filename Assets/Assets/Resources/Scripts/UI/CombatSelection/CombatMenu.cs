@@ -61,7 +61,7 @@ namespace RedKite
                 if (pos.y + rect.rect.yMax > Screen.height / 2)
                     pos.y = Screen.height / 2 - rect.sizeDelta.y;
 
-                rect.localPosition = pos;
+                rect.localPosition = new Vector3(400, -140, 0);
 
                 Actionables actionables = FindInteractions(unit, selectedTile);
 

@@ -18,6 +18,7 @@ namespace RedKite
             Spawn,
             OccupiedEnemy,
             OccupiedAlly,
+            OccupiedProp
         }
 
         public Type TileType { get; private set; }

@@ -9,6 +9,9 @@ namespace RedKite
     {
         Tile clearTile;
         Tile rangeTile;
+        Tile selectTile;
+        Tile attackTile;
+        Tile assistTile;
 
         public Level level;
 
@@ -20,6 +23,8 @@ namespace RedKite
         public List<Node> withinRange = new List<Node>();
         public List<Node> canMoveTo = new List<Node>();
 
+        public bool isActive;
+
         // Start is called before the first frame update
         void Start()
         {
@@ -30,6 +35,14 @@ namespace RedKite
             rangeTile = ScriptableObject.CreateInstance<Tile>();
             rangeTile.sprite = Resources.Load<Sprite>("UI/Range");
 
+            selectTile = ScriptableObject.CreateInstance<Tile>();
+            selectTile.sprite = Resources.Load<Sprite>("UI/Select");
+
+            attackTile = ScriptableObject.CreateInstance<Tile>();
+            attackTile.sprite = Resources.Load<Sprite>("UI/Attack");
+
+            assistTile = ScriptableObject.CreateInstance<Tile>();
+            assistTile.sprite = Resources.Load<Sprite>("UI/Assist");
 
             for (int x = 0; x < map.cellBounds.xMax; x++)
             {
@@ -42,6 +55,27 @@ namespace RedKite
 
         // Update is called once per frame
 
+        public void NewUnitRange(Unit unit)
+        {
+            isActive = true;
+
+            Dictionary<Vector3Int, PathFinder.TileHighlightType> range = pathFinder.GetRanges(unit);
+
+            foreach(KeyValuePair<Vector3Int, PathFinder.TileHighlightType> entry in range)
+            {
+                if (entry.Value == PathFinder.TileHighlightType.Attack)
+                    map.SetTile(entry.Key, attackTile);
+                else if (entry.Value == PathFinder.TileHighlightType.Assist)
+                    map.SetTile(entry.Key, assistTile);
+                else
+                    map.SetTile(entry.Key, rangeTile);
+
+                withinRange.Add(PathFinder.graph[entry.Key.x, entry.Key.y]);
+                canMoveTo.Add(PathFinder.graph[entry.Key.x, entry.Key.y]);
+            }
+
+            map.RefreshAllTiles();
+        }
 
 
         public void UnitRange(Unit unit)
@@ -133,26 +167,17 @@ namespace RedKite
 
         }
 
-        public void HighlightActionables(List<Enemy> actionables)
+        //pretty sure if I I make this an array this repetition isn't necessary
+        public void HighlightActionables(GameSprite[] actionables, int highlightIndex)
         {
 
-            foreach (GameSprite actionable in actionables)
-                map.SetTile(actionable.Coordinate, rangeTile);
-
-            map.RefreshAllTiles();
-        }
-        public void HighlightActionables(List<Hero> actionables)
-        {
-            foreach (GameSprite actionable in actionables)
-                map.SetTile(actionable.Coordinate, rangeTile);
-
-            map.RefreshAllTiles();
-        }
-        public void HighlightActionables(List<Prop> actionables)
-        {
-            foreach (GameSprite actionable in actionables)
-                map.SetTile(actionable.Coordinate, rangeTile);
-
+            for (int i = 0; i < actionables.Length; i++)
+            {
+                if (i == highlightIndex)
+                    map.SetTile(actionables[i].Coordinate, selectTile);
+                else
+                    map.SetTile(actionables[i].Coordinate, rangeTile);
+            }
             map.RefreshAllTiles();
         }
 
@@ -167,6 +192,7 @@ namespace RedKite
             withinRange = new List<Node>();
             canMoveTo = new List<Node>();
 
+            isActive = false;
 
             map.ClearAllTiles();
 

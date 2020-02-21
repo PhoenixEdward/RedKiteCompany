@@ -16,7 +16,7 @@ namespace RedKite
 
         Reticle reticle;
 
-        public List<Node> GeneratePathTo(Vector3 startCoord, Vector3 destCoord, int maxDistance, bool isHero = true)
+        public List<Node> GeneratePathTo(Vector3 startCoord, Vector3 destCoord, int maxDistance, bool isHero = true, bool isEnemy = false)
         { 
             Dictionary<Node, float> dist = new Dictionary<Node, float>();
             Dictionary<Node, Node> prev = new Dictionary<Node, Node>();
@@ -74,7 +74,13 @@ namespace RedKite
 
                 foreach (Node v in u.neighbours)
                 {
-                    float alt = dist[u] + CostToEnterTile(v.cell.x, v.cell.y, isHero: isHero);
+                    float alt;
+
+                    if (v != target)
+                        alt = dist[u] + CostToEnterTile(v.cell.x, v.cell.y, isHero: isHero, isEnemy: isEnemy);
+                    else
+                        alt = dist[u] + CostToEnterTile(v.cell.x, v.cell.y, isHero: isHero, isEnemy: isEnemy, true);
+
                     if (alt < dist[v])
                     {
                         dist[v] = alt;
@@ -111,8 +117,8 @@ namespace RedKite
             currentPath.Reverse();
 
             //the + 1 is to account for the fact that the source is the first node in the list.
-            if (currentPath.Count - 1 > maxDistance + 1)
-                currentPath = currentPath.Take(maxDistance).ToList();
+            if (dist[target] > maxDistance + 1)
+                return null;
 
             return currentPath;
 
@@ -214,13 +220,127 @@ namespace RedKite
 
         }
 
+        public enum TileHighlightType
+        {
+            Move,
+            Attack,
+            Assist
+        }
+
+        public Dictionary<Vector3Int, TileHighlightType> GetRanges(GameSprite unit)
+        {
+            Dictionary<Vector3Int, TileHighlightType> allPoints = new Dictionary<Vector3Int, TileHighlightType>();
+
+            int maxDistance = unit.Movement + Mathf.Max(unit.MaxAttackRange, unit.MaxAssistRange);
+            int maxAttackRange = unit.Movement + unit.MaxAttackRange;
+            int maxAssistRange = unit.Movement + unit.MaxAssistRange;
+
+            Node[] range = Utility.GenerateBoxRange(unit.Coordinate, maxDistance);
+
+            Node source = graph[
+                    unit.Coordinate.x,
+                    unit.Coordinate.y
+                    ];
+
+
+            Dictionary<Node, float> dist = new Dictionary<Node, float>();
+            Dictionary<Node, float> neutDist = new Dictionary<Node, float>();
+            Dictionary<Node, Node> prev = new Dictionary<Node, Node>();
+
+            // Setup the "Q" -- the list of nodes we haven't checked yet.
+            List<Node> unvisited = new List<Node>();
+
+
+            dist[source] = 0;
+            neutDist[source] = 0;
+            prev[source] = null;
+
+            foreach (Node v in range)
+            {
+                if (v != source)
+                {
+                    dist[v] = Mathf.Infinity;
+                    neutDist[v] = Mathf.Infinity;
+                    prev[v] = null;
+                }
+
+                unvisited.Add(v);
+            }
+
+            while (unvisited.Count > 0)
+            {
+                // "u" is going to be the unvisited node with the smallest distance.
+                Node u = null;
+
+                foreach (Node possibleU in unvisited)
+                {
+                    if (u == null || dist[possibleU] < dist[u])
+                    {
+                        u = possibleU;
+                    }
+                }
+
+                unvisited.Remove(u);
+
+                foreach (Node v in u.neighbours)
+                {
+                    if (Utility.ManhattanDistance(new Vector3Int(source.cell.x, source.cell.y, 2), new Vector3Int(v.cell.x, v.cell.y, 2)) <= maxDistance)
+                       {
+                        float alt = dist[u] + CostToEnterTile(v.cell.x, v.cell.y, true);
+                        float neutAlt = dist[u] + CostToEnterTile(v.cell.x, v.cell.y);
+
+                        if (alt < dist[v])
+                        {
+                            dist[v] = alt;
+                            neutDist[v] = neutAlt;
+                            prev[v] = u;
+                        }
+                    }
+                }
+            }
+
+            for (int i = 0; i < range.Length; i++)
+            {
+                float totalMovementCost = dist[range[i]];
+                float totalNeutralMovementCost = neutDist[range[i]];
+
+                if (totalMovementCost > unit.Movement & totalMovementCost <= maxDistance)
+                {
+                    if (totalMovementCost > unit.Movement & totalMovementCost <= maxAttackRange)
+                        allPoints.Add(range[i].cell, TileHighlightType.Attack);
+                    else if (totalMovementCost > unit.Movement & totalMovementCost <= maxAssistRange)
+                        allPoints.Add(range[i].cell, TileHighlightType.Assist);
+                }
+                else if (totalMovementCost <= unit.Movement)
+                {
+                    allPoints.Add(range[i].cell, TileHighlightType.Move);
+                }
+                else if((TileMapper.Instance.Tiles[range[i].cell.x, range[i].cell.y].TileType == Cell.Type.OccupiedEnemy | 
+                    TileMapper.Instance.Tiles[range[i].cell.x, range[i].cell.y].TileType == Cell.Type.OccupiedProp) &
+                    totalNeutralMovementCost <= unit.Movement)
+                {
+                        allPoints.Add(range[i].cell, TileHighlightType.Move);
+                }
+                else if ((TileMapper.Instance.Tiles[range[i].cell.x, range[i].cell.y].TileType == Cell.Type.OccupiedEnemy |
+                    TileMapper.Instance.Tiles[range[i].cell.x, range[i].cell.y].TileType == Cell.Type.OccupiedProp) &
+                    totalNeutralMovementCost <= unit.MaxAttackRange)
+                {
+                    allPoints.Add(range[i].cell, TileHighlightType.Attack);
+                }
+            }
+
+            Debug.Log("AllPoints: " + allPoints.Count);
+
+            return allPoints;
+
+        }
+
+
         public List<Node> AIGeneratePathTo(Vector3 startCoord, Vector3 destCoord, int maxDistanceFromStart, int maxDistanceFromTarget)
         {
             List<List<Node>> potentialPaths = new List<List<Node>>();
 
             Node[] range = Utility.GenerateBoxRange(Vector3Int.FloorToInt(startCoord), maxDistanceFromStart);
-
-            Debug.Log("Supposed Movement: " + maxDistanceFromStart);
 
             Node source = graph[
                                 (int)startCoord.x,
@@ -290,8 +410,7 @@ namespace RedKite
 
                     foreach (Node v in u.neighbours)
                     {
-                        if (Utility.ManhattanDistance(new Vector3Int(source.cell.x, source.cell.y, 2), new Vector3Int(v.cell.x, v.cell.y, 2)) <= maxDistanceFromStart &
-                            Utility.WithinBounds(new Vector3(v.cell.x, 2, v.cell.y), TileMapper.Instance.W, TileMapper.Instance.H))
+                        if (Utility.ManhattanDistance(new Vector3Int(source.cell.x, source.cell.y, 2), new Vector3Int(v.cell.x, v.cell.y, 2)) <= maxDistanceFromStart)
                         {
                             float alt = dist[u] + CostToEnterTile(v.cell.x, v.cell.y, isEnemy: true);
 
@@ -329,7 +448,7 @@ namespace RedKite
 
                 currentPath.Reverse();
 
-                if (currentPath.Sum(x => x.MovementCost) > maxDistanceFromStart)
+                if (dist[currentPath[currentPath.Count - 1]] > maxDistanceFromStart)
                     continue;
 
                 // Right now, currentPath describes a route from out target to our source
@@ -354,24 +473,8 @@ namespace RedKite
             //issue with it defaulting to attempting to walk through a wall as shortest path. Need to account for future movement cost. Maybe redo box range to incorporate complete distance to target.
             List<Node> finalPath = potentialPaths.FirstOrDefault(x => Utility.ManhattanDistance(x[x.Count - 1].cell, graph[(int)destCoord.x, (int)destCoord.y].cell) == curMin);
 
-            Debug.Log("Final Path Distance: " + Utility.ManhattanDistance(finalPath[finalPath.Count - 1].cell, graph[(int)destCoord.x, (int)destCoord.y].cell));
-
-
             return finalPath ?? new List<Node> { source };
 
-        }
-
-
-        struct DistanceStruct
-        {
-            public float DistanceFromStart;
-            public float DistanceFromTarget;
-            
-            public DistanceStruct(float _distanceFromStart, float _distanceFromTarget)
-            {
-                DistanceFromStart = _distanceFromStart;
-                DistanceFromTarget = _distanceFromTarget;
-            }
         }
 
         float CostToEnterTile(int x, int y, bool isHero = false, bool isEnemy = false, bool isFinal = false)

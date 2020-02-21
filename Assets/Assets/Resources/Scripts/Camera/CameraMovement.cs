@@ -67,6 +67,17 @@ namespace RedKite
             Camera.main.transform.position = new Vector3(interactables[lockOnIndex].Coordinate.x, 0, interactables[lockOnIndex].Coordinate.y) + offset;
         }
 
+        public static void LockOn(GameSprite sprite)
+        {
+            LockedOn = true;
+
+            Vector3 offset = facing == Facing.NE ? new Vector3(-15f, 15f, -15f) : facing == Facing.NW ? new Vector3(15f, 15f, -15f) :
+                facing == Facing.SE ? new Vector3(-15f, 15f, 15f) : new Vector3(15f, 15f, 15f);
+
+            Camera.main.transform.position = new Vector3(sprite.Coordinate.x, 0, sprite.Coordinate.y) + offset;
+        }
+
+
         public static void LockOff()
         {
             LockedOn = false;

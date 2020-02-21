@@ -8,7 +8,7 @@ public class Node
     public Vector3Int cell = new Vector3Int();
     static int lastID = 0;
     public int ID;
-    public int MovementCost;
+    public float MovementCost;
 
     public Node()
     {
