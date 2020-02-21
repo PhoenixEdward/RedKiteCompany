@@ -24,6 +24,7 @@ namespace RedKite
         CombatMenu combatMenu;
 
         bool isSelection;
+        bool deselect = false;
 
         Node destination;
 
@@ -41,6 +42,9 @@ namespace RedKite
         StatSheet statSheet;
 
         BattleGrid battleGrid;
+
+        GameObject cursor;
+        public Material cursorMat;
 
         // Start is called before the first frame update
         void Start()
@@ -69,6 +73,12 @@ namespace RedKite
             map = TileMapper.Instance;
 
             Generate();
+
+            cursor = new GameObject();
+
+            cursor.AddComponent<Cursor>();
+
+            cursor.GetComponent<MeshRenderer>().material = cursorMat;
         }
 
         public void Generate()
@@ -90,34 +100,32 @@ namespace RedKite
                 { 
                     if (selectedHero != null)
                     {
-                        if (!selectedHero.Ready)
+                        if (!selectedHero.Ready & deselect)
                         {
+                            deselect = false;
                             selectedHero = null;
-                            battleGrid.DeactivateUnitRange();
                             return;
                         }
 
-                        else
-                        { 
-                            if (selectedHero.IsMoving == false & CombatMenu.IsActive == false & battleGrid.isActive == false)
-                                battleGrid.NewUnitRange(selectedHero);
-                            /*
-                            else if (battleGrid.withinRange != null & battleGrid.canMoveTo != null)
-                                battleGrid.DeactivateUnitRange();
-                            */
-                            if (destination != null & CombatMenu.IsActive == false)
+                        if (selectedHero.IsMoving == false & CombatMenu.IsActive == false & battleGrid.isActive == false & selectedHero.Ready)
+                            battleGrid.NewUnitRange(selectedHero);
+                        /*
+                        else if (battleGrid.withinRange != null & battleGrid.canMoveTo != null)
+                            battleGrid.DeactivateUnitRange();
+                        */
+                        if (destination != null & CombatMenu.IsActive == false)
+                        {
+                            if (TileMapper.Instance.Tiles[destination.cell.x, destination.cell.y].IsWalkable == true & selectedHero.IsMoving == false)
                             {
-                                if (TileMapper.Instance.Tiles[destination.cell.x, destination.cell.y].IsWalkable == true & selectedHero.IsMoving == false)
+                                if (Utility.ManhattanDistance(new Vector3Int((int)selectedHero.Coordinate.x, (int)selectedHero.Coordinate.y, 2), new Vector3Int(destination.cell.x, destination.cell.y, 2)) <= selectedHero.Movement)
                                 {
-                                    if (Utility.ManhattanDistance(new Vector3Int((int)selectedHero.Coordinate.x, (int)selectedHero.Coordinate.y, 2), new Vector3Int(destination.cell.x, destination.cell.y, 2)) <= selectedHero.Movement)
+                                    if (battleGrid.canMoveTo.Contains(destination) &
+                                        (TileMapper.Instance.Tiles[destination.cell.x, destination.cell.y].TileType != Cell.Type.OccupiedAlly | destination.cell == selectedHero.Coordinate))
                                     {
-                                        if (battleGrid.canMoveTo.Contains(destination) &
-                                            TileMapper.Instance.Tiles[destination.cell.x, destination.cell.y].TileType != Cell.Type.OccupiedAlly)
                                         {
-                                            {
-                                                combatMenu.ActivatePopUp(selectedHero, destination.cell);
-                                                destination = null;
-                                            }
+                                            deselect = true;
+                                            combatMenu.ActivatePopUp(selectedHero, destination.cell);
+                                            destination = null;
                                         }
                                     }
                                 }
@@ -132,10 +140,15 @@ namespace RedKite
                             battleGrid.DeactivateUnitRange();
                         }
 
+                        if (CombatMenu.IsActive)
+                            tilemap.ClearAllTiles();
+
                     }
                     //this needs to be reworked. The above should be a function. A later problem.
                 }
             }
+
+            cursor.transform.position = grid.CellToWorld(highlight) + new Vector3(0.5f,2,0.5f);
         }
 
         public void UnitData()
@@ -161,6 +174,7 @@ namespace RedKite
             }
 
             tilemap.SetTile(highlight, highlightTile);
+            cursorMat.mainTexture = highlightTile.sprite.texture;
 
             foreach (Unit unit in units)
             {
@@ -183,7 +197,10 @@ namespace RedKite
             //here is where I can put in all the highlight logic;
 
             if (map.Tiles[highlight.x, highlight.y].TileType == Cell.Type.OccupiedEnemy | map.Tiles[highlight.x, highlight.y].TileType == Cell.Type.OccupiedAlly)
+            {
                 tilemap.SetTile(highlight, selectTile);
+                cursorMat.mainTexture = selectTile.sprite.texture;
+            }
 
             if (temp == Vector3Int.zero)
             {
@@ -221,6 +238,8 @@ namespace RedKite
                             {
 
                                 tilemap.SetTile(highlight, rangeHighlightTile);
+
+                                cursorMat.mainTexture = rangeHighlightTile.sprite.texture;
 
                                 break;
                             }

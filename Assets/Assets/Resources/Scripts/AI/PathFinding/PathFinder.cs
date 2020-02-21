@@ -315,15 +315,9 @@ namespace RedKite
                 {
                     allPoints.Add(range[i].cell, TileHighlightType.Move);
                 }
-                else if((TileMapper.Instance.Tiles[range[i].cell.x, range[i].cell.y].TileType == Cell.Type.OccupiedEnemy | 
-                    TileMapper.Instance.Tiles[range[i].cell.x, range[i].cell.y].TileType == Cell.Type.OccupiedProp) &
-                    totalNeutralMovementCost <= unit.Movement)
-                {
-                        allPoints.Add(range[i].cell, TileHighlightType.Move);
-                }
                 else if ((TileMapper.Instance.Tiles[range[i].cell.x, range[i].cell.y].TileType == Cell.Type.OccupiedEnemy |
                     TileMapper.Instance.Tiles[range[i].cell.x, range[i].cell.y].TileType == Cell.Type.OccupiedProp) &
-                    totalNeutralMovementCost <= unit.MaxAttackRange)
+                    totalNeutralMovementCost <= maxAttackRange)
                 {
                     allPoints.Add(range[i].cell, TileHighlightType.Attack);
                 }
@@ -479,6 +473,7 @@ namespace RedKite
 
         float CostToEnterTile(int x, int y, bool isHero = false, bool isEnemy = false, bool isFinal = false)
         {
+
             int tt = (int)TileMapper.Instance.Tiles[x, y].movementCost;
 
             if (isHero == true & TileMapper.Instance.Tiles[x, y].TileType == Cell.Type.OccupiedEnemy)

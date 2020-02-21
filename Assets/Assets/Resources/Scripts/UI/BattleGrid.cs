@@ -68,10 +68,12 @@ namespace RedKite
                 else if (entry.Value == PathFinder.TileHighlightType.Assist)
                     map.SetTile(entry.Key, assistTile);
                 else
+                {
                     map.SetTile(entry.Key, rangeTile);
+                    withinRange.Add(PathFinder.graph[entry.Key.x, entry.Key.y]);
+                    canMoveTo.Add(PathFinder.graph[entry.Key.x, entry.Key.y]);
+                }
 
-                withinRange.Add(PathFinder.graph[entry.Key.x, entry.Key.y]);
-                canMoveTo.Add(PathFinder.graph[entry.Key.x, entry.Key.y]);
             }
 
             map.RefreshAllTiles();
@@ -176,7 +178,14 @@ namespace RedKite
                 if (i == highlightIndex)
                     map.SetTile(actionables[i].Coordinate, selectTile);
                 else
-                    map.SetTile(actionables[i].Coordinate, rangeTile);
+                {
+                    if (actionables[i] is Enemy)
+                        map.SetTile(actionables[i].Coordinate, attackTile);
+                    else if (actionables[i] is Hero)
+                        map.SetTile(actionables[i].Coordinate, assistTile);
+                    else
+                        map.SetTile(actionables[i].Coordinate, rangeTile);
+                }
             }
             map.RefreshAllTiles();
         }
