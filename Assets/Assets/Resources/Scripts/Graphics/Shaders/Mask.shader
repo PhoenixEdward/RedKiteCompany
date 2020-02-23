@@ -1,11 +1,13 @@
-﻿Shader "Unlit/Mask"
+﻿#warning Upgrade NOTE: unity_Scale shader variable was removed; replaced '_WorldSpaceCameraPos.w' with '1.0'
+
+Shader "Unlit/Mask"
 {
     Properties
     {
         _MainTex ("Texture", 2D) = "white" {}
 		_MainTex2("Texture2", 2D) = "white" {}
 		_MainTex3("Texture3", 2D) = "white" {}
-		_Covered("IsCovered", int) = 0
+		_Covered("Covered", int) = 0
 		_FogColor("FogColor", Color) = (0,0,0,0)
     }
     SubShader
@@ -24,7 +26,7 @@
         {
 			Cull Off
 			Lighting Off
-			ZWrite Off
+			ZWrite On
 
 			Blend SrcAlpha OneMinusSrcAlpha
 
@@ -50,6 +52,7 @@
 				float4 color : COLOR;
                 UNITY_FOG_COORDS(1)
                 float4 vertex : SV_POSITION;
+				float4 worldPos : TEXCOORD1;
             };
 			sampler2D _MainTex3;
 			sampler2D _MainTex2;
@@ -65,6 +68,7 @@
                 o.uv = TRANSFORM_TEX(v.uv, _MainTex);
 				o.color = v.color;
                 UNITY_TRANSFER_FOG(o,o.vertex);
+				o.worldPos = mul(unity_ObjectToWorld, v.vertex);
                 return o;
             }
 
@@ -75,11 +79,15 @@
 				float2 texelSize = 1 / _ScreenParams.xy;
 				fixed4 wallCol = tex2D(_MainTex3, i.vertex * texelSize);
 				float4 fogCol = tex2D(_MainTex2, i.vertex * texelSize);
-				
-				if (wallCol.a != 0 & wallCol.b > 0.74f)
+				float dist = (distance(i.worldPos, _WorldSpaceCameraPos) - 18.5) / 16;
+
+				if (wallCol.a != 0 & abs(wallCol.b - dist) < .02f)
 				{
-					_Covered = 1;
 					return float4(0,0,0,0);
+				}
+				else
+				{
+					return col;
 				}
 				/*
 				else if (fogCol.a != 0)
@@ -87,10 +95,6 @@
 					return col * (_FogColor * float4(.6f, .6f, .6f, 1));
 				}
 				*/
-				else
-				{
-					return col;
-				}
 				
                 // apply fog
                 UNITY_APPLY_FOG(i.fogCoord, col);

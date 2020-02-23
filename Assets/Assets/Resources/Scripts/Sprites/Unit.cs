@@ -9,7 +9,6 @@ namespace RedKite
     public class Unit : GameSprite
     {
         //Should destination be here?
-        protected static Grid grid;
 
         public List<Node> currentPath = null;
 
@@ -26,18 +25,11 @@ namespace RedKite
         
         public SpriteRenderer mirrorRender;
 
-        public BoxCollider boxCollider;
-
         public Vector3 distanceFromCoord;
 
         public override void Start()
         {
             base.Start();
-
-            //possibly shortcut in TileMapper code
-            grid = FindObjectOfType<Grid>();
-            //transform.parent = grid.transform;
-            //level.tileMap = FindObjectOfType<TileMapper>();
 
             currentPath = null;
 
@@ -48,8 +40,6 @@ namespace RedKite
             mirror.transform.SetParent(transform);
             mirror.layer = 13;
 
-            boxCollider = gameObject.AddComponent<BoxCollider>();
-            boxCollider.center += new Vector3(0, 0.5f, 0);
         }
 
         public override void Update()
@@ -90,7 +80,7 @@ namespace RedKite
 
             base.Update();
 
-            sr.sprite = sprites[HorizontalRow, VerticalRow];
+            SR.sprite = sprites[HorizontalRow, VerticalRow];
             mirrorRender.sprite = sprites[HorizontalRow, VerticalRow];
 
             transform.localPosition += new Vector3(distanceFromCoord.x, 0, distanceFromCoord.y);

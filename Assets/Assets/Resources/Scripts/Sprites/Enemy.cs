@@ -58,7 +58,7 @@ namespace RedKite
                     Debug.Log("spawn room: " + spawnRoom);
 
                     spawnTiles = new List<Vector3>();
-                    spawnTiles = TileMapper.Instance.Areas[spawnRoom].GetCoords().ToList();
+                    spawnTiles = TileMapper.Instance.Areas[spawnRoom].GetCoords(true).ToList();
                     spawnTiles.Shuffle();
 
                     spawnCenter = spawnTiles[0];

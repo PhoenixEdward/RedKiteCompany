@@ -107,10 +107,10 @@ namespace RedKite
                         }
                     }
 
-                    if (Utility.ManhattanDistance(compareSprite.Coordinate, firstSprite.Coordinate) < compareSprite.PerceptionRange)
+                    if (Utility.ManhattanDistance(compareSprite.Coordinate, firstSprite.Coordinate) < compareSprite.Perception)
                         Telegraph.Instance.DispatchMessage(new Telegram(new Telegram.BeatSignature(BattleClock.Instance.CurrentBeat, firstSprite.Stats.Dexterity.Modifier, 0),
                             firstSprite, compareSprite, Message.InFOV));
-                    if (Utility.ManhattanDistance(firstSprite.Coordinate, compareSprite.Coordinate) < firstSprite.PerceptionRange)
+                    if (Utility.ManhattanDistance(firstSprite.Coordinate, compareSprite.Coordinate) < firstSprite.Perception)
                         Telegraph.Instance.DispatchMessage(new Telegram(new Telegram.BeatSignature(BattleClock.Instance.CurrentBeat, compareSprite.Stats.Dexterity.Modifier, 0),
                             compareSprite, firstSprite, Message.InFOV));
                 }

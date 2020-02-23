@@ -244,7 +244,7 @@ namespace RedKite
 
 
             Dictionary<Node, float> dist = new Dictionary<Node, float>();
-            Dictionary<Node, float> neutDist = new Dictionary<Node, float>();
+            Dictionary<Node, float> rangeDist = new Dictionary<Node, float>();
             Dictionary<Node, Node> prev = new Dictionary<Node, Node>();
 
             // Setup the "Q" -- the list of nodes we haven't checked yet.
@@ -252,7 +252,7 @@ namespace RedKite
 
 
             dist[source] = 0;
-            neutDist[source] = 0;
+            rangeDist[source] = 0;
             prev[source] = null;
 
             foreach (Node v in range)
@@ -260,7 +260,7 @@ namespace RedKite
                 if (v != source)
                 {
                     dist[v] = Mathf.Infinity;
-                    neutDist[v] = Mathf.Infinity;
+                    rangeDist[v] = Mathf.Infinity;
                     prev[v] = null;
                 }
 
@@ -287,12 +287,12 @@ namespace RedKite
                     if (Utility.ManhattanDistance(new Vector3Int(source.cell.x, source.cell.y, 2), new Vector3Int(v.cell.x, v.cell.y, 2)) <= maxDistance)
                        {
                         float alt = dist[u] + CostToEnterTile(v.cell.x, v.cell.y, true);
-                        float neutAlt = dist[u] + CostToEnterTile(v.cell.x, v.cell.y);
+                        float rangeAlt = dist[u] + RangeCostToEnterTile(v.cell.x, v.cell.y);
 
                         if (alt < dist[v])
                         {
                             dist[v] = alt;
-                            neutDist[v] = neutAlt;
+                            rangeDist[v] = rangeAlt;
                             prev[v] = u;
                         }
                     }
@@ -302,25 +302,30 @@ namespace RedKite
             for (int i = 0; i < range.Length; i++)
             {
                 float totalMovementCost = dist[range[i]];
-                float totalNeutralMovementCost = neutDist[range[i]];
+                float totalRangeCost = rangeDist[range[i]];
 
-                if (totalMovementCost > unit.Movement & totalMovementCost <= maxDistance)
+                if (totalRangeCost > unit.Movement & totalRangeCost <= maxDistance)
                 {
-                    if (totalMovementCost > unit.Movement & totalMovementCost <= maxAttackRange)
+                    if (totalRangeCost <= maxAttackRange)
                         allPoints.Add(range[i].cell, TileHighlightType.Attack);
-                    else if (totalMovementCost > unit.Movement & totalMovementCost <= maxAssistRange)
+                    else if (totalRangeCost <= maxAssistRange)
                         allPoints.Add(range[i].cell, TileHighlightType.Assist);
                 }
                 else if (totalMovementCost <= unit.Movement)
                 {
                     allPoints.Add(range[i].cell, TileHighlightType.Move);
                 }
-                else if ((TileMapper.Instance.Tiles[range[i].cell.x, range[i].cell.y].TileType == Cell.Type.OccupiedEnemy |
-                    TileMapper.Instance.Tiles[range[i].cell.x, range[i].cell.y].TileType == Cell.Type.OccupiedProp) &
-                    totalNeutralMovementCost <= maxAttackRange)
+                else if ((TileMapper.Instance.Tiles[range[i].cell.x, range[i].cell.y].TileType == Cell.Type.OccupiedEnemy) &
+                    totalRangeCost <= maxAttackRange)
                 {
                     allPoints.Add(range[i].cell, TileHighlightType.Attack);
                 }
+                else if ((TileMapper.Instance.Tiles[range[i].cell.x, range[i].cell.y].TileType == Cell.Type.PassableProp) &
+                    totalRangeCost <= unit.Movement)
+                {
+                    allPoints.Add(range[i].cell, TileHighlightType.Move);
+                }
+
             }
 
             Debug.Log("AllPoints: " + allPoints.Count);
@@ -476,17 +481,26 @@ namespace RedKite
 
             int tt = (int)TileMapper.Instance.Tiles[x, y].movementCost;
 
-            if (isHero == true & TileMapper.Instance.Tiles[x, y].TileType == Cell.Type.OccupiedEnemy)
+            if (isHero == true & TileMapper.Instance.Tiles[x, y].TileType == Cell.Type.OccupiedEnemy | isHero == true & TileMapper.Instance.Tiles[x, y].TileType == Cell.Type.PassableProp)
                 tt = 100;
 
-            if (isEnemy == true & TileMapper.Instance.Tiles[x, y].TileType == Cell.Type.OccupiedAlly)
+            if (isEnemy == true & TileMapper.Instance.Tiles[x, y].TileType == Cell.Type.OccupiedAlly | isEnemy == true & TileMapper.Instance.Tiles[x, y].TileType == Cell.Type.PassableProp)
                 tt = 100;
 
-            if (isFinal & (TileMapper.Instance.Tiles[x, y].TileType == Cell.Type.OccupiedAlly | TileMapper.Instance.Tiles[x, y].TileType == Cell.Type.OccupiedEnemy))
+            if (isFinal & (TileMapper.Instance.Tiles[x, y].TileType == Cell.Type.OccupiedAlly | TileMapper.Instance.Tiles[x, y].TileType == Cell.Type.OccupiedEnemy | TileMapper.Instance.Tiles[x, y].TileType == Cell.Type.PassableProp))
                 tt = 100;
 
             return tt;
         }
+
+        float RangeCostToEnterTile(int x, int y, bool isHero = false, bool isEnemy = false, bool isFinal = false)
+        {
+
+            int tt = (int)TileMapper.Instance.Tiles[x, y].rangeCost;
+
+            return tt;
+        }
+
 
         bool HeroCanEnterTile(int x1, int y1, bool isHero, bool isEnemy)
         {

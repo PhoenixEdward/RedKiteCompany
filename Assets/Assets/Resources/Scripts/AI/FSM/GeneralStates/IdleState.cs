@@ -29,7 +29,7 @@ namespace RedKite
         public bool OnMessage(GameSprite owner, Telegram message)
         {
             if(message.Msg == Message.InFOV & ((owner is Hero & message.Sender is Enemy) | (owner is Enemy & message.Sender is Hero)))
-                if (Utility.ManhattanDistance(message.Sender.Coordinate, owner.Coordinate) < owner.PerceptionRange)
+                if (Utility.ManhattanDistance(message.Sender.Coordinate, owner.Coordinate) < owner.Perception)
                 {
                     owner.StateMachine.ChangeState(new CombatState());
                     //not sure if this is the proper way of doing this or if I need to send a message out to the telegraph?

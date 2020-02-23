@@ -72,7 +72,7 @@
 				float2 texelSize2 = 1 / _ScreenParams.xy;
 				fixed4 wallCol = tex2D(_MainTex3, i.vertex * texelSize2);
 
-				if (wallCol.a != 0 & wallCol.b > 0.74f)
+				if (wallCol.a != 0 & wallCol.g > 0.74f)
 				{
 					return float4(0, 0, 0, 0);
 				}

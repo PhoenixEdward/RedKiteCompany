@@ -35,12 +35,15 @@ Shader "Unlit/GlowMask"
 				struct v2f {
 					float4 pos : SV_POSITION;
 					half2 uv : TEXCOORD0;
+					float4 worldPos : TEXCOORD1;
 				};
 
 				v2f vert(appdata_base v) {
 					v2f o;
 					o.pos = UnityObjectToClipPos(v.vertex);
 					o.uv = v.texcoord;
+					o.worldPos = mul(unity_ObjectToWorld, v.vertex);
+
 					return o;
 				}
 
@@ -53,6 +56,9 @@ Shader "Unlit/GlowMask"
 				{
 				float2 texelSize = 1 / _ScreenParams.xy;
 				fixed4 wall = tex2D(_MainTex2, i.pos * texelSize);
+
+				float dist = (distance(i.worldPos, _WorldSpaceCameraPos) - 18) / 14;
+
 					half4 c = tex2D(_MainTex, i.uv);
 					c.rgb *= c.a;
 					half4 outlineC = _Color;
@@ -71,11 +77,11 @@ Shader "Unlit/GlowMask"
 
 					if (_Covered == 1)
 					{
-						if (c.a != 1 & wall.a == 1)
+						if (c.a != 1 & wall.a == 1 & abs(wall.b - dist) < 0.08)
 						{
 							return lerp(c, outlineC, c.a == 0 && (alpha_up + alpha_down + alpha_right > 0) || (alpha_left + alpha_up2 + alpha_down2 + alpha_left2 + alpha_right2 > 0));
 						}
-						else if (c.a == 1 & wall.a == 1)
+						else if (c.a == 1 & wall.a == 1 & abs(wall.b - dist) < 0.08)
 						{
 							return float4(outlineC.r, outlineC.g, outlineC.b, 0.75f);
 						}

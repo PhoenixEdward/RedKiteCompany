@@ -39,7 +39,6 @@ namespace RedKite
             if (currentState != null)
                 currentState.Execute(owner);
 
-            Debug.Log(owner.Name + ": " + currentState.ToString());
         }
 
         public void ChangeState(IState newState)

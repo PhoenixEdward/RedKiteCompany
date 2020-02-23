@@ -4,7 +4,6 @@ using UnityEngine;
 
 namespace RedKite
 {
-    [ExecuteInEditMode]
     public class WallRender : MonoBehaviour
     {
         public Camera cam;

@@ -107,12 +107,9 @@ namespace RedKite
                             return;
                         }
 
-                        if (selectedHero.IsMoving == false & CombatMenu.IsActive == false & battleGrid.isActive == false & selectedHero.Ready)
+                        if (selectedHero.IsMoving == false & battleGrid.isActive == false & selectedHero.Ready)
                             battleGrid.NewUnitRange(selectedHero);
-                        /*
-                        else if (battleGrid.withinRange != null & battleGrid.canMoveTo != null)
-                            battleGrid.DeactivateUnitRange();
-                        */
+
                         if (destination != null & CombatMenu.IsActive == false)
                         {
                             if (TileMapper.Instance.Tiles[destination.cell.x, destination.cell.y].IsWalkable == true & selectedHero.IsMoving == false)
@@ -139,16 +136,21 @@ namespace RedKite
                             combatMenu.Deactivate();
                             battleGrid.DeactivateUnitRange();
                         }
-
-                        if (CombatMenu.IsActive)
-                            tilemap.ClearAllTiles();
-
+                    }
+                    else
+                    {
+                        battleGrid.DeactivateUnitRange();
                     }
                     //this needs to be reworked. The above should be a function. A later problem.
+                }
+                else
+                {
+                    battleGrid.DeactivateUnitRange();
                 }
             }
 
             cursor.transform.position = grid.CellToWorld(highlight) + new Vector3(0.5f,2,0.5f);
+            cursor.transform.Rotate(new Vector3(0, 1, 0));
         }
 
         public void UnitData()

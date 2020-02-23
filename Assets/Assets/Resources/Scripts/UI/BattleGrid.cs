@@ -12,6 +12,7 @@ namespace RedKite
         Tile selectTile;
         Tile attackTile;
         Tile assistTile;
+        Tile readyTile;
 
         public Level level;
 
@@ -24,6 +25,8 @@ namespace RedKite
         public List<Node> canMoveTo = new List<Node>();
 
         public bool isActive;
+
+        List<Hero> heroes;
 
         // Start is called before the first frame update
         void Start()
@@ -44,6 +47,9 @@ namespace RedKite
             assistTile = ScriptableObject.CreateInstance<Tile>();
             assistTile.sprite = Resources.Load<Sprite>("UI/Assist");
 
+            readyTile = ScriptableObject.CreateInstance<Tile>();
+            readyTile.sprite = Resources.Load<Sprite>("UI/Ready");
+
             for (int x = 0; x < map.cellBounds.xMax; x++)
             {
                 for (int y = 0; y < map.cellBounds.yMax; y++)
@@ -51,6 +57,26 @@ namespace RedKite
                     map.SetTile(new Vector3Int(x, y, 0), clearTile);
                 }
             }
+
+        }
+
+        private void Update()
+        {
+            heroes = GameSpriteManager.Instance.Heroes;
+
+            if (!isActive)
+            {
+                foreach (Hero hero in heroes)
+                {
+                    if (hero.Ready)
+                    {
+                        map.SetTile(hero.Coordinate, readyTile);
+                    }
+                    else
+                        map.SetTile(hero.Coordinate, clearTile);
+                }
+            }
+            map.RefreshAllTiles();
         }
 
         // Update is called once per frame
@@ -77,96 +103,6 @@ namespace RedKite
             }
 
             map.RefreshAllTiles();
-        }
-
-
-        public void UnitRange(Unit unit)
-        {
-                //draw grid of valid movement tiles
-                //may need to keep an eye out for impassible moving units. could cause issues here.
-
-                if (unit.IsMoving == false & withinRange.Count == 0 & unit.Ready)
-                {
-
-                    //formula for area of max unit range is (n+1)^2 + n^2 where n is movement speed.
-                    //for now null for withinRange will be a single array with Vector3Int.Zero (default value) indicating a non walkable cell.
-                    //this will either need a second array or be converted to a dictionary later to record WHY the cell isn't walkable (enemy unit, chest, wall).
-                    //honestly not sure if this is the best place to store that data though.
-
-
-                    int withinRangeIndex = 0;
-
-                    //changed box from List to Array. May not really be worth it for this small of an operation but it's good practice. Nulls indicate
-
-                    int boxRange = (unit.Movement * 2) + 1;
-
-
-                    Vector2Int cell;
-
-                    Vector2 startingSpot = new Vector2(unit.Coordinate.x - unit.Movement, unit.Coordinate.y - unit.Movement);
-
-                    for (int i = 0; i < boxRange; i++)
-                    {
-                        for (int j = 0; j < boxRange; j++)
-                        {
-                            cell = new Vector2Int((int)startingSpot.x + i, (int)startingSpot.y + j);
-
-                            if (Utility.ManhattanDistance(new Vector3Int((int)unit.Coordinate.x, (int)unit.Coordinate.y,2), new Vector3Int(cell.x, cell.y,2)) <= unit.Movement)
-                            {
-
-                                if (cell.x >= 0 & cell.x < TileMapper.Instance.W & cell.y >= 0 & cell.y < TileMapper.Instance.H)
-                                {
-                                    withinRange.Add(PathFinder.graph[cell.x, cell.y]);
-
-                                }
-
-                                withinRangeIndex++;
-
-                            }
-                        }
-                    }
-
-                    //remove nodes that are not walkable or obstructed. May be worth while to create a seperate variable.
-
-                    for (int i = 0; i < withinRange.Count; i++)
-                    {
-                        if (withinRange[i] != null)
-                        {
-                            if (pathFinder.IsReachable(PathFinder.graph[unit.Coordinate.x, unit.Coordinate.y], withinRange[i], withinRange.ToArray(), unit.Movement))
-                            {
-                                canMoveTo.Add(withinRange[i]);
-                            }
-                        }
-                    }
-
-                    for (int i = 0; i < canMoveTo.Count; i++)
-                    {
-
-                        map.SetTile(canMoveTo[i].cell, rangeTile);
-                    }
-
-                    map.RefreshAllTiles();
-                }
-
-                else if (unit.IsMoving == true & withinRange != null & canMoveTo != null)
-                {
-
-                    for (int i = 0; i < canMoveTo.Count; i++)
-                    {
-                        if (canMoveTo[i] != null)
-                        {
-                            map.SetTile(canMoveTo[i].cell, clearTile);
-                        }
-                    }
-
-                    withinRange = new List<Node>();
-                    canMoveTo = new List<Node>();
-                }
-
-                map.RefreshAllTiles();
-
-            //kept in case something doesnt work
-
         }
 
         //pretty sure if I I make this an array this repetition isn't necessary

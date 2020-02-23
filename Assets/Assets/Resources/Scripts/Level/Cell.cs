@@ -18,7 +18,7 @@ namespace RedKite
             Spawn,
             OccupiedEnemy,
             OccupiedAlly,
-            OccupiedProp
+            PassableProp
         }
 
         public Type TileType { get; private set; }
@@ -27,6 +27,8 @@ namespace RedKite
 
         public float movementCost { get; private set; }
 
+        public float rangeCost { get; private set; }
+
         public Cell(Cell.Type type)
         {
             TileType = type;
@@ -34,38 +36,51 @@ namespace RedKite
             if (type == Cell.Type.Floor)
             {
                 movementCost = 1;
+                rangeCost = 1;
             }
             if (type == Cell.Type.Wall)
             {
                 movementCost = 100;
+                rangeCost = 100;
                 IsWalkable = false;
             }
             if (type == Cell.Type.Empty)
             {
                 movementCost = 100;
+                rangeCost = 1;
                 IsWalkable = false;
             }
             if (type == Cell.Type.Door)
             {
                 movementCost = 100;
+                rangeCost = 100;
                 IsWalkable = false;
             }
             if (type == Cell.Type.Corner)
             {
                 movementCost = 100;
+                rangeCost = 100;
                 IsWalkable = false;
             }
             if (type == Cell.Type.Spawn)
             {
                 movementCost = 1;
+                rangeCost = 1;
             }
-            if(type == Cell.Type.OccupiedEnemy)
+            if (type == Cell.Type.OccupiedEnemy)
             {
                 movementCost = 1;
+                rangeCost = 1;
             }
             if(type == Cell.Type.OccupiedAlly)
             {
                 movementCost = 1;
+                rangeCost = 1;
+            }
+            if (type == Cell.Type.PassableProp)
+            {
+                movementCost = 1;
+                rangeCost = 1;
             }
         }
     }

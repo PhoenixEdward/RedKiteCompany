@@ -41,6 +41,8 @@ namespace RedKite
         void Start()
         {
             menu = GetComponentInParent<CombatMenu>();
+
+            TargetNone();
         }
 
         void Update()
@@ -71,7 +73,6 @@ namespace RedKite
             }
             else
             {
-                battleGrid.Clear();
                 CameraMovement.LockOff();
                 lockOnIndex = 0;
             }

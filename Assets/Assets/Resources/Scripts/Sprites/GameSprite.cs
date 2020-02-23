@@ -46,7 +46,7 @@ namespace RedKite
         public JobClass jobClass { get; private set; }
         public int Movement { get; private set; }
         public int Fatigue { get; private set; }
-        public int PerceptionRange { get; private set; }
+        public int Perception { get; private set; }
         public Vector3 Destination { get; set; } = Vector3.zero;
 
         public Skill ActiveSkill { get; private set; } = Skill.Alert;
@@ -79,8 +79,8 @@ namespace RedKite
 
         public static Color fogTint;
 
-        protected SpriteRenderer sr;
-        protected Vector2Int FrameDimensions;
+        public SpriteRenderer SR { get; private set; }
+        public Vector2Int FrameDimensions;
 
         static protected CameraMovement cam;
 
@@ -131,27 +131,40 @@ namespace RedKite
 
             }
 
-            FrameDimensions = FrameDimensions == Vector2.zero ? new Vector2Int(200, 200) : FrameDimensions;
+            if (spriteType != SpriteType.Prop)
+                FrameDimensions = FrameDimensions == Vector2.zero ? new Vector2Int(200, 200) : FrameDimensions;
+            else
+                FrameDimensions = FrameDimensions == Vector2.zero ? new Vector2Int(spriteLoad.height, spriteLoad.width) : FrameDimensions;
 
             verticalFrames = spriteLoad.height / FrameDimensions.y;
             horizontalFrames = spriteLoad.width / FrameDimensions.x;
 
-            sprites = new Sprite[horizontalFrames, verticalFrames];
+            if(sprites == null)
+            { 
+                sprites = new Sprite[horizontalFrames, verticalFrames];
 
-            for (int y = 0; y < verticalFrames; y++)
-            {
-                for (int x = 0; x < horizontalFrames; x++)
+                for (int y = 0; y < verticalFrames; y++)
                 {
-                    Sprite sprite = Sprite.Create(spriteLoad, new Rect(new Vector2(x * FrameDimensions.x, y * FrameDimensions.y), FrameDimensions), new Vector2(0.5f, 0f));
-                    sprites[x, y] = sprite;
+                    for (int x = 0; x < horizontalFrames; x++)
+                    {
+                        Sprite sprite = Sprite.Create(spriteLoad, new Rect(new Vector2(x * FrameDimensions.x, y * FrameDimensions.y), FrameDimensions), new Vector2(0.5f, 0f));
+                        sprites[x, y] = sprite;
+                    }
                 }
             }
 
-            sr = gameObject.AddComponent<SpriteRenderer>();
+            SpriteRenderer spriteRenderer;
 
-            sr.material = spriteMask;
+            if (gameObject.TryGetComponent(out spriteRenderer))
+                SR = spriteRenderer;
+            else
+                SR = gameObject.AddComponent<SpriteRenderer>();
 
-            sr.sortingLayerName = "Units";
+            Debug.Log(SR.name);
+
+            SR.material = spriteMask;
+
+            SR.sortingLayerName = "Units";
 
         }
 
@@ -167,9 +180,9 @@ namespace RedKite
         {
 
             if (!IsVisible)
-                sr.enabled = false;
+                SR.enabled = false;
             else
-                sr.enabled = true;
+                SR.enabled = true;
 
             if (CameraMovement.facing == CameraMovement.Facing.NE)
             {
@@ -336,7 +349,7 @@ namespace RedKite
             Ready = true;
             Movement = 4 + (Stats.Dexterity.Modifier / 4);
 
-            PerceptionRange = Mathf.Max(10, 5 + (Stats.Intelligence.Modifier / 5));
+            Perception = Mathf.Max(10, 3 + (Stats.Intelligence.Modifier / 5));
 
             if (Stats.Strength.Altered)
                 Stats.Strength.DecrementBuffDuration();

@@ -15,7 +15,6 @@ namespace RedKite
         {
             get
             {
-                Debug.Log("Current Buff: " + buff);
                 return _modifier + buff;
 
             }

@@ -333,7 +333,7 @@ namespace RedKite
             SubMeshes[0].vertices = backVertices;
             SubMeshes[0].triangles = backTriangles;
             //subMeshes[0].Optimize();
-            //subMeshes[0].RecalculateNormals();
+            SubMeshes[0].RecalculateNormals();
 
             //create front submesh
             SubMeshes[1] = new Mesh();
@@ -341,7 +341,7 @@ namespace RedKite
             SubMeshes[1].vertices = frontVertices;
             SubMeshes[1].triangles = frontTriangles;
             //subMeshes[1].Optimize();
-            //subMeshes[1].RecalculateNormals();
+            SubMeshes[1].RecalculateNormals();
 
             //create top submesh
             SubMeshes[2] = new Mesh();
@@ -349,7 +349,7 @@ namespace RedKite
             SubMeshes[2].vertices = topVertices;
             SubMeshes[2].triangles = topTriangles;
             //subMeshes[2].Optimize();
-            //subMeshes[2].RecalculateNormals();
+            SubMeshes[2].RecalculateNormals();
 
             //create bottom submesh
             SubMeshes[3] = new Mesh();
@@ -357,7 +357,7 @@ namespace RedKite
             SubMeshes[3].vertices = bottomVertices;
             SubMeshes[3].triangles = bottomTriangles;
             //subMeshes[3].Optimize();
-            //subMeshes[3].RecalculateNormals();
+            SubMeshes[3].RecalculateNormals();
 
             //create left submesh
             SubMeshes[4] = new Mesh();
@@ -365,7 +365,7 @@ namespace RedKite
             SubMeshes[4].vertices = leftVertices;
             SubMeshes[4].triangles = leftTriangles;
             //subMeshes[4].Optimize();
-            //subMeshes[4].RecalculateNormals();
+            SubMeshes[4].RecalculateNormals();
 
             //create right submesh
             SubMeshes[5] = new Mesh();
@@ -373,7 +373,7 @@ namespace RedKite
             SubMeshes[5].vertices = rightVertices;
             SubMeshes[5].triangles = rightTriangles;
             //subMeshes[5].Optimize();
-            //subMeshes[5].RecalculateNormals();
+            SubMeshes[5].RecalculateNormals();
         }
 
         public void SetTextures(Renderer renderer, Texture2D[] textures, bool[] isMirrored)
@@ -582,7 +582,7 @@ namespace RedKite
                     //bottom right
                     uvs[index + 2 + rotOffset[rotV][2][rotH]] = new Vector3(3/4f - pixOffsetH, 3/4f + pixOffsetV);
                     //bottom left
-                    uvs[index + 3 + rotOffset[rotV][3][rotH]] = new Vector3(2/ 4f + pixOffsetH, 3/4f + pixOffsetV);
+                    uvs[index + 3 + rotOffset[rotV][3][rotH]] = new Vector3(2/4f + pixOffsetH, 3/4f + pixOffsetV);
 
                     index += 4;
 
@@ -783,7 +783,7 @@ namespace RedKite
 
                 outMesh.SubMeshes[plane] = new Mesh();
                 outMesh.SubMeshes[plane].CombineMeshes(combine, true, true);
-                //outMesh.subMeshes[plane].Optimize();
+                outMesh.SubMeshes[plane].RecalculateNormals();
             }
 
             return outMesh;
@@ -811,7 +811,7 @@ namespace RedKite
 
         public Texture2D CreateCubeTexture(Texture2D[] textures)
         {
-            Texture2D outTexture = new Texture2D(100 * 4, 100 * 4);
+            Texture2D outTexture = new Texture2D(100 * 4, 100 * 4, TextureFormat.ARGB32,false);
             Color[] empty = new Color[100 * 100];
 
             //get empty color array
@@ -847,13 +847,13 @@ namespace RedKite
             };
 
             //creates indexes for skipping over
-            int[] empties = new int[10] { 0, 1, 3, 4, 8, 9, 11, 12, 13, 14 };//,15,16,18,19};
+            int[] empties = new int[10] { 0, 1, 3, 4, 8, 9, 11, 12, 13, 15 };//,15,16,18,19};
 
             int[] texOrder = new int[] {2,4,1,5,3,0};
             //to increment the texture array seperately.
             int texIndex = 0;
 
-            for (int i = 0; i < textures.Length + 9; i++)
+            for (int i = 0; i < textures.Length + 10; i++)
             {
                 if (empties.Contains(i))
                 {

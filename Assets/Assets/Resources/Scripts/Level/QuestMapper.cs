@@ -25,6 +25,7 @@ namespace RedKite
         public List<Enemy> enemies = new List<Enemy>();
         public Dictionary<Vector3Int, string> Props { get; private set; } = new Dictionary<Vector3Int, string>();
         int chestCount;
+        int treeCount;
 
         Dictionary<int, int> distanceFromSpawn = new Dictionary<int, int>();
 
@@ -52,7 +53,7 @@ namespace RedKite
 
                     if(chance > 0.75d)
                     {
-                        List<Vector3> coords = TileMapper.Instance.Areas[area.Key].GetCoords().ToList();
+                        List<Vector3> coords = TileMapper.Instance.Areas[area.Key].GetCoords(true).ToList();
 
                         coords.Shuffle();
 
@@ -68,6 +69,31 @@ namespace RedKite
 
                 }
             }
+
+            treeCount = 10;
+
+            for (int i = 0; i < treeCount; i++)
+            {
+                foreach (KeyValuePair<int, Area> area in TileMapper.Instance.Areas)
+                {
+                    double chance = rndState.Next(0, Mathf.RoundToInt(area.Value.Floor.height * area.Value.Floor.width)/35);
+
+                    for(int j = 0; j < chance; j++)
+                    { 
+                        List<Vector3> coords = TileMapper.Instance.Areas[area.Key].GetCoords(true).ToList();
+
+                        coords.Shuffle();
+
+                        foreach (Vector3 coord in coords)
+                            if (!Props.ContainsKey(Vector3Int.FloorToInt(coord)))
+                            {
+                                Props.Add(Vector3Int.FloorToInt(coord), "Evergreen");
+                                break;
+                            }
+                    }
+                }
+            }
+
         }
     }
 }

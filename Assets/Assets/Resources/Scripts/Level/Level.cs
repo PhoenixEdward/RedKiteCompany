@@ -52,8 +52,6 @@ namespace RedKite
             pathFinder = new PathFinder();
             pathFinder.GenerateGraph();
 
-            Vector3 offset = new Vector3(-0.35f, 0, -0.35f);
-
             grid = FindObjectOfType<Grid>();
 
             fow = FindObjectOfType<FOW>();
@@ -71,11 +69,8 @@ namespace RedKite
             GameSprite.fogTint = fogColor;
 
 
-            GameObject hero1 = new GameObject();
-            hero1.name = "RangedGuy";
-            hero1.layer = 8;
-            Hero unit1 = hero1.AddComponent<Hero>();
-            unit1.spriteName = "Ranged";
+            GameObject hero1 = Instantiate(Resources.Load<GameObject>("Characters/Prefabs/Heroes/Ranged"));
+            Hero unit1 = hero1.GetComponent<Hero>();
             unit1.Instantiate("Gongagoo", JobClass.Ranger, 8);
             unit1.Spawn();
             unit1.LearnSkill("Training Short Bow");
@@ -106,6 +101,10 @@ namespace RedKite
 
             SpawnEnemies(4);
 
+            GameSpriteManager.Instance.GetSprites();
+
+            TileMapper.Instance.Update();
+
             QuestMapper.Instance.Generate();
 
             foreach (KeyValuePair<Vector3Int, string> prop in QuestMapper.Instance.Props)
@@ -114,10 +113,12 @@ namespace RedKite
                 propInstances.Add(prop.Key, propInstance);
                 propInstance.name = prop.Value;
                 Prop entity = propInstance.AddComponent<Prop>();
-                entity.Coordinate = prop.Key;
+                entity.Coordinate = prop.Key - new Vector3Int(0, 0, 2);
                 entity.isIso = true;
                 entity.spriteName = prop.Value;
             }
+
+            GameSpriteManager.Instance.GetSprites();
 
             glow = FindObjectOfType<Glow>();
 
@@ -194,8 +195,7 @@ namespace RedKite
                 propInstances.Add(prop.Key, propInstance);
                 propInstance.name = prop.Value;
                 Prop entity = propInstance.AddComponent<Prop>();
-                entity.Coordinate = prop.Key;
-                entity.isIso = true;
+                entity.Coordinate = prop.Key - new Vector3Int(0,0,2);
                 entity.spriteName = prop.Value;
             }
 

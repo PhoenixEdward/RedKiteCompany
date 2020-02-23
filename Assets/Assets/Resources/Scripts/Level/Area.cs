@@ -31,7 +31,7 @@ namespace RedKite
             Walls = new List<Wall>();
         }
 
-        public Vector3[] GetCoords()
+        public Vector3[] GetCoords(bool openOnly = false)
         {
             Vector3[][] allCoords = new Vector3[(int)Floor.height][];
 
@@ -41,7 +41,10 @@ namespace RedKite
                 allCoords[i] = Utility.CoordRange(Floor.BottomLeft + (Orientation.Forward * i), Floor.BottomRight + (Orientation.Forward * i));
             }
 
-            return allCoords.SelectMany(x => x).ToArray();
+            if(openOnly)
+                return allCoords.SelectMany(x => x).Where(x => TileMapper.Instance.Tiles[(int)x.x, (int)x.y].TileType == Cell.Type.Floor).ToArray();
+            else
+                return allCoords.SelectMany(x => x).ToArray();
 
         }
 

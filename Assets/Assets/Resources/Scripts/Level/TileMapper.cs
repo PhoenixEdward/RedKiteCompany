@@ -26,7 +26,8 @@ namespace RedKite
             new Cell(Cell.Type.Floor),
             new Cell(Cell.Type.Wall),
             new Cell(Cell.Type.OccupiedEnemy),
-            new Cell(Cell.Type.OccupiedAlly)
+            new Cell(Cell.Type.OccupiedAlly),
+            new Cell(Cell.Type.PassableProp)
         };
 
         public int H;
@@ -63,6 +64,7 @@ namespace RedKite
 
         List<Enemy> enemies;
         List<Hero> heroes;
+        List<Prop> props;
 
         public void Update()
         {
@@ -73,9 +75,11 @@ namespace RedKite
         {
             enemies = GameSpriteManager.Instance.Enemies;
             heroes = GameSpriteManager.Instance.Heroes;
+            props = GameSpriteManager.Instance.Props;
 
             List<Vector2> occupiedTilesEnemy = new List<Vector2>();
             List<Vector2> occupiedTilesHeroes = new List<Vector2>();
+            List<Vector2> occupiedTilesProps = new List<Vector2>();
 
             foreach (Unit unit in enemies)
                 occupiedTilesEnemy.Add(new Vector2(unit.Destination.x, unit.Destination.y));
@@ -83,20 +87,27 @@ namespace RedKite
             foreach (Unit unit in heroes)
                 occupiedTilesHeroes.Add(new Vector2(unit.Destination.x, unit.Destination.y));
 
+            foreach (Prop prop in props)
+                occupiedTilesProps.Add(new Vector2(prop.Coordinate.x, prop.Coordinate.y));
 
             for (int y = 0; y < Tiles.GetLength(1); y++)
             { 
                 for(int x = 0; x < Tiles.GetLength(0); x++)
                 {
-                        if (Tiles[x, y].TileType == Cell.Type.OccupiedEnemy & !occupiedTilesEnemy.Contains(new Vector2(x, y)))
-                            Tiles[x, y] = tileTypes[1];
-                        else if (occupiedTilesEnemy.Contains(new Vector2(x, y)))
-                            Tiles[x, y] = tileTypes[3];
+                    if (Tiles[x, y].TileType == Cell.Type.OccupiedEnemy & !occupiedTilesEnemy.Contains(new Vector2(x, y)))
+                        Tiles[x, y] = tileTypes[1];
+                    else if (occupiedTilesEnemy.Contains(new Vector2(x, y)))
+                        Tiles[x, y] = tileTypes[3];
 
                     if (Tiles[x, y].TileType == Cell.Type.OccupiedAlly & !occupiedTilesHeroes.Contains(new Vector2(x, y)))
                         Tiles[x, y] = tileTypes[1];
                     else if (occupiedTilesHeroes.Contains(new Vector2(x, y)))
                         Tiles[x, y] = tileTypes[4];
+
+                    if (Tiles[x, y].TileType == Cell.Type.PassableProp & !occupiedTilesProps.Contains(new Vector2(x, y)))
+                        Tiles[x, y] = tileTypes[1];
+                    else if (occupiedTilesProps.Contains(new Vector2(x, y)))
+                        Tiles[x, y] = tileTypes[5];
                 }
             }
         }
@@ -161,8 +172,6 @@ namespace RedKite
 
             SplitAllWalls();
 
-            Utility.LevelToJSON(Areas);
-
             foreach (Area area in Areas.Values)
             {
                 foreach(Area.Wall wall in area.Walls)
@@ -214,6 +223,8 @@ namespace RedKite
                         { 
                             RoomTiles[(int)c-48].Add(new Vector3Int(x, y,1));
                         }
+
+                        Tiles[x, y] = Tiles[x, y] = tileTypes[1];
                     }
                     else if (c == TILE_WALL | c == TILE_WALL_CORNER)
                     {
@@ -226,9 +237,6 @@ namespace RedKite
                     }
                 }
             }
-
-            //Utility.LevelToJSON(areas);
-
         }
 
         protected void ClearMap()

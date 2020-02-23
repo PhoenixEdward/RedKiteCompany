@@ -23,7 +23,7 @@ namespace RedKite
         {
             base.Update();
 
-            sr.sprite = sprites[HorizontalRow, VerticalRow];
+            SR.sprite = sprites[HorizontalRow, VerticalRow];
         }
     }
 }
