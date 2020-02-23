@@ -28,7 +28,9 @@ namespace RedKite
         public Sprite moveSprite;
         public static Sprite fogSprite;
 
-        List<Hero> heroes;
+        static PathFinder pathFinder;
+
+        static List<Hero> heroes;
         List<Enemy> enemies;
         List<Prop> props;
 
@@ -44,6 +46,8 @@ namespace RedKite
         public Color fogColor;
 
         public Texture wallTarget;
+
+        static List<Vector3> clearCoords;
 
         Slider[] colorSliders;
 
@@ -64,6 +68,32 @@ namespace RedKite
 
             GenerateFog();
             //place inital fog tiles on tilemap
+
+            pathFinder = new PathFinder();
+        }
+
+        public static void UpdateFog()
+        {
+
+            heroes = heroes ?? GameSpriteManager.Instance.Heroes;
+            pathFinder = pathFinder ?? new PathFinder();
+
+            clearCoords = new List<Vector3>();
+
+            foreach (Hero hero in heroes)
+            {
+                Node[] coords = Utility.GenerateBoxRange(hero.Coordinate, hero.Perception);
+
+                foreach (Node node in coords)
+                {
+
+                    Vector3Int coord = node.cell;
+
+                    if (Utility.ManhattanDistance(hero.Coordinate, coord) <= hero.Perception)
+                        if (pathFinder.IsVisible(PathFinder.graph[hero.Coordinate.x, hero.Coordinate.y], PathFinder.graph[coord.x, coord.y], coords, hero.Perception))
+                            clearCoords.Add(coord);
+                }
+            }
         }
 
         public void GenerateFog()
@@ -120,9 +150,9 @@ namespace RedKite
             fogColor = new Color(colorSliders[0].value, colorSliders[1].value, colorSliders[2].value);
             partMaterial.SetColor("_Color", fogColor);
 
-            foreach(Patch patch in patches)
+            foreach (Patch patch in patches)
             {
-                if(patch != null)
+                if (patch != null)
                 {
                     patch.Rotate();
 
@@ -133,68 +163,38 @@ namespace RedKite
                 }
             }
 
-            List<int> currentRooms = new List<int>();
-
-            foreach (Hero hero in heroes)
-            {
-                Vector3Int coord = hero.Coordinate;
-
-                if((int)roomMap[coord.x, coord.y] - 48 >= 0 & (int)roomMap[coord.x, coord.y] - 48 <= 9)
-                {
-                    currentRooms.Add((int)roomMap[coord.x, coord.y] - 48);
-
-                    if(!activeRooms.Contains((int)roomMap[coord.x, coord.y] - 48))
-                    { 
-                        activeRooms.Add((int)roomMap[coord.x, coord.y] - 48);
-                    }
-
-                }
-            }
 
 
-
-            foreach(int roomIndex in activeRooms)
-            {
-                Vector3[] edgeCoords = TileMapper.Instance.Areas[roomIndex].GetWallCoords();
-
-                foreach (Vector3 coord in edgeCoords)
-                {
-                    if (currentRooms.Contains(roomIndex))
-                        fogMap[(int)coord.x, (int)coord.y] = TILE_EDGE;
-                    else
+            for(int y = 0; y < fogMap.GetLength(1); y++)
+            { 
+                for(int x = 0; x < fogMap.GetLength(0); x++)
                     {
-                        fogMap[(int)coord.x, (int)coord.y] = TILE_FOG;
+                        Vector3 coord = new Vector3(x, y, -1);
+
+                        if(clearCoords.Contains(coord))
+                        { 
+                            fogMap[(int)coord.x, (int)coord.y] = TILE_CLEAR;
+
+
+                            foreach (Prop prop in props)
+                                if (prop.Coordinate.x == coord.x & prop.Coordinate.y == coord.y)
+                                    prop.IsVisible = true;
+
+                            foreach (Enemy enemy in enemies)
+                                if (enemy.Coordinate.x == coord.x & enemy.Coordinate.y == coord.y)
+                                    enemy.IsVisible = true;
+                        }
+                        else
+                        { 
+                            fogMap[(int)coord.x, (int)coord.y] = TILE_FOG;
+
+
+                            foreach (Enemy enemy in enemies)
+                                if (enemy.Coordinate.x == coord.x & enemy.Coordinate.y == coord.y)
+                                    enemy.IsVisible = false;
+                        }
                     }
-                }
-                Vector3[] clearCoords = TileMapper.Instance.Areas[roomIndex].GetCoords();
-
-                foreach (Vector3 coord in clearCoords)
-                {
-                    if(currentRooms.Contains(roomIndex))
-                    { 
-                        fogMap[(int)coord.x, (int)coord.y] = TILE_CLEAR;
-
-
-                        foreach (Prop prop in props)
-                            if (prop.Coordinate.x == coord.x & prop.Coordinate.y == coord.y)
-                                prop.IsVisible = true;
-
-                        foreach (Enemy enemy in enemies)
-                            if (enemy.Coordinate.x == coord.x & enemy.Coordinate.y == coord.y)
-                                enemy.IsVisible = true;
-                    }
-                    else
-                    { 
-                        fogMap[(int)coord.x, (int)coord.y] = TILE_FOG;
-
-
-                        foreach (Enemy enemy in enemies)
-                            if (enemy.Coordinate.x == coord.x & enemy.Coordinate.y == coord.y)
-                                enemy.IsVisible = false;
-                    }
-                }
             }
-
 
             for (int y = 1; y < TileMapper.Instance.H - 1; y++)
             {

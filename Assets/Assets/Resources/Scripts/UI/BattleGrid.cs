@@ -28,9 +28,13 @@ namespace RedKite
 
         List<Hero> heroes;
 
+        Reticle reticle;
+
         // Start is called before the first frame update
         void Start()
         {
+            reticle = FindObjectOfType<Reticle>();
+
             map = GetComponent<Tilemap>();
 
             clearTile = ScriptableObject.CreateInstance<Tile>();
@@ -100,6 +104,7 @@ namespace RedKite
                     canMoveTo.Add(PathFinder.graph[entry.Key.x, entry.Key.y]);
                 }
 
+                withinRange.Add(PathFinder.graph[entry.Key.x, entry.Key.y]);
             }
 
             map.RefreshAllTiles();
@@ -112,7 +117,11 @@ namespace RedKite
             for (int i = 0; i < actionables.Length; i++)
             {
                 if (i == highlightIndex)
-                    map.SetTile(actionables[i].Coordinate, selectTile);
+                {
+                    reticle.highlight = actionables[i].Coordinate + new Vector3Int(0, 0, -1);
+
+                    reticle.UpdateHighlight();
+                }
                 else
                 {
                     if (actionables[i] is Enemy)

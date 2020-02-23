@@ -14,6 +14,7 @@ namespace RedKite
         GameSprite primaryTarget;
         bool hasTakenTurn = false;
         bool initiated = false;
+        bool HeroMoving = false;
 
         public void Enter(IState previousState, GameSprite owner)
         {
@@ -98,6 +99,15 @@ namespace RedKite
                     TargetPings[i] = false;
             }
 
+            else if(HeroMoving)
+            {
+                if (!owner.IsMoving)
+                {
+                    owner.Action(owner, Skill.Wait);
+                    HeroMoving = false;
+                }
+            }
+
             else if(initiated == true)
             {
                 if (!owner.IsMoving)
@@ -155,6 +165,15 @@ namespace RedKite
                 initiated = true;
                 primaryTarget = message.Sender;
                 return true;
+            }
+
+           if(message.Msg == Message.Wait)
+            {
+                Hero hero = (Hero)message.Sender;
+
+                hero.Embark(hero.Destination);
+
+                HeroMoving = true;
             }
 
             return false;

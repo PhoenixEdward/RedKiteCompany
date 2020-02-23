@@ -324,7 +324,7 @@ namespace RedKite
             }
         }
 
-        public void Spawn()
+        public virtual void Spawn()
         {
             if (rnd == null)
                 rnd = new System.Random();
@@ -349,7 +349,7 @@ namespace RedKite
             Ready = true;
             Movement = 4 + (Stats.Dexterity.Modifier / 4);
 
-            Perception = Mathf.Max(10, 3 + (Stats.Intelligence.Modifier / 5));
+            Perception = Mathf.Min(10, 5 + (Stats.Intelligence.Modifier / 5));
 
             if (Stats.Strength.Altered)
                 Stats.Strength.DecrementBuffDuration();
@@ -367,6 +367,9 @@ namespace RedKite
 
         public void EndTurn(int burden)
         {
+            if (this is Hero)
+                FOW.UpdateFog();
+
             Fatigue += Mathf.Max(Mathf.Max(35 - (Stats.Dexterity.Modifier / 2), 10) + burden, 0);
             Ready = false;
         }

@@ -116,13 +116,23 @@ namespace RedKite
                             {
                                 if (Utility.ManhattanDistance(new Vector3Int((int)selectedHero.Coordinate.x, (int)selectedHero.Coordinate.y, 2), new Vector3Int(destination.cell.x, destination.cell.y, 2)) <= selectedHero.Movement)
                                 {
-                                    if (battleGrid.canMoveTo.Contains(destination) &
+                                    if (battleGrid.withinRange.Contains(destination) &
                                         (TileMapper.Instance.Tiles[destination.cell.x, destination.cell.y].TileType != Cell.Type.OccupiedAlly | destination.cell == selectedHero.Coordinate))
                                     {
                                         {
                                             deselect = true;
-                                            combatMenu.ActivatePopUp(selectedHero, destination.cell);
+
+                                            List<Node> path = pathFinder.GeneratePathTo(selectedHero.Coordinate, destination.cell, selectedHero.Movement);
+
+                                            highlight = path[path.Count - 1].cell + new Vector3Int(0,0,-1);
+
+                                            UpdateHighlight();
+
+                                            tilemap.RefreshAllTiles();
+
+                                            combatMenu.ActivatePopUp(selectedHero, path[path.Count - 1].cell);
                                             destination = null;
+
                                         }
                                     }
                                 }
@@ -149,8 +159,6 @@ namespace RedKite
                 }
             }
 
-            cursor.transform.position = grid.CellToWorld(highlight) + new Vector3(0.5f,2,0.5f);
-            cursor.transform.Rotate(new Vector3(0, 1, 0));
         }
 
         public void UnitData()
@@ -197,26 +205,7 @@ namespace RedKite
             }
 
             //here is where I can put in all the highlight logic;
-
-            if (map.Tiles[highlight.x, highlight.y].TileType == Cell.Type.OccupiedEnemy | map.Tiles[highlight.x, highlight.y].TileType == Cell.Type.OccupiedAlly)
-            {
-                tilemap.SetTile(highlight, selectTile);
-                cursorMat.mainTexture = selectTile.sprite.texture;
-            }
-
-            if (temp == Vector3Int.zero)
-            {
-                temp = highlight;
-            }
-
-            if (highlight != temp)
-            {
-
-
-                tilemap.SetTile(temp, clearTile);
-
-                temp = highlight;
-            }
+            UpdateHighlight();
 
             //this needs to be moved somewhere else 
             if (selectedHero != null)
@@ -253,6 +242,34 @@ namespace RedKite
             tilemap.RefreshAllTiles();
 
             isSelection = false;
+        }
+
+        public void UpdateHighlight()
+        {
+            if (map.Tiles[highlight.x, highlight.y].TileType == Cell.Type.OccupiedEnemy | map.Tiles[highlight.x, highlight.y].TileType == Cell.Type.OccupiedAlly)
+            {
+                tilemap.SetTile(highlight, selectTile);
+                cursorMat.mainTexture = selectTile.sprite.texture;
+            }
+
+            if (temp == Vector3Int.zero)
+            {
+                temp = highlight;
+            }
+
+            if (highlight != temp)
+            {
+
+
+                tilemap.SetTile(temp, clearTile);
+
+                temp = highlight;
+            }
+
+            tilemap.RefreshAllTiles();
+
+            cursor.transform.position = grid.CellToWorld(highlight) + new Vector3(0.5f, 2, 0.5f);
+            cursor.transform.Rotate(new Vector3(0, 1, 0));
         }
 
         public void BattleGridState()

@@ -91,34 +91,37 @@ namespace RedKite
 
             foreach (GameSprite sprite in sprites)
             {
-                if (sprite is Enemy enemy)
-                {
-                    if (Utility.ManhattanDistance(new Vector3Int(selectedTile.x, selectedTile.y, -1), new Vector3Int(enemy.Coordinate.x, enemy.Coordinate.y, -1)) <= unit.MaxAttackRange)
+                if(sprite.IsVisible)
+                { 
+                    if (sprite is Enemy enemy)
                     {
-                        bool result = pathFinder.IsReachable(PathFinder.graph[selectedTile.x, selectedTile.y], PathFinder.graph[enemy.Coordinate.x, enemy.Coordinate.y], attackNodes, unit.MaxAttackRange, false);
+                        if (Utility.ManhattanDistance(new Vector3Int(selectedTile.x, selectedTile.y, -1), new Vector3Int(enemy.Coordinate.x, enemy.Coordinate.y, -1)) <= unit.MaxAttackRange)
+                        {
+                            bool result = pathFinder.IsReachable(PathFinder.graph[selectedTile.x, selectedTile.y], PathFinder.graph[enemy.Coordinate.x, enemy.Coordinate.y], attackNodes, unit.MaxAttackRange, false);
 
-                        if (result)
-                            attackables.Add(enemy);
+                            if (result)
+                                attackables.Add(enemy);
+                        }
                     }
-                }
-                else if (sprite is Hero hero)
-                {
-                    if (Utility.ManhattanDistance(new Vector3Int(selectedTile.x, selectedTile.y, -1), new Vector3Int(hero.Coordinate.x, hero.Coordinate.y, -1)) <= unit.MaxAssistRange | hero.Equals(unit))
+                    else if (sprite is Hero hero)
                     {
-                        bool result = false;
+                        if (Utility.ManhattanDistance(new Vector3Int(selectedTile.x, selectedTile.y, -1), new Vector3Int(hero.Coordinate.x, hero.Coordinate.y, -1)) <= unit.MaxAssistRange | hero.Equals(unit))
+                        {
+                            bool result = false;
 
-                        if(!hero.Equals(unit))
-                            result = pathFinder.IsReachable(PathFinder.graph[selectedTile.x, selectedTile.y], PathFinder.graph[hero.Coordinate.x, hero.Coordinate.y], assistNodes, unit.MaxAssistRange, false);
+                            if(!hero.Equals(unit))
+                                result = pathFinder.IsReachable(PathFinder.graph[selectedTile.x, selectedTile.y], PathFinder.graph[hero.Coordinate.x, hero.Coordinate.y], assistNodes, unit.MaxAssistRange, false);
 
-                        if (result | hero.Equals(unit))
-                            assistables.Add(hero);
+                            if (result | hero.Equals(unit))
+                                assistables.Add(hero);
+                        }
                     }
-                }
-                else if (sprite is Prop prop)
-                {
-                    if (prop.IsInteractable & Utility.ManhattanDistance(selectedTile, prop.Coordinate) <= 1)
+                    else if (sprite is Prop prop)
                     {
-                        interactables.Add(prop);
+                        if (prop.IsInteractable & Utility.ManhattanDistance(selectedTile, prop.Coordinate) <= 1)
+                        {
+                            interactables.Add(prop);
+                        }
                     }
                 }
             }

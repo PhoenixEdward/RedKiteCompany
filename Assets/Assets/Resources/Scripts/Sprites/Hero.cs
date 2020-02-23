@@ -42,6 +42,13 @@ namespace RedKite
             IsVisible = true;
         }
 
+        public override void Spawn()
+        {
+            base.Spawn();
+
+            FOW.UpdateFog();
+        }
+
         public static void ClearStatic()
         {
             activeSpawns.Clear();

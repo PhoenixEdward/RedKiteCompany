@@ -12,6 +12,7 @@ namespace RedKite
         TakeDamage,
         Die,
         Critical,
-        UseSkill
+        UseSkill,
+        Wait
     }
 }

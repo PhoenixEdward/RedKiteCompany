@@ -32,6 +32,8 @@ namespace RedKite
         public GameObject skillScreen;
         int lockOnIndex;
 
+        Reticle reticle;
+
         List<Weapon> weapons = new List<Weapon>();
         List<Weapon> heals = new List<Weapon>();
         List<Buff> buffs = new List<Buff>();
@@ -47,8 +49,6 @@ namespace RedKite
 
         void Update()
         {
-
-
 
             if (target == Target.Enemy & actionables.Attackables.Count > 0)
             {
@@ -83,7 +83,7 @@ namespace RedKite
         {
             Debug.Log("The Fuck????");
 
-            unit.Embark(selectedTile);
+            Telegraph.Instance.DispatchMessage(new Telegram(new Telegram.BeatSignature(BattleClock.Instance.CurrentBeat, unit.Stats.Dexterity.Modifier, 0), unit, unit, Message.Wait));
             unit.SetActiveSkill(weapon);
             Telegraph.Instance.DispatchMessage(new Telegram(new Telegram.BeatSignature(BattleClock.Instance.CurrentBeat, unit.Stats.Dexterity.Modifier, 0), actionableSprites[lockOnIndex], unit, Message.UseSkill));
             menu.Deactivate();
@@ -91,7 +91,7 @@ namespace RedKite
 
         public void UseSkill(Buff buff)
         {
-            unit.Embark(selectedTile);
+            Telegraph.Instance.DispatchMessage(new Telegram(new Telegram.BeatSignature(BattleClock.Instance.CurrentBeat, unit.Stats.Dexterity.Modifier, 0), unit, unit, Message.Wait));
             unit.SetActiveSkill(buff);
             Telegraph.Instance.DispatchMessage(new Telegram(new Telegram.BeatSignature(BattleClock.Instance.CurrentBeat, unit.Stats.Dexterity.Modifier, 0), actionableSprites[lockOnIndex], unit, Message.UseSkill));
             menu.Deactivate();
@@ -142,8 +142,11 @@ namespace RedKite
 
         public void UnitWait()
         {
+            unit.Destination = new Vector3Int(selectedTile.x, selectedTile.y, 1);
+
+            Telegraph.Instance.DispatchMessage(new Telegram(new Telegram.BeatSignature(BattleClock.Instance.CurrentBeat, unit.Stats.Dexterity.Modifier, 0), unit, unit, Message.Wait));
+
             unit.Action(unit, Skill.Wait);
-            unit.Embark(new Vector3Int(selectedTile.x, selectedTile.y, 1));
             menu.Deactivate();
         }
 
