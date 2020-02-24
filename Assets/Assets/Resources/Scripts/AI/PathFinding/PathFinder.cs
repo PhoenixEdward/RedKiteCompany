@@ -114,11 +114,18 @@ namespace RedKite
             //the + 1 is to account for the fact that the source is the first node in the list.
             if (dist[target] > maxDistance + 1)
             {
-                for(int i = currentPath.Count - 1; i > -1; i--)
+                for(int i = currentPath.Count - 1; i > 0; i--)
                 {
-                    if(dist[currentPath[i]] <= maxDistance + 1)
+                    float newFinalDist = dist[prev[currentPath[i]]] + CostToEnterTile(currentPath[i].cell.x, currentPath[i].cell.y, isHero: isHero, isEnemy: isEnemy, true);
+
+                    if (newFinalDist <= maxDistance + 1)
                     {
                         currentPath = currentPath.Take(i + 1).ToList();
+                        break;
+                    }
+                    if(i == 1)
+                    {
+                        currentPath = new List<Node> { source };
                         break;
                     }
                 }

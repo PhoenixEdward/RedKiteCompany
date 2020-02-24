@@ -45,8 +45,8 @@ namespace RedKite
         public Stats Stats { get; protected set; }
         public JobClass jobClass { get; private set; }
         public int Movement { get; private set; }
-        public int Fatigue { get; private set; }
-        public int Perception { get; private set; }
+        public int Fatigue { get; protected set; }
+        public int Perception { get; protected set; }
         public Vector3 Destination { get; set; } = Vector3.zero;
 
         public Skill ActiveSkill { get; private set; } = Skill.Alert;

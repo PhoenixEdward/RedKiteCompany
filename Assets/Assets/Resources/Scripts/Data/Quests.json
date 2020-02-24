@@ -1,0 +1,25 @@
+{
+  "Quests": [
+    {
+      "Name": "Gather",
+      "Keys": [
+        {
+          "Name": "Portal Fragment",
+          "uses": 1,
+          "DiceBonus": 0,
+          "BaseBonus": 0
+        }
+      ],
+
+      "States": [
+        0,
+        1
+      ],
+      "FlashMessages": [
+        "This is a test"
+      ],
+      "PropLoads": [],
+      "Regions": []
+    }
+  ]
+}

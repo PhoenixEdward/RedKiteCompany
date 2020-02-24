@@ -4,14 +4,14 @@ using UnityEngine;
 using System.Linq;
 
 namespace RedKite
-{  public class QuestMapper : TileMapper
+{  public class QuestMapper
     {
 
         static QuestMapper _instance;
 
         //Needs a graph in which to place enemies and props. Can inherit from TileMapper.
 
-        public new static QuestMapper Instance
+        public static QuestMapper Instance
         {
             get
             {
@@ -22,16 +22,18 @@ namespace RedKite
         }
 
         static Grid grid;
+        public Quest CurrentQuest { get; private set; }
         public List<Enemy> enemies = new List<Enemy>();
         public Dictionary<Vector3Int, string> Props { get; private set; } = new Dictionary<Vector3Int, string>();
         int chestCount;
         int treeCount;
+        System.Random rndState = new System.Random();
 
         Dictionary<int, int> distanceFromSpawn = new Dictionary<int, int>();
 
         PathFinder pathFinder;
 
-        public override void Generate()
+        public void Generate()
         {
             Props.Clear();
             distanceFromSpawn.Clear();
@@ -51,7 +53,7 @@ namespace RedKite
                 {
                     double chance = rndState.Next(0, area.Value)/ distanceFromSpawn.Values.Average();
 
-                    if(chance > 0.75d)
+                    if(chance > 0.65d)
                     {
                         List<Vector3> coords = TileMapper.Instance.Areas[area.Key].GetCoords(true).ToList();
 
@@ -70,13 +72,13 @@ namespace RedKite
                 }
             }
 
-            treeCount = 10;
+            treeCount = 1;
 
             for (int i = 0; i < treeCount; i++)
             {
                 foreach (KeyValuePair<int, Area> area in TileMapper.Instance.Areas)
                 {
-                    double chance = rndState.Next(0, Mathf.RoundToInt(area.Value.Floor.height * area.Value.Floor.width)/35);
+                    float chance = (area.Value.Floor.height * area.Value.Floor.width)/30;
 
                     for(int j = 0; j < chance; j++)
                     { 
@@ -85,15 +87,28 @@ namespace RedKite
                         coords.Shuffle();
 
                         foreach (Vector3 coord in coords)
+                        { 
                             if (!Props.ContainsKey(Vector3Int.FloorToInt(coord)))
                             {
+                                //needs to prevent blocking paths
+
                                 Props.Add(Vector3Int.FloorToInt(coord), "Evergreen");
                                 break;
                             }
+                        }
                     }
                 }
             }
 
+        }
+
+        public IState LookupState()
+        {
+
+            if (CurrentQuest.state == Quest.State.Gather)
+                return new GatherState();
+            else
+                return new IdleState();
         }
     }
 }

@@ -16,7 +16,7 @@ namespace RedKite
         bool initiated = false;
         bool HeroMoving = false;
 
-        public void Enter(IState previousState, GameSprite owner)
+        public void Enter(IState previousState, Objective objective)
         {
             if (previousState is IdleState)
             { } //There is a lot of potential here and means I can move combat menu and battle clock from directly manipulating units
@@ -24,9 +24,9 @@ namespace RedKite
             
         }
 
-        public void Execute(GameSprite owner)
+        public void Execute(Objective objective)
         {
-            if (owner is Enemy attacker)
+            if (objective.Owner is Enemy attacker)
             {
                 for (int i = 0; i < TargetPings.Count; i++)
                 {
@@ -39,7 +39,7 @@ namespace RedKite
 
                 if (Targets.Count == 0)
                 {
-                    owner.StateMachine.ChangeState(new IdleState());
+                    objective.Owner.StateMachine.ChangeState(new IdleState());
                 }
 
                 if (attacker.Ready)
@@ -62,7 +62,7 @@ namespace RedKite
                     }
                     //need to add skil cycling here
                     //this may not be the best place for the FX but eff it
-                    else if (!owner.IsMoving & Utility.ManhattanDistance(primaryTarget.Coordinate, attacker.Coordinate) <= attacker.MaxAttackRange & !BattleFX.IsActive)
+                    else if (!objective.Owner.IsMoving & Utility.ManhattanDistance(primaryTarget.Coordinate, attacker.Coordinate) <= attacker.MaxAttackRange & !BattleFX.IsActive)
                     {
                         if(attacker.Weapons.Count > 0)
                             if (attacker.Weapons[0].Anti == false & attacker.Weapons[0].Uses > 0)
@@ -85,7 +85,7 @@ namespace RedKite
                         hasTakenTurn = false;
 
                     }
-                    else if(!owner.IsMoving & Utility.ManhattanDistance(primaryTarget.Coordinate, attacker.Coordinate) > attacker.MaxAttackRange)
+                    else if(!objective.Owner.IsMoving & Utility.ManhattanDistance(primaryTarget.Coordinate, attacker.Coordinate) > attacker.MaxAttackRange)
                     {
                         //needs to be adjusted to include rest. Need to see if starting position is same as ending. Won't happen
                         //very often but necessary to give the AI for fairness.
@@ -101,34 +101,34 @@ namespace RedKite
 
             else if(HeroMoving)
             {
-                if (!owner.IsMoving)
+                if (!objective.Owner.IsMoving)
                 {
-                    owner.Action(owner, Skill.Wait);
+                    objective.Owner.Action(objective.Owner, Skill.Wait);
                     HeroMoving = false;
                 }
             }
 
             else if(initiated == true)
             {
-                if (!owner.IsMoving)
+                if (!objective.Owner.IsMoving)
                 {
                     Debug.Log("Runomundo");
-                    owner.Action(primaryTarget, owner.ActiveSkill);
+                    objective.Owner.Action(primaryTarget, objective.Owner.ActiveSkill);
                     initiated = false;
                 }
             }
         }
-        public void Exit(GameSprite owner)
+        public void Exit(Objective objective)
         {
             Targets = null;
             primaryTarget = null;
         }
 
-        public bool OnMessage(GameSprite owner, Telegram message)
+        public bool OnMessage(Objective objective, Telegram message)
         {
             if(message.Msg == Message.InFOV)
             {
-                if(((owner is Hero & message.Sender is Enemy) | (owner is Enemy & message.Sender is Hero)))
+                if(((objective.Owner is Hero & message.Sender is Enemy) | (objective.Owner is Enemy & message.Sender is Hero)))
                 { 
                     if(!Targets.Contains(message.Sender))
                     { 
@@ -148,7 +148,7 @@ namespace RedKite
             {
                 if(message.Sender == Targets[0])
                 {
-                    owner.StateMachine.ChangeState(new IdleState());
+                    objective.Owner.StateMachine.ChangeState(new IdleState());
                 }
 
                 return true;

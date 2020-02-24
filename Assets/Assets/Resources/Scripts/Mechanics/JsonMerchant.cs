@@ -26,7 +26,7 @@ namespace RedKite
         {
             dynamic output;
 
-            TextAsset json = Resources.Load<TextAsset>("Scripts/LootData/Inventory");
+            TextAsset json = Resources.Load<TextAsset>("Scripts/Data/Inventory");
 
             Inventory inventory = JsonUtility.FromJson<Inventory>(json.text);
 

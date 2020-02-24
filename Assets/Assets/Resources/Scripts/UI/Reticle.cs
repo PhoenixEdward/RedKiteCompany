@@ -124,7 +124,7 @@ namespace RedKite
 
                                             List<Node> path = pathFinder.GeneratePathTo(selectedHero.Coordinate, destination.cell, selectedHero.Movement);
 
-                                            highlight = path[path.Count - 1].cell + new Vector3Int(0,0,-1);
+                                            highlight = new Vector3Int(path[path.Count - 1].cell.x, path[path.Count - 1].cell.y, -2);
 
                                             UpdateHighlight();
 
@@ -207,69 +207,91 @@ namespace RedKite
             //here is where I can put in all the highlight logic;
             UpdateHighlight();
 
-            //this needs to be moved somewhere else 
-            if (selectedHero != null)
-            {
-                if (!isSelection)
-                {
-                    if (selectedHero.IsMoving == false)
-                    {
-
-                        if (Input.GetMouseButtonDown(0))
-                        {
-                            Vector3Int destCoords = highlight;
-                            destination = PathFinder.graph[destCoords.x, destCoords.y];
-
-                        }
-
-                        foreach (Node node in battleGrid.canMoveTo)
-                        {
-
-                            if (highlight.x == node.cell.x & highlight.y == node.cell.y)
-                            {
-
-                                tilemap.SetTile(highlight, rangeHighlightTile);
-
-                                cursorMat.mainTexture = rangeHighlightTile.sprite.texture;
-
-                                break;
-                            }
-                        }
-                    }
-                }
-            }
-
-            tilemap.RefreshAllTiles();
-
-            isSelection = false;
         }
 
         public void UpdateHighlight()
         {
-            if (map.Tiles[highlight.x, highlight.y].TileType == Cell.Type.OccupiedEnemy | map.Tiles[highlight.x, highlight.y].TileType == Cell.Type.OccupiedAlly)
-            {
-                tilemap.SetTile(highlight, selectTile);
-                cursorMat.mainTexture = selectTile.sprite.texture;
+            if(highlight.x < map.Tiles.GetLength(0) & highlight.y < map.Tiles.GetLength(1))
+            { 
+                if (map.Tiles[highlight.x, highlight.y].TileType == Cell.Type.OccupiedEnemy | map.Tiles[highlight.x, highlight.y].TileType == Cell.Type.OccupiedAlly)
+                {
+                    tilemap.SetTile(highlight, selectTile);
+                    cursorMat.mainTexture = selectTile.sprite.texture;
+                }
+
+                if (temp == Vector3Int.zero)
+                {
+                    temp = highlight;
+                }
+
+                if (highlight != temp)
+                {
+
+
+                    tilemap.SetTile(temp, clearTile);
+
+                    temp = highlight;
+                }
+
+
+                //this needs to be moved somewhere else 
+                if (selectedHero != null)
+                {
+                    if (!isSelection)
+                    {
+                        if (selectedHero.IsMoving == false)
+                        {
+
+                            if (Input.GetMouseButtonDown(0))
+                            {
+                                Vector3Int destCoords = highlight;
+                                destination = PathFinder.graph[destCoords.x, destCoords.y];
+
+                            }
+
+                            foreach (Node node in battleGrid.canMoveTo)
+                            {
+
+                                if (highlight.x == node.cell.x & highlight.y == node.cell.y)
+                                {
+
+                                    tilemap.SetTile(highlight, rangeHighlightTile);
+
+                                    cursorMat.mainTexture = rangeHighlightTile.sprite.texture;
+
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                    else
+                    {
+                        if (selectedHero.IsMoving == false)
+                        {
+                            foreach (Node node in battleGrid.canMoveTo)
+                            {
+
+                                if (highlight.x == node.cell.x & highlight.y == node.cell.y)
+                                {
+
+                                    tilemap.SetTile(highlight, rangeHighlightTile);
+
+                                    cursorMat.mainTexture = rangeHighlightTile.sprite.texture;
+
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                }
+
+                isSelection = false;
+
+                tilemap.RefreshAllTiles();
+
+                cursor.transform.position = grid.CellToWorld(highlight) + new Vector3(0.5f, 2, 0.5f);
+                cursor.transform.Rotate(new Vector3(0, 1, 0));
             }
-
-            if (temp == Vector3Int.zero)
-            {
-                temp = highlight;
-            }
-
-            if (highlight != temp)
-            {
-
-
-                tilemap.SetTile(temp, clearTile);
-
-                temp = highlight;
-            }
-
-            tilemap.RefreshAllTiles();
-
-            cursor.transform.position = grid.CellToWorld(highlight) + new Vector3(0.5f, 2, 0.5f);
-            cursor.transform.Rotate(new Vector3(0, 1, 0));
         }
 
         public void BattleGridState()

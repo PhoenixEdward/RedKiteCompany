@@ -68,31 +68,29 @@ namespace RedKite
 
             GameSprite.fogTint = fogColor;
 
+            Quest quest = QuestLoader.Instance.Load("Gather");
 
             GameObject hero1 = Instantiate(Resources.Load<GameObject>("Characters/Prefabs/Heroes/Ranged"));
             Hero unit1 = hero1.GetComponent<Hero>();
+            hero1.layer = 8;
             unit1.Instantiate("Gongagoo", JobClass.Ranger, 8);
             unit1.Spawn();
             unit1.LearnSkill("Training Short Bow");
             unit1.LearnSkill("Disarm");
             heroes.Add(hero1);
 
-            GameObject hero2 = new GameObject();
-            hero2.name = "MeleeGuy";
+            GameObject hero2 = Instantiate(Resources.Load<GameObject>("Characters/Prefabs/Heroes/Melee"));
             hero2.layer = 8;
-            Hero unit2 = hero2.AddComponent<Hero>();
-            unit2.spriteName = "Melee";
+            Hero unit2 = hero2.GetComponent<Hero>();
             unit2.Instantiate("Cestra", JobClass.Fighter, 8);
             unit2.Spawn();
             unit2.LearnSkill("Training Gauntlets");
             unit2.LearnSkill("Training Axe");
             heroes.Add(hero2);
 
-            GameObject hero3 = new GameObject();
-            hero3.name = "CasterGal";
+            GameObject hero3 = Instantiate(Resources.Load<GameObject>("Characters/Prefabs/Heroes/Caster"));
             hero3.layer = 8;
-            Hero unit3 = hero3.AddComponent<Hero>();
-            unit3.spriteName = "Caster";
+            Hero unit3 = hero3.GetComponent<Hero>();
             unit3.Instantiate("Eerilai", JobClass.Cleric, 8);
             unit3.Spawn();
             unit3.LearnSkill("Cure");
@@ -104,6 +102,8 @@ namespace RedKite
             GameSpriteManager.Instance.GetSprites();
 
             TileMapper.Instance.Update();
+
+            FOW.UpdateFog();
 
             QuestMapper.Instance.Generate();
 
@@ -125,6 +125,7 @@ namespace RedKite
             cam = FindObjectOfType<CameraMovement>();
 
             cam.enabled = true;
+
         }
 
         private void Update()

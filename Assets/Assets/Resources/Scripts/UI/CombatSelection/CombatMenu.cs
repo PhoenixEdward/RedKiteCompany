@@ -11,6 +11,8 @@ namespace RedKite
         public GameObject skillSelection;
         public GameObject menu;
 
+        static FlashDisplay flashDisplay;
+         
         PathFinder pathFinder = new PathFinder();
 
         List<GameSprite> sprites;
@@ -27,6 +29,8 @@ namespace RedKite
             sprites = GameSpriteManager.Instance.Sprites;
             battleGrid = FindObjectOfType<BattleGrid>();
             grid = FindObjectOfType<Grid>();
+
+            flashDisplay = GetComponentInChildren<FlashDisplay>();
         }
 
         // Update is called once per frame
@@ -66,7 +70,13 @@ namespace RedKite
                 Actionables actionables = FindInteractions(unit, selectedTile);
 
                 menu.GetComponent<CombatMenuPopUp>().Activate(unit, selectedTile, actionables, battleGrid);
+
             }
+        }
+
+        public static void DisplayFlashMessage(FlashMessage message)
+        {
+            flashDisplay.DisplayMessage(message);
         }
 
         public void Deactivate()

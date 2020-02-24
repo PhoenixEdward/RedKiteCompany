@@ -8,34 +8,34 @@ namespace RedKite
 {
     public class IdleState : IState
     {
-        public void Enter(IState previousState, GameSprite owner)
+        public void Enter(IState previousState, Objective objective)
         { }
 
-        public void Execute(GameSprite owner)
+        public void Execute(Objective objective)
         {
-            if (owner is Enemy enemy)
+            if (objective.Owner is Enemy enemy)
                 if (enemy.Ready)
                     enemy.Action(enemy, Skill.Wait);
                 else { }
-            else if (owner is Hero)
-                owner.StateMachine.ChangeState(new CombatState());
+            else if (objective.Owner is Hero hero)
+                hero.StateMachine.ChangeState(new CombatState());
         }
 
-        public void Exit(GameSprite owner)
+        public void Exit(Objective objective)
         {
             //there actually seems like potential for something here.
         }
 
-        public bool OnMessage(GameSprite owner, Telegram message)
+        public bool OnMessage(Objective objective, Telegram message)
         {
-            if(message.Msg == Message.InFOV & ((owner is Hero & message.Sender is Enemy) | (owner is Enemy & message.Sender is Hero)))
-                if (Utility.ManhattanDistance(message.Sender.Coordinate, owner.Coordinate) < owner.Perception)
+            if(message.Msg == Message.InFOV & ((objective.Owner is Hero & message.Sender is Enemy) | (objective.Owner is Enemy & message.Sender is Hero)))
+                if (Utility.ManhattanDistance(message.Sender.Coordinate, objective.Owner.Coordinate) < objective.Owner.Perception)
                 {
-                    owner.StateMachine.ChangeState(new CombatState());
+                    objective.Owner.StateMachine.ChangeState(new CombatState());
                     //not sure if this is the proper way of doing this or if I need to send a message out to the telegraph?
-                    owner.StateMachine.currentState.OnMessage(owner,
+                    objective.Owner.StateMachine.currentState.OnMessage(objective,
                         new Telegram(new Telegram.BeatSignature(BattleClock.Instance.CurrentBeat,message.Sender.Stats.Dexterity.Modifier, 0), 
-                        message.Sender, owner, Message.InFOV
+                        message.Sender, objective.Owner, Message.InFOV
                         ));
                     return true;
                 }
