@@ -22,7 +22,7 @@ namespace RedKite
             }
         }
 
-        public Skill Load<T>(string item)
+        public Skill Load(string item)
         {
             dynamic output;
 

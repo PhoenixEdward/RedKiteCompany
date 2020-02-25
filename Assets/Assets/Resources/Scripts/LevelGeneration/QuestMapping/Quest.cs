@@ -26,22 +26,32 @@ namespace RedKite
 
         public List<Key> Keys;
 
+        public List<string> LootLoad;
+        public List<Skill> Loot;
+
         public List<string> FlashMessages;
 
         public List<PropLoad> PropLoads;
 
         public List<Region> Regions;
 
+        public int BeatLimit;
+
+        public bool Complete = false;
 
         [Serializable]
         public class PropLoad
         {
-
+            public string Name;
+            public int TilesPerUnit;
         }
         [Serializable]
         public class Region
         {
-
+            public string TopWallTexture;
+            public string SideWallTexture;
+            public string TopFloorTexture;
+            public string SideFloorTexture;
         }
 
         [Serializable]
@@ -49,6 +59,14 @@ namespace RedKite
         {
             Gather,
             Complete
+        }
+
+        public void Instantiate()
+        {
+            foreach(string item in LootLoad)
+            {
+                Loot.Add(JsonMerchant.Instance.Load(item));
+            }
         }
     }
 }

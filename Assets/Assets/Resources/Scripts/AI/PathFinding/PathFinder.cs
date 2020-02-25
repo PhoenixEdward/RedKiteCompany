@@ -10,11 +10,16 @@ namespace RedKite
 
     public class PathFinder
     {
-        public static Node[,] graph;
+        public static Node[,] Graph;
 
         public Unit selectedHero;
 
         Reticle reticle;
+
+        public static  Node GetNode(Vector3 pos)
+        {
+            return Graph[(int)pos.x, (int)pos.y];
+        }
 
         public List<Node> GeneratePathTo(Vector3 startCoord, Vector3 destCoord, int maxDistance, bool isHero = true, bool isEnemy = false)
         { 
@@ -24,12 +29,12 @@ namespace RedKite
             // Setup the "Q" -- the list of nodes we haven't checked yet.
             List<Node> unvisited = new List<Node>();
 
-            Node source = graph[
+            Node source = Graph[
                                 (int)startCoord.x,
                                 (int)startCoord.y
                                 ];
 
-            Node target = graph[
+            Node target = Graph[
                                 (int)destCoord.x,
                                 (int)destCoord.y
                                 ];
@@ -41,7 +46,7 @@ namespace RedKite
             // we don't know any better right now. Also, it's possible
             // that some nodes CAN'T be reached from the source,
             // which would make INFINITY a reasonable value
-            foreach (Node v in graph)
+            foreach (Node v in Graph)
             {
                 if (v != source)
                 {
@@ -230,6 +235,187 @@ namespace RedKite
 
         }
 
+        public bool IsReachable(Node _start, Node _target, int maxDistance, bool isHero = true, bool isEnemy = false, bool isFinal = false)
+        {
+            if (HeroCanEnterTile((int)_target.cell.x, (int)_target.cell.y, isHero: isHero, isEnemy: isEnemy) == false)
+            {
+                return false;
+            }
+
+            Dictionary<Node, float> dist = new Dictionary<Node, float>();
+            Dictionary<Node, Node> prev = new Dictionary<Node, Node>();
+
+            // Setup the "Q" -- the list of nodes we haven't checked yet.
+            List<Node> unvisited = new List<Node>();
+
+            Node source = _start;
+
+            if (_target == source)
+            {
+                return true;
+            }
+
+            Node target = _target;
+
+            dist[source] = 0;
+            prev[source] = null;
+
+            // Initialize everything to have INFINITY distance, since
+            // we don't know any better right now. Also, it's possible
+            // that some nodes CAN'T be reached from the source,
+            // which would make INFINITY a reasonable value
+            // apply this only to nodes in the withinRange array;
+
+            foreach (Node v in Graph)
+            {
+                if (v != null)
+                {
+                    if (v != source)
+                    {
+                        dist[v] = Mathf.Infinity;
+                        prev[v] = null;
+                    }
+
+                    unvisited.Add(v);
+                }
+            }
+
+            while (unvisited.Count > 0)
+            {
+                // "u" is going to be the unvisited node with the smallest distance.
+                Node u = null;
+
+                foreach (Node possibleU in unvisited)
+                {
+                    if (u == null || dist[possibleU] < dist[u])
+                    {
+                        u = possibleU;
+                    }
+                }
+
+                if (u == target)
+                {
+                    break;  // Exit the while loop!
+                }
+
+                unvisited.Remove(u);
+
+                foreach (Node v in u.neighbours)
+                {
+                    if (Utility.ManhattanDistance(new Vector3Int(source.cell.x, source.cell.y, 2), new Vector3Int(v.cell.x, v.cell.y, 2)) <= maxDistance &
+                        Utility.WithinBounds(new Vector3(source.cell.x, 2, source.cell.y), TileMapper.Instance.W, TileMapper.Instance.H))
+                    {
+                        float alt = dist[u] + CostToEnterTile(v.cell.x, v.cell.y, isHero: isHero, isEnemy: isEnemy, isFinal: isFinal);
+
+                        if (alt < dist[v] & alt <= maxDistance)
+                        {
+                            dist[v] = alt;
+                            prev[v] = u;
+                        }
+                    }
+                }
+            }
+
+            // If we get there, the either we found the shortest route
+            // to our target, or there is no route at ALL to our target.
+
+            if (prev[target] == null)
+            {
+                // No route between our target and the source
+                return false;
+            }
+            else
+            {
+                return true;
+            }
+
+        }
+
+
+        public int GetDistance(Node _start, Node _target, bool isHero = true, bool isEnemy = false, bool isFinal = false)
+        {
+            if (HeroCanEnterTile((int)_target.cell.x, (int)_target.cell.y, isHero: isHero, isEnemy: isEnemy) == false)
+            {
+                return 1000;
+            }
+
+            Dictionary<Node, float> dist = new Dictionary<Node, float>();
+            Dictionary<Node, Node> prev = new Dictionary<Node, Node>();
+
+            // Setup the "Q" -- the list of nodes we haven't checked yet.
+            List<Node> unvisited = new List<Node>();
+
+            Node source = _start;
+
+            if (_target == source)
+            {
+                return 0;
+            }
+
+            Node target = _target;
+
+            dist[source] = 0;
+            prev[source] = null;
+
+            // Initialize everything to have INFINITY distance, since
+            // we don't know any better right now. Also, it's possible
+            // that some nodes CAN'T be reached from the source,
+            // which would make INFINITY a reasonable value
+            // apply this only to nodes in the withinRange array;
+
+            foreach (Node v in Graph)
+            {
+                if (v != null)
+                {
+                    if (v != source)
+                    {
+                        dist[v] = Mathf.Infinity;
+                        prev[v] = null;
+                    }
+
+                    unvisited.Add(v);
+                }
+            }
+
+            while (unvisited.Count > 0)
+            {
+                // "u" is going to be the unvisited node with the smallest distance.
+                Node u = null;
+
+                foreach (Node possibleU in unvisited)
+                {
+                    if (u == null || dist[possibleU] < dist[u])
+                    {
+                        u = possibleU;
+                    }
+                }
+
+                if (u == target)
+                {
+                    break;  // Exit the while loop!
+                }
+
+                unvisited.Remove(u);
+
+                foreach (Node v in u.neighbours)
+                {
+                    if (Utility.WithinBounds(new Vector3(source.cell.x, 2, source.cell.y), TileMapper.Instance.W, TileMapper.Instance.H))
+                    {
+                        float alt = dist[u] + CostToEnterTile(v.cell.x, v.cell.y, isHero: isHero, isEnemy: isEnemy, isFinal: isFinal);
+
+                        if (alt < dist[v])
+                        {
+                            dist[v] = alt;
+                            prev[v] = u;
+                        }
+                    }
+                }
+            }
+
+            return (int)dist[target] - 1;
+
+        }
+
         public bool IsVisible(Node _start, Node _target, Node[] range, int maxDistance, bool isHero = false, bool isEnemy = false, bool isFinal = false)
         {
             if (HeroCanEnterTile((int)_target.cell.x, (int)_target.cell.y, isHero: isHero, isEnemy: isEnemy) == false)
@@ -343,7 +529,7 @@ namespace RedKite
 
             Node[] range = Utility.GenerateBoxRange(unit.Coordinate, maxDistance);
 
-            Node source = graph[
+            Node source = Graph[
                     unit.Coordinate.x,
                     unit.Coordinate.y
                     ];
@@ -447,7 +633,7 @@ namespace RedKite
 
             Node[] range = Utility.GenerateBoxRange(Vector3Int.FloorToInt(startCoord), maxDistanceFromStart);
 
-            Node source = graph[
+            Node source = Graph[
                                 (int)startCoord.x,
                                 (int)startCoord.y
                                 ];
@@ -570,13 +756,13 @@ namespace RedKite
 
             foreach(List<Node> x in potentialPaths)
             {
-                int curDist = Utility.ManhattanDistance(x[x.Count - 1].cell, graph[(int)destCoord.x, (int)destCoord.y].cell);
+                int curDist = Utility.ManhattanDistance(x[x.Count - 1].cell, Graph[(int)destCoord.x, (int)destCoord.y].cell);
                 curMin = curDist < curMin ? curDist : curMin;
             }
 
 
             //issue with it defaulting to attempting to walk through a wall as shortest path. Need to account for future movement cost. Maybe redo box range to incorporate complete distance to target.
-            List<Node> finalPath = potentialPaths.FirstOrDefault(x => Utility.ManhattanDistance(x[x.Count - 1].cell, graph[(int)destCoord.x, (int)destCoord.y].cell) == curMin);
+            List<Node> finalPath = potentialPaths.FirstOrDefault(x => Utility.ManhattanDistance(x[x.Count - 1].cell, Graph[(int)destCoord.x, (int)destCoord.y].cell) == curMin);
 
             return finalPath ?? new List<Node> { source };
 
@@ -627,14 +813,14 @@ namespace RedKite
         public void GenerateGraph()
         {
             // Initialize the array
-            graph = new Node[TileMapper.Instance.W, TileMapper.Instance.H];
+            Graph = new Node[TileMapper.Instance.W, TileMapper.Instance.H];
 
             // Initialize a Node for each spot in the array
             for (int x = 0; x < TileMapper.Instance.W; x++)
             {
                 for (int y = 0; y < TileMapper.Instance.H; y++)
                 {
-                    graph[x, y] = new Node
+                    Graph[x, y] = new Node
                     {
                         cell = new Vector3Int(x, y, -1)
                     };
@@ -648,13 +834,13 @@ namespace RedKite
                 {
 
                     if (x > 0)
-                        graph[x, y].neighbours.Add(graph[x - 1, y]);
+                        Graph[x, y].neighbours.Add(Graph[x - 1, y]);
                     if (x < TileMapper.Instance.W - 1)
-                        graph[x, y].neighbours.Add(graph[x + 1, y]);
+                        Graph[x, y].neighbours.Add(Graph[x + 1, y]);
                     if (y > 0)
-                        graph[x, y].neighbours.Add(graph[x, y - 1]);
+                        Graph[x, y].neighbours.Add(Graph[x, y - 1]);
                     if (y < TileMapper.Instance.H - 1)
-                        graph[x, y].neighbours.Add(graph[x, y + 1]);
+                        Graph[x, y].neighbours.Add(Graph[x, y + 1]);
 
                 }
             }

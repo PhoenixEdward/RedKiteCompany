@@ -119,21 +119,20 @@ namespace RedKite
                                     if (battleGrid.withinRange.Contains(destination) &
                                         (TileMapper.Instance.Tiles[destination.cell.x, destination.cell.y].TileType != Cell.Type.OccupiedAlly | destination.cell == selectedHero.Coordinate))
                                     {
-                                        {
-                                            deselect = true;
+                                        deselect = true;
 
-                                            List<Node> path = pathFinder.GeneratePathTo(selectedHero.Coordinate, destination.cell, selectedHero.Movement);
+                                        List<Node> path = pathFinder.GeneratePathTo(selectedHero.Coordinate, destination.cell, selectedHero.Movement);
 
-                                            highlight = new Vector3Int(path[path.Count - 1].cell.x, path[path.Count - 1].cell.y, -2);
+                                        highlight = new Vector3Int(path[path.Count - 1].cell.x, path[path.Count - 1].cell.y, -2);
 
-                                            UpdateHighlight();
+                                        UpdateHighlight(true);
 
-                                            tilemap.RefreshAllTiles();
+                                        tilemap.RefreshAllTiles();
 
-                                            combatMenu.ActivatePopUp(selectedHero, path[path.Count - 1].cell);
-                                            destination = null;
+                                        combatMenu.ActivatePopUp(selectedHero, path[path.Count - 1].cell);
 
-                                        }
+                                        destination = null;
+
                                     }
                                 }
                             }
@@ -209,7 +208,7 @@ namespace RedKite
 
         }
 
-        public void UpdateHighlight()
+        public void UpdateHighlight(bool isAction = false)
         {
             if(highlight.x < map.Tiles.GetLength(0) & highlight.y < map.Tiles.GetLength(1))
             { 
@@ -242,10 +241,10 @@ namespace RedKite
                         if (selectedHero.IsMoving == false)
                         {
 
-                            if (Input.GetMouseButtonDown(0))
+                            if (Input.GetMouseButtonDown(0) & !isAction)
                             {
                                 Vector3Int destCoords = highlight;
-                                destination = PathFinder.graph[destCoords.x, destCoords.y];
+                                destination = PathFinder.Graph[destCoords.x, destCoords.y];
 
                             }
 
@@ -254,10 +253,17 @@ namespace RedKite
 
                                 if (highlight.x == node.cell.x & highlight.y == node.cell.y)
                                 {
+                                    if(!isAction)
+                                    { 
+                                        tilemap.SetTile(highlight, rangeHighlightTile);
 
-                                    tilemap.SetTile(highlight, rangeHighlightTile);
-
-                                    cursorMat.mainTexture = rangeHighlightTile.sprite.texture;
+                                        cursorMat.mainTexture = rangeHighlightTile.sprite.texture;
+                                    }
+                                    else
+                                    {
+                                        tilemap.SetTile(highlight, selectTile);
+                                        cursorMat.mainTexture = selectTile.sprite.texture;
+                                    }
 
                                     break;
                                 }
@@ -292,11 +298,6 @@ namespace RedKite
                 cursor.transform.position = grid.CellToWorld(highlight) + new Vector3(0.5f, 2, 0.5f);
                 cursor.transform.Rotate(new Vector3(0, 1, 0));
             }
-        }
-
-        public void BattleGridState()
-        {
-
         }
     }
 }

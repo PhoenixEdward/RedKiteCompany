@@ -62,6 +62,8 @@ namespace RedKite
 
         public int index = 0;
 
+        PathFinder pathFinder;
+
         List<Enemy> enemies;
         List<Hero> heroes;
         List<Prop> props;
@@ -71,6 +73,35 @@ namespace RedKite
             TrackSprites();
         }
 
+        public bool TryUpdateTile(Vector3Int pos, Cell.Type tileType, int room)
+        {
+            if (Tiles[pos.x, pos.y].TileType == Cell.Type.Floor)
+            {
+                if (tileType == Cell.Type.PassableProp)
+                { 
+                    Tiles[pos.x, pos.y] = tileTypes[5];
+
+                    //max distance is 99 since all non passable objects are 100. Could get complicated once rooms get bigger.
+                    if (Areas[room].ConnectedAreas.All(x=> pathFinder.IsReachable(PathFinder.Graph[(int)Areas[room].Floor.Center.x, (int)Areas[room].Floor.Center.y], PathFinder.Graph[(int)TileMapper.Instance.Areas[x].Floor.Center.x, (int)TileMapper.Instance.Areas[x].Floor.Center.y], 99)))
+                         return true;
+                    else
+                    {
+                        Tiles[pos.x, pos.y] = tileTypes[1];
+                        return false;
+                    }
+                }
+                else
+                    return false;
+            }
+            else
+                return false;
+           
+        }
+
+        public void UpdateTile(Vector3Int pos, Cell.Type tileType)
+        {
+            Tiles[pos.x, pos.y] = tileTypes.First(x=> x.TileType == tileType);
+        }
         void TrackSprites()
         {
             enemies = GameSpriteManager.Instance.Enemies;

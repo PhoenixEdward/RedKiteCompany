@@ -15,6 +15,8 @@ namespace RedKite
         bool hasTakenTurn = false;
         bool initiated = false;
         bool HeroMoving = false;
+        bool isTrade = false;
+        bool isInteraction = false;
 
         public void Enter(IState previousState, Objective objective)
         {
@@ -30,7 +32,7 @@ namespace RedKite
             {
                 for (int i = 0; i < TargetPings.Count; i++)
                 {
-                    if (TargetPings[i] == false)
+                    if (TargetPings[i] == false | !Targets[i].IsAlive)
                     {
                         Targets.RemoveAt(i);
                         TargetPings.RemoveAt(i);
@@ -44,11 +46,9 @@ namespace RedKite
 
                 if (attacker.Ready)
                 {
-                    Debug.Log("Attack Flow");
                     if (primaryTarget == null & Targets.Count > 0)
                     {
                         primaryTarget = Targets.OrderBy(x => x.Health + x.Stats.Constitution.Modifier).ToList()[0];
-                        Debug.Log("Finding Target");
                     }
                     //this will need to be adjusted for ranged. Will need to find a way of cacheing distance and DPB.
                     if (Utility.ManhattanDistance(primaryTarget.Coordinate, attacker.Coordinate) > attacker.MaxAttackRange & !hasTakenTurn)
@@ -103,7 +103,6 @@ namespace RedKite
             {
                 if (!objective.Owner.IsMoving)
                 {
-                    objective.Owner.Action(objective.Owner, Skill.Wait);
                     HeroMoving = false;
                 }
             }
@@ -112,15 +111,31 @@ namespace RedKite
             {
                 if (!objective.Owner.IsMoving)
                 {
-                    Debug.Log("Runomundo");
-                    objective.Owner.Action(primaryTarget, objective.Owner.ActiveSkill);
+                    if (!isTrade & !isInteraction)
+                    {
+                        //this can be change to take an item.
+                        objective.Owner.Action(primaryTarget, (Skill)objective.Owner.ActiveItem);
+                    }
+                    
+                    else if(isTrade)
+                    {
+                        isTrade = false;
+                        objective.Owner.Trade(primaryTarget, objective.Owner.ActiveItem);
+                    }
+
+                    else if(isInteraction)
+                    {
+                        isInteraction = false;
+                        objective.Owner.Interact(primaryTarget);
+                    }
+
                     initiated = false;
                 }
             }
         }
         public void Exit(Objective objective)
         {
-            Targets = null;
+            Targets = new List<GameSprite>();
             primaryTarget = null;
         }
 
@@ -167,7 +182,7 @@ namespace RedKite
                 return true;
             }
 
-           if(message.Msg == Message.Wait)
+           if(message.Msg == Message.HeroMove)
             {
                 Hero hero = (Hero)message.Sender;
 
@@ -176,6 +191,21 @@ namespace RedKite
                 HeroMoving = true;
             }
 
+           if(message.Msg == Message.Trade)
+            {
+                initiated = true;
+                primaryTarget = message.Sender;
+                isTrade = true;
+                return true;
+            }
+
+           if(message.Msg == Message.Interact)
+            {
+                initiated = true;
+                isInteraction = true;
+                primaryTarget = message.Sender;
+                return true;
+            }
             return false;
         }
         /*

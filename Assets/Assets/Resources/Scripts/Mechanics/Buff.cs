@@ -13,7 +13,6 @@ namespace RedKite
 
         public Buff() { }
 
-        [JsonConstructor]
         public Buff(string _name, int _uses, bool _anti, int _diceBonus, int _baseBonus, Form _majorForm, Form _minorForm, int _range, int _burden, int _duration) 
             : base(_name, _uses, _anti, _diceBonus, _baseBonus, _majorForm, _minorForm, _range, _burden)
         {
@@ -42,7 +41,7 @@ namespace RedKite
 
             statBonus = giver.Stats.Charisma.Roll(DiceBonus);
 
-            int grossBonus = baseBonus + statBonus;
+            int grossBonus = BaseBonus + statBonus;
 
             if (chanceFailureMinor < chanceSuccessMajor)
             {

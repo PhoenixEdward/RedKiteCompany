@@ -43,7 +43,7 @@ namespace RedKite
             else
                 statBonus = giver.Stats.Strength.Modifier;
 
-            int grossBonus = rnd.Next(0, DiceBonus) + baseBonus + statBonus;
+            int grossBonus = rnd.Next(0, DiceBonus) + BaseBonus + statBonus;
 
             Debug.Log("Damage: " + grossBonus);
             Debug.Log("Stat Bonus: " + statBonus);

@@ -100,11 +100,11 @@ namespace RedKite
                 else
                 {
                     map.SetTile(entry.Key, rangeTile);
-                    withinRange.Add(PathFinder.graph[entry.Key.x, entry.Key.y]);
-                    canMoveTo.Add(PathFinder.graph[entry.Key.x, entry.Key.y]);
+                    withinRange.Add(PathFinder.Graph[entry.Key.x, entry.Key.y]);
+                    canMoveTo.Add(PathFinder.Graph[entry.Key.x, entry.Key.y]);
                 }
 
-                withinRange.Add(PathFinder.graph[entry.Key.x, entry.Key.y]);
+                withinRange.Add(PathFinder.Graph[entry.Key.x, entry.Key.y]);
             }
 
             map.RefreshAllTiles();
@@ -120,7 +120,7 @@ namespace RedKite
                 {
                     reticle.highlight = actionables[i].Coordinate + new Vector3Int(0, 0, -1);
 
-                    reticle.UpdateHighlight();
+                    reticle.UpdateHighlight(true);
                 }
                 else
                 {

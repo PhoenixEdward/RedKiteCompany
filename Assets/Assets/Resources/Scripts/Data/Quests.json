@@ -1,13 +1,19 @@
 {
   "Quests": [
     {
-      "Name": "Gather",
+      "Name": "WinterGather",
       "Keys": [
         {
           "Name": "Portal Fragment",
-          "uses": 1,
-          "DiceBonus": 0,
-          "BaseBonus": 0
+          "uses": 1
+        },
+        {
+          "Name": "Portal Fragment",
+          "uses": 1
+        },
+        {
+          "Name": "Portal Fragment",
+          "uses": 1
         }
       ],
 
@@ -18,8 +24,18 @@
       "FlashMessages": [
         "This is a test"
       ],
-      "PropLoads": [],
-      "Regions": []
+      "PropLoads": [
+        {
+          "Name": "Evergreen",
+          "TilesPerUnit" :  35
+        }
+      ],
+      "Regions": [],
+      "LootLoad": [
+        "Training Sword",
+        "Training Dagger"
+      ],
+      "BeatLimit": 6000
     }
   ]
 }

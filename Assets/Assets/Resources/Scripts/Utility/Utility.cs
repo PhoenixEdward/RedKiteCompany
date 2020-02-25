@@ -46,7 +46,7 @@ namespace RedKite
 
                     if (cell.x >= 0 & cell.x < TileMapper.Instance.W & cell.y >= 0 & cell.y < TileMapper.Instance.H)
                     {
-                        range.Add(PathFinder.graph[cell.x, cell.y]);
+                        range.Add(PathFinder.Graph[cell.x, cell.y]);
                     }
                 }
             }

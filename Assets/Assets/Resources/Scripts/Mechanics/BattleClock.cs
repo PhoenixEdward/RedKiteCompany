@@ -40,21 +40,21 @@ namespace RedKite
             enemies = GameSpriteManager.Instance.Enemies;
             units = GameSpriteManager.Instance.Units;
 
-            if (units.All(x => !x.Ready) & units.All(x=> x.IsMoving == false) & !BattleFX.IsActive)
+            if (units.All(x => !x.Ready | !x.IsAlive) & units.All(x=> x.IsMoving == false) & !BattleFX.IsActive)
                 Run();
 
             IsEnemyTurn = enemies.Any(x => x.Ready);
         }
 
-        // Update is called once per frame
         public void Run()
         {
+            GameSpriteManager.Instance.UpdateSpriteLists();
 
             bool unitReady = false;
 
             while(unitReady == false)
             { 
-                foreach(Unit unit in units)
+                foreach(Unit unit in units.Where(x=> x.IsAlive))
                 {
                     CurrentBeat++;
                     if (unit.Fatigue >= 0)

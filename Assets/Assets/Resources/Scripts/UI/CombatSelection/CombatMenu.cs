@@ -107,7 +107,7 @@ namespace RedKite
                     {
                         if (Utility.ManhattanDistance(new Vector3Int(selectedTile.x, selectedTile.y, -1), new Vector3Int(enemy.Coordinate.x, enemy.Coordinate.y, -1)) <= unit.MaxAttackRange)
                         {
-                            bool result = pathFinder.IsReachable(PathFinder.graph[selectedTile.x, selectedTile.y], PathFinder.graph[enemy.Coordinate.x, enemy.Coordinate.y], attackNodes, unit.MaxAttackRange, false);
+                            bool result = pathFinder.IsReachable(PathFinder.Graph[selectedTile.x, selectedTile.y], PathFinder.Graph[enemy.Coordinate.x, enemy.Coordinate.y], attackNodes, unit.MaxAttackRange, false);
 
                             if (result)
                                 attackables.Add(enemy);
@@ -120,7 +120,7 @@ namespace RedKite
                             bool result = false;
 
                             if(!hero.Equals(unit))
-                                result = pathFinder.IsReachable(PathFinder.graph[selectedTile.x, selectedTile.y], PathFinder.graph[hero.Coordinate.x, hero.Coordinate.y], assistNodes, unit.MaxAssistRange, false);
+                                result = pathFinder.IsReachable(PathFinder.Graph[selectedTile.x, selectedTile.y], PathFinder.Graph[hero.Coordinate.x, hero.Coordinate.y], assistNodes, unit.MaxAssistRange, false);
 
                             if (result | hero.Equals(unit))
                                 assistables.Add(hero);
@@ -136,7 +136,7 @@ namespace RedKite
                 }
             }
 
-            Actionables actionables = new Actionables(attackables, interactables, assistables);
+            Actionables actionables = new Actionables(unit, attackables, interactables, assistables);
 
             return actionables;
         }
@@ -148,11 +148,32 @@ namespace RedKite
             public List<Prop> Interactables;
             public List<Hero> Assistables;
 
-            public Actionables(List<Enemy> _attackables, List<Prop> _interactables, List<Hero> _assistables)
+            public List<int> AttackbleDistances;
+            public List<int> InteractableDistances;
+            public List<int> AssistableDistances;
+
+            public Actionables(GameSprite _unit, List<Enemy> _attackables, List<Prop> _interactables, List<Hero> _assistables)
             {
                 Attackables = _attackables;
                 Interactables = _interactables;
                 Assistables = _assistables;
+
+                PathFinder pathFinder = new PathFinder();
+
+                AttackbleDistances = new List<int>();
+
+                foreach (GameSprite sprite in _attackables)
+                    AttackbleDistances.Add(pathFinder.GetDistance(PathFinder.GetNode(_unit.Coordinate), PathFinder.GetNode(sprite.Coordinate)));
+
+                InteractableDistances = new List<int>();
+
+                foreach (GameSprite sprite in _interactables)
+                    InteractableDistances.Add(pathFinder.GetDistance(PathFinder.GetNode(_unit.Coordinate), PathFinder.GetNode(sprite.Coordinate)));
+
+                AssistableDistances = new List<int>();
+
+                foreach (GameSprite sprite in _assistables)
+                    AssistableDistances.Add(pathFinder.GetDistance(PathFinder.GetNode(_unit.Coordinate), PathFinder.GetNode(sprite.Coordinate)));
             }
         }
     }

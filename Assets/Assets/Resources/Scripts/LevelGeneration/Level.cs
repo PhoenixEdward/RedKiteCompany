@@ -68,8 +68,6 @@ namespace RedKite
 
             GameSprite.fogTint = fogColor;
 
-            Quest quest = QuestLoader.Instance.Load("Gather");
-
             GameObject hero1 = Instantiate(Resources.Load<GameObject>("Characters/Prefabs/Heroes/Ranged"));
             Hero unit1 = hero1.GetComponent<Hero>();
             hero1.layer = 8;
@@ -105,7 +103,30 @@ namespace RedKite
 
             FOW.UpdateFog();
 
-            QuestMapper.Instance.Generate();
+            QuestMapper.Instance.Generate("WinterGather");
+
+            foreach (KeyValuePair<Vector3Int, Key> key in QuestMapper.Instance.KeyChests)
+            {
+                GameObject chestInstance = new GameObject();
+                propInstances.Add(key.Key, chestInstance);
+                chestInstance.name = key.Value.Name;
+                Chest chest = chestInstance.AddComponent<Chest>();
+                chest.Coordinate = key.Key - new Vector3Int(0, 0, 2);
+                chest.spriteName = "chest";
+                chest.StowItem(key.Value);
+            }
+
+            foreach (KeyValuePair<Vector3Int, Skill> loot in QuestMapper.Instance.LootChests)
+            {
+                GameObject chestInstance = new GameObject();
+                propInstances.Add(loot.Key, chestInstance);
+                chestInstance.name = loot.Value.Name;
+                Chest chest = chestInstance.AddComponent<Chest>();
+                chest.Coordinate = loot.Key - new Vector3Int(0, 0, 2);
+                chest.spriteName = "chest";
+                chest.StowItem(loot.Value);
+            }
+
 
             foreach (KeyValuePair<Vector3Int, string> prop in QuestMapper.Instance.Props)
             {
@@ -188,8 +209,6 @@ namespace RedKite
             //not to keep them in the same place but keep the composition the same.
             propInstances = new Dictionary<Vector3Int, GameObject>();
 
-            QuestMapper.Instance.Generate();
-
             foreach (KeyValuePair<Vector3Int, string> prop in QuestMapper.Instance.Props)
             {
                 GameObject propInstance = new GameObject();
@@ -251,6 +270,7 @@ namespace RedKite
             entity.IsVisible = true;
 
         }
+
         public void RemoveProp(Vector3Int position)
         {
             if (QuestMapper.Instance.Props.ContainsKey(position))

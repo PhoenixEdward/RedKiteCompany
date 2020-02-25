@@ -90,7 +90,7 @@ namespace RedKite
                     Vector3Int coord = node.cell;
 
                     if (Utility.ManhattanDistance(hero.Coordinate, coord) <= hero.Perception)
-                        if (pathFinder.IsVisible(PathFinder.graph[hero.Coordinate.x, hero.Coordinate.y], PathFinder.graph[coord.x, coord.y], coords, hero.Perception))
+                        if (pathFinder.IsVisible(PathFinder.Graph[hero.Coordinate.x, hero.Coordinate.y], PathFinder.Graph[coord.x, coord.y], coords, hero.Perception))
                             clearCoords.Add(coord);
                 }
             }

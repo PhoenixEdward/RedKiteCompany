@@ -13,6 +13,8 @@ namespace RedKite
         Die,
         Critical,
         UseSkill,
-        Wait
+        HeroMove,
+        Trade,
+        Interact
     }
 }

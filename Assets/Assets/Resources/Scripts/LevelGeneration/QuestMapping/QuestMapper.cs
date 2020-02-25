@@ -24,6 +24,8 @@ namespace RedKite
         static Grid grid;
         public Quest CurrentQuest { get; private set; }
         public List<Enemy> enemies = new List<Enemy>();
+        public Dictionary<Vector3Int, Key> KeyChests = new Dictionary<Vector3Int, Key>();
+        public Dictionary<Vector3Int, Skill> LootChests = new Dictionary<Vector3Int, Skill>();
         public Dictionary<Vector3Int, string> Props { get; private set; } = new Dictionary<Vector3Int, string>();
         int chestCount;
         int treeCount;
@@ -33,8 +35,12 @@ namespace RedKite
 
         PathFinder pathFinder;
 
-        public void Generate()
+        public void Generate(string questName)
         {
+            CurrentQuest = QuestLoader.Instance.Load(questName);
+
+            CurrentQuest.Instantiate();
+
             Props.Clear();
             distanceFromSpawn.Clear();
 
@@ -47,52 +53,78 @@ namespace RedKite
                 distanceFromSpawn.Add(area.Key, pathFinder.GeneratePathTo(TileMapper.Instance.Areas[0].Floor.Center,area.Value.Floor.Center, 10000).Count());
             }
 
-            for(int i = 0; i < chestCount; i++)
+            for(int i = 0; i < CurrentQuest.Keys.Count; i++)
+            {
+                //need to remove these from a list once occupied.
+                foreach (KeyValuePair<int, int> area in distanceFromSpawn.OrderByDescending(x=> x.Value))
+                {
+                    Area curArea = TileMapper.Instance.Areas[area.Key];
+                    List<Vector3> coords = curArea.GetCoords(true).ToList();
+                    coords.Shuffle();
+
+                    foreach (Vector3 coord in coords)
+                    {
+                        if (TileMapper.Instance.TryUpdateTile(Vector3Int.RoundToInt(coord), Cell.Type.PassableProp, curArea.RoomIndex))
+                        {
+                            Debug.Log("Key placed");
+                            KeyChests.Add(Vector3Int.FloorToInt(coord), CurrentQuest.Keys[i]);
+                            break;
+                        }
+                    }
+
+                    break;
+                }
+            }
+
+            for (int i = 0; i < CurrentQuest.Loot.Count; i++)
             {
                 foreach(KeyValuePair<int,int> area in distanceFromSpawn)
                 {
+                    Area curArea = TileMapper.Instance.Areas[area.Key];
+
                     double chance = rndState.Next(0, area.Value)/ distanceFromSpawn.Values.Average();
 
                     if(chance > 0.65d)
                     {
-                        List<Vector3> coords = TileMapper.Instance.Areas[area.Key].GetCoords(true).ToList();
+                        List<Vector3> coords = curArea.GetCoords(true).ToList();
 
                         coords.Shuffle();
 
                         foreach(Vector3 coord in coords)
-                            if(!Props.ContainsKey(Vector3Int.FloorToInt(coord)))
+                        { 
+                            if(TileMapper.Instance.TryUpdateTile(Vector3Int.RoundToInt(coord), Cell.Type.PassableProp, curArea.RoomIndex))
                             { 
-                                Props.Add(Vector3Int.FloorToInt(coord), "chest");
+                                LootChests.Add(Vector3Int.FloorToInt(coord), CurrentQuest.Loot[i]);
                                 break;
                             }
-
-                        break;
+                        }
                     }
 
                 }
             }
 
-            treeCount = 1;
-
-            for (int i = 0; i < treeCount; i++)
+            for (int i = 0; i < CurrentQuest.PropLoads.Count; i++)
             {
                 foreach (KeyValuePair<int, Area> area in TileMapper.Instance.Areas)
                 {
-                    float chance = (area.Value.Floor.height * area.Value.Floor.width)/30;
+                    Area curArea = TileMapper.Instance.Areas[area.Key];
+
+                    float chance = (area.Value.Floor.height * area.Value.Floor.width)/CurrentQuest.PropLoads[i].TilesPerUnit;
 
                     for(int j = 0; j < chance; j++)
                     { 
-                        List<Vector3> coords = TileMapper.Instance.Areas[area.Key].GetCoords(true).ToList();
+                        List<Vector3> coords = curArea.GetCoords(true).ToList();
 
                         coords.Shuffle();
 
                         foreach (Vector3 coord in coords)
                         { 
-                            if (!Props.ContainsKey(Vector3Int.FloorToInt(coord)))
+
+                            if (TileMapper.Instance.TryUpdateTile(Vector3Int.RoundToInt(coord), Cell.Type.PassableProp, curArea.RoomIndex))
                             {
                                 //needs to prevent blocking paths
 
-                                Props.Add(Vector3Int.FloorToInt(coord), "Evergreen");
+                                Props.Add(Vector3Int.FloorToInt(coord), CurrentQuest.PropLoads[i].Name);
                                 break;
                             }
                         }

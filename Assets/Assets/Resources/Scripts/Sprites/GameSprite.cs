@@ -8,10 +8,7 @@ namespace RedKite
     {
         public int ID { get; private set; } = 0;
         static List<int> activeIDs = new List<int>();
-
-
         public StateMachine StateMachine { get; private set; }
-
         public string Name { get; private set; }
 
         public List<Weapon> Weapons
@@ -19,13 +16,11 @@ namespace RedKite
             get;
             private set;
         } = new List<Weapon>();
-
         public List<Weapon> Heals
         {
             get;
             private set;
         } = new List<Weapon>();
-
         public List<Buff> Buffs
         {
             get;
@@ -37,6 +32,11 @@ namespace RedKite
             get;
             private set;
         } = new List<Buff>();
+        public List<Item> Inventory
+        {
+            get;
+            private set;
+        } = new List<Item>();
 
         public int Health { get; private set; }
         public int MaxHealth { get; private set; }
@@ -49,7 +49,7 @@ namespace RedKite
         public int Perception { get; protected set; }
         public Vector3 Destination { get; set; } = Vector3.zero;
 
-        public Skill ActiveSkill { get; private set; } = Skill.Alert;
+        public Item ActiveItem { get; private set; } = Skill.Alert;
         public static PathFinder pathFinder { get; private set; }
 
         protected System.Random rnd = new System.Random();
@@ -240,6 +240,7 @@ namespace RedKite
             if (Health <= 0)
             {
                 IsAlive = false;
+                TileMapper.Instance.UpdateTile(Coordinate, Cell.Type.Floor);
                 gameObject.SetActive(false);
             }
         }
@@ -270,6 +271,8 @@ namespace RedKite
 
         public void GetMaxSkillDistances()
         {
+            MaxAttackRange = 0;
+            MaxAssistRange = 1;
 
             //find the maximum distance for interactions
             foreach (Skill skill in Weapons)
@@ -397,6 +400,27 @@ namespace RedKite
             EndTurn(_skill.Burden);
         }
 
+        public void Trade(GameSprite _unit, Item _item)
+        {
+            _item.Trade(this, _unit);
+
+            EndTurn(0);
+        }
+
+        //can like bash down doors or somthing? Make a derivative that shows stats.
+        public void Interact(GameSprite sprite, Item key = null)
+        {
+            if (sprite is Chest chest)
+                if (!chest.IsLocked)
+                    chest.Open(this);
+                else if (chest.IsLocked & key != null)
+                { } //worry about this a little later
+                else if (chest.IsLocked & key == null)
+                { } // send a Flash Message
+
+            //maybe end turn with key burden if not null
+            EndTurn(0);
+        }
         public int ChangeHealth(int change, bool anti)
         {
 
@@ -425,27 +449,70 @@ namespace RedKite
 
         public void LearnSkill(string item)
         {
-            dynamic skill;
+            Skill skill;
 
-            if (Loot.Keys[item].majorForm != Skill.Form.Charming)
-                skill = JsonMerchant.Instance.Load<Weapon>(item);
-            else
-                skill = JsonMerchant.Instance.Load<Buff>(item);
+            skill = JsonMerchant.Instance.Load(item);
 
             if ((jobClass == JobClass.Ranger | jobClass == JobClass.Fighter) & skill.Type.Major == Skill.Form.Finesse)
-                Weapons.Add(skill);
+                Weapons.Add((Weapon)skill);
             else if ((jobClass == JobClass.Mage | jobClass == JobClass.Bard) & skill.Type.Major == Skill.Form.Clever)
-                Weapons.Add(skill);
+                Weapons.Add((Weapon)skill);
             else if ((jobClass == JobClass.Cleric | jobClass == JobClass.Mage) & skill.Type.Major == Skill.Form.Wise)
-                Heals.Add(skill);
+                Heals.Add((Weapon)skill);
             else if ((jobClass == JobClass.Bard | jobClass == JobClass.Ranger) & skill.Type.Major == Skill.Form.Charming & skill.Anti == false)
-                Buffs.Add(skill);
+                Buffs.Add((Buff)skill);
             else if ((jobClass == JobClass.Bard | jobClass == JobClass.Ranger) & skill.Type.Major == Skill.Form.Charming & skill.Anti == true)
-                Debuffs.Add(skill);
+                Debuffs.Add((Buff)skill);
             else if (skill.Type.Major == Skill.Form.Brute)
-                Weapons.Add(skill);
+                Weapons.Add((Weapon)skill);
+
+            Inventory.Add(skill);
 
             GetMaxSkillDistances();
+        }
+
+        public void AddItem(Item item)
+        {
+            Inventory.Add(item);
+
+            TryMakeSkillActive(item);
+
+            GetMaxSkillDistances();
+        }
+
+        public void RemoveItem(Item item)
+        {
+            Inventory.Remove(item);
+
+            GetMaxSkillDistances();
+        }
+
+        public bool TryMakeSkillActive(Item item)
+        {
+            if (item is Key)
+                return false;
+
+            else if (item is Skill skill)
+            {
+                if ((jobClass == JobClass.Ranger | jobClass == JobClass.Fighter) & skill.Type.Major == Skill.Form.Finesse)
+                    Weapons.Add((Weapon)skill);
+                else if ((jobClass == JobClass.Mage | jobClass == JobClass.Bard) & skill.Type.Major == Skill.Form.Clever)
+                    Weapons.Add((Weapon)skill);
+                else if ((jobClass == JobClass.Cleric | jobClass == JobClass.Mage) & skill.Type.Major == Skill.Form.Wise)
+                    Heals.Add((Weapon)skill);
+                else if ((jobClass == JobClass.Bard | jobClass == JobClass.Ranger) & skill.Type.Major == Skill.Form.Charming & skill.Anti == false)
+                    Buffs.Add((Buff)skill);
+                else if ((jobClass == JobClass.Bard | jobClass == JobClass.Ranger) & skill.Type.Major == Skill.Form.Charming & skill.Anti == true)
+                    Debuffs.Add((Buff)skill);
+                else if (skill.Type.Major == Skill.Form.Brute)
+                    Weapons.Add((Weapon)skill);
+                else
+                    return false;
+
+                return true;
+            }
+            else
+                return false;
         }
 
         public int AbilityCheck(Skill.Form _type)
@@ -493,9 +560,9 @@ namespace RedKite
 
         }
 
-        public void SetActiveSkill(Skill skill)
+        public void SetActiveSkill(Item item)
         {
-            ActiveSkill = skill;
+            ActiveItem = item;
         }
 
         public int DefensiveRoll()

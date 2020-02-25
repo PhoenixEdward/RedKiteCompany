@@ -8,12 +8,17 @@ namespace RedKite
     {
         CombatMenuPopUp menu;
 
-        private dynamic _action;
-        public dynamic Action
+        private Item _action;
+
+        //maybe an enum for type of interaction?
+        public Item Action
         {
             get
             {
-                return _action;
+                if (_action is Skill skill)
+                    return skill;
+                else
+                    return (Key)_action;
             }
 
             set
@@ -22,9 +27,11 @@ namespace RedKite
                     _action = weapon;
                 else if (value is Buff buff)
                     _action = buff;
-
+                else
+                    _action = value;
             }
         }
+
         // Start is called before the first frame update
         void Start()
         {
@@ -37,6 +44,14 @@ namespace RedKite
                 menu.UseSkill(weapon);
             else if (Action is Buff buff)
                 menu.UseSkill(buff);
+            else if(Action is Skill skill)
+            {
+                menu.UseSkill(skill);
+            }
+            else if(Action is Item item)
+            {
+                menu.UseSkill(item);
+            }
         }
     }
 }

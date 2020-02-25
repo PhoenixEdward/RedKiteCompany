@@ -15,7 +15,7 @@
     },
     {
       "Name": "Training Gauntlets",
-      "uses": 40,
+      "Uses": 40,
       "Anti": false,
       "DiceBonus": 4,
       "BaseBonus": 7,
